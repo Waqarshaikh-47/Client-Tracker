@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-6" @click="$router.push({name:'new-client'})">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">New Client</h5>
@@ -34,24 +34,30 @@
   </div>
 </template>
 
-<script lang="ts">
-import firestore from "@/plugins/db/fireBaseInit"
+<script setup lang="ts">
+import firestore from "@/plugins/db/fireBaseInit";
 import { QuerySnapshot, doc } from "firebase/firestore";
-export default {
-  data() {
-    return {
-      users: [],
-    }
-  },
-  created() {
-    firestore.collection('users').get().then((querySnapshot: any) => {
-      querySnapshot.forEach((userDoc: any) => {
-        console.log(userDoc.data());
-        this.users.push(userDoc.data());
-      });
+import { ref, onMounted } from 'vue';
+
+const users = ref<any[]>([]);
+
+// Use async/await to properly handle asynchronous data fetching
+const fetchData = async () => {
+  try {
+    const querySnapshot: QuerySnapshot = await firestore.collection('users').get();
+    querySnapshot.forEach((userDoc) => {
+      users.value.push(userDoc.data());
     });
-  },
-}
+  } catch (error) {
+    console.error('Error fetching users:', error);
+  }
+};
+
+// Call the fetchData function to fetch users when the component is mounted
+onMounted(() => {
+  fetchData();
+});
+
 
 </script>
 
