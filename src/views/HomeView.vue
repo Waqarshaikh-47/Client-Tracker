@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-6" @click="$router.push({name:'new-client'})">
+      <div class="col-md-6" @click="$router.push({ name: 'new-client' })">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">New Client</h5>
@@ -44,8 +44,8 @@ const users = ref<any[]>([]);
 // Use async/await to properly handle asynchronous data fetching
 const fetchData = async () => {
   try {
-    const querySnapshot: QuerySnapshot = await firestore.collection('users').get();
-    querySnapshot.forEach((userDoc) => {
+    const querySnapshot: any = await firestore.collection('users').get();
+    querySnapshot.forEach((userDoc: any) => {
       users.value.push(userDoc.data());
     });
   } catch (error) {
