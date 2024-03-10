@@ -1,12 +1,12 @@
 <template>
     <div>
       <!-- Progress Bar -->
-      <div class="progress mb-4">
+      <div class="progress mb-4 mt-4">
         <div
           v-for="(step, index) in steps"
           :key="index"
           class="progress-bar"
-          :class="{ 'bg-success': index < currentStep, 'bg-info': index === currentStep }"
+          :class="{ 'bg-success': index < currentStep, 'bg-secondary': index === currentStep }"
           :style="{ width: `${stepWidth}%` }"
           role="progressbar"
           :aria-valuenow="index + 1"
@@ -36,12 +36,18 @@
           <textarea v-model="formData[index].message" class="form-control" rows="3"></textarea>
         </div>
   
-        <button @click.prevent="nextStep" type="button" class="btn btn-primary me-2" :disabled="!isFormValid(index)">
-          Next
-        </button>
-        <button @click.prevent="prevStep" type="button" class="btn btn-secondary" :disabled="index === 0">
+       <div class="d-flex">
+        <div class="p-2">
+            <button @click.prevent="prevStep" type="button" class="btn btn-secondary" :disabled="index === 0">
           Previous
         </button>
+        </div>
+        <div class="p-2">
+            <button @click.prevent="nextStep" type="button" class="btn btn-primary me-2" :disabled="!isFormValid(index)">
+          {{ steps.length - 1 == index ? 'Save & Continue' : 'Next' }}
+        </button>
+        </div>
+       </div>
       </form>
       <!-- Forms -->
     </div>

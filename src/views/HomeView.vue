@@ -22,7 +22,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-6"  @click="$router.push({name:'clients'})">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">View Clients</h5>
