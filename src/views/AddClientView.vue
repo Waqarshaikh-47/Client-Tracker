@@ -47,7 +47,7 @@
     </div>
   </template>
   
-  <script setup>
+  <script setup type="ts">
   import { ref } from 'vue';
   
   const steps = ref([
