@@ -47,16 +47,17 @@ import SignInComponent from "@/components/signIn/SignIn.vue";
 import SignUpComponent from "@/components/signIn/SignUp.vue";
 import { store } from "@/stores/store";
 import { onMounted } from "vue";
+import * as bootstrap from "bootstrap"; // Import all exports from the 'bootstrap' module
 
 onMounted(() => {
-  const authModal = new bootstrap.Modal(document.getElementById('authModal'));
+  const authModal = new bootstrap.Modal(document.getElementById('authModal')!);
   authModal.show();
 });
 const authSuccess = (user: any) => {
   // Handle the event here
   console.log('Authentication successful');
   console.log('Authentication successful', user);
-  const authModal = new bootstrap.Modal(document.getElementById('authModal'));
+  const authModal = new bootstrap.Modal(document.getElementById('authModal')!);
   store.commit('setUser', user)
   authModal.hide();
 }
