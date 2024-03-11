@@ -1,32 +1,34 @@
 <template>
   <div class="background-image">
-    <div class="row">
-      <div class="col">
-        <div class="welcome-message">
-          <h1>Welcome to Our Website!</h1>
-          <p>We are glad to have you here.</p>
-          <p class="mt-3 text-success">data from firebase </p>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <div class="welcome-message">
+            <h1>Welcome to Our Website!</h1>
+            <p>We are glad to have you here.</p>
+            <p class="mt-3 text-success">Data from Firebase</p>
 
-          <div class="d-flex justify-content-center" v-for="user in users" :key="user">
-            {{ user }}
+            <div class="d-flex justify-content-center" v-for="user in users" :key="user">
+              {{ user }}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-md-6" @click="$router.push({ name: 'new-client' })">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">New Client</h5>
-            <p class="card-text">This is the first card.</p>
+      <div class="row">
+        <div class="col-md-6" @click="$router.push({name:'new-client'})">
+          <div class="card shadow">
+            <div class="card-body">
+              <h5 class="card-title">New Client</h5>
+              <p class="card-text">This is the first card.</p>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-6"  @click="$router.push({name:'clients'})">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">View Clients</h5>
-            <p class="card-text">This is the second card.</p>
+        <div class="col-md-6">
+          <div class="card shadow">
+            <div class="card-body">
+              <h5 class="card-title" @click="$router.push({name:'clients'})">View Clients</h5>
+              <p class="card-text">This is the second card.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -58,28 +60,48 @@ onMounted(() => {
   fetchData();
 });
 
-
 </script>
 
 <style scoped>
 .background-image {
-  /* background-image: url('https://www.theforage.com/blog/wp-content/uploads/2022/07/investment-banking-companies.jpg'); */
-  background-size: cover;
-  background-position: center;
+  background: linear-gradient(135deg, #000000, #434343);
   height: 100vh;
+  padding: 60px 0;
+  overflow-x: hidden; /* Prevent horizontal scrollbar */
 }
 
 .welcome-message {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   text-align: center;
-  color: #060404;
+  color: #fff;
 }
 
 .card {
-  width: 300px;
   margin: 20px auto;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transition: transform 0.3s ease;
 }
+
+.card:hover {
+  transform: translateY(-10px);
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.card-text {
+  font-size: 1.1rem;
+}
+
+.text-success {
+  color: #28a745;
+}
+
 </style>
