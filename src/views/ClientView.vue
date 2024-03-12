@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-5">
-    <h1>Client Lists</h1>
+    <h1 class="text-light">Client Lists</h1>
     
     <!-- Nav Tabs -->
     <ul class="nav nav-tabs mt-3" id="clientTabs" role="tablist">
@@ -17,42 +17,52 @@
       <!-- Active Client List Tab -->
       <div class="tab-pane fade show active" id="active-client" role="tabpanel" aria-labelledby="active-client-tab">
         <ul class="list-group mt-3">
-          <li v-for="(contact, index) in activeClients" :key="'active-' + index" class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-              <span class="fw-bold">{{ contact.name }}</span> - {{ contact.mobile }}
-            </div>
-            <div class="dropdown">
-              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi bi-three-dots"></i>
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <li><a class="dropdown-item" @click="viewContact(index)">View</a></li>
-                <li><a class="dropdown-item" @click="editContact(index)">Edit</a></li>
-                <li><a class="dropdown-item" @click="deleteContact(index, 'activeClients')">Delete</a></li>
-              </ul>
-            </div>
-          </li>
+          <template v-if="activeClients.length">
+            <li v-for="(contact, index) in activeClients" :key="'active-' + index" class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <span class="fw-bold">{{ contact.name }}</span> - {{ contact.mobile }}
+              </div>
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="bi bi-three-dots"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <li><a class="dropdown-item" @click="viewContact(index)">View</a></li>
+                  <li><a class="dropdown-item" @click="editContact(index)">Edit</a></li>
+                  <li><a class="dropdown-item" @click="deleteContact(index, 'activeClients')">Delete</a></li>
+                </ul>
+              </div>
+            </li>
+          </template>
+          <template v-else>
+            <li class="list-group-item">No active clients found.</li>
+          </template>
         </ul>
       </div>
       
       <!-- Pending Client List Tab -->
       <div class="tab-pane fade" id="pending-client" role="tabpanel" aria-labelledby="pending-client-tab">
         <ul class="list-group mt-3">
-          <li v-for="(contact, index) in pendingClients" :key="'pending-' + index" class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-              <span class="fw-bold">{{ contact.name }}</span> - {{ contact.mobile }}
-            </div>
-            <div class="dropdown">
-              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi bi-three-dots"></i>
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <li><a class="dropdown-item" @click="viewContact(index)">View</a></li>
-                <li><a class="dropdown-item" @click="editContact(index)">Edit</a></li>
-                <li><a class="dropdown-item" @click="deleteContact(index, 'pendingClients')">Delete</a></li>
-              </ul>
-            </div>
-          </li>
+          <template v-if="pendingClients.length">
+            <li v-for="(contact, index) in pendingClients" :key="'pending-' + index" class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <span class="fw-bold">{{ contact.name }}</span> - {{ contact.mobile }}
+              </div>
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="bi bi-three-dots"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <li><a class="dropdown-item" @click="viewContact(index)">View</a></li>
+                  <li><a class="dropdown-item" @click="editContact(index)">Edit</a></li>
+                  <li><a class="dropdown-item" @click="deleteContact(index, 'pendingClients')">Delete</a></li>
+                </ul>
+              </div>
+            </li>
+          </template>
+          <template v-else>
+            <li class="list-group-item">No pending clients found.</li>
+          </template>
         </ul>
       </div>
     </div>
@@ -137,5 +147,12 @@ const deleteContact = (index: number, listType: string): void => {
   
   .dropdown-toggle::after {
     display: none;
+  }
+  
+  .container {
+    background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
+    color: #fff;
+    padding: 20px;
+    border-radius: 10px;
   }
 </style>

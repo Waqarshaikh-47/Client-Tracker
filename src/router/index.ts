@@ -4,6 +4,7 @@ import ClientView from "../views/ClientView.vue";
 import AddClientView from "@/views/AddClientView.vue";
 import SignupSignIn from "@/views/SignupSignIn.vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import AboutView from "@/views/AboutView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -36,6 +37,11 @@ const router = createRouter({
       path: "/register",
       name: "register",
       component: SignupSignIn,
+    },
+    {
+      path: "/about",
+      name: "about",
+      component: AboutView,
     },
   ],
 });
