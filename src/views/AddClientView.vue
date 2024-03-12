@@ -22,7 +22,7 @@
 
     <!-- Forms -->
     <template v-for="(step, index) in steps" :key="index">
-      <div v-show="index === currentStep">
+      <div v-if="index === currentStep">
         <component :is="step.componentName" />
         <div class="d-flex justify-content-between mt-4">
           <button
@@ -93,11 +93,11 @@ const prevStep = () => {
   }
 };
 
-const setCurrentStep = (index) => {
+const setCurrentStep = (index:any) => {
   currentStep.value = index;
 };
 
-const isFormValid = (index) => {
+const isFormValid = (index:any) => {
   return Object.values(formData.value[index]).every(
     (value) => value.trim() !== ""
   );
