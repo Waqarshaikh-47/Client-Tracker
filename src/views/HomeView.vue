@@ -23,10 +23,10 @@
             </div>
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6" @click="$router.push({name:'clients'})">
           <div class="card shadow">
             <div class="card-body">
-              <h5 class="card-title" @click="$router.push({name:'clients'})">View Clients</h5>
+              <h5 class="card-title">View Clients</h5>
               <p class="card-text">This is the second card.</p>
             </div>
           </div>

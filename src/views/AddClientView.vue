@@ -23,7 +23,7 @@
     <!-- Forms -->
     <template v-for="(step, index) in steps" :key="index">
       <div v-show="index === currentStep">
-        <component :is="step.componentName" />
+        <component :is="step.componentName" @prev-step="prevStep" @next-step="nextStep" />
         <div class="d-flex justify-content-between mt-4">
           <button
             @click.prevent="prevStep"
@@ -80,9 +80,6 @@ const currentStep = ref(0);
 
 const nextStep = () => {
   if (currentStep.value < steps.value.length - 1) {
-    if (currentStep.value === 0 && !isFormValid(currentStep.value)) {
-      return;
-    }
     currentStep.value++;
   }
 };
@@ -128,7 +125,7 @@ const isFormValid = (index) => {
 }
 
 .progress-tab.completed {
-  background-color: #494F55;
+  background-color: #343a40;
 }
 
 .step-number {
