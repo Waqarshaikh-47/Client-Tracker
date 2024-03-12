@@ -90,11 +90,11 @@ const prevStep = () => {
   }
 };
 
-const setCurrentStep = (index) => {
+const setCurrentStep = (index:any) => {
   currentStep.value = index;
 };
 
-const isFormValid = (index) => {
+const isFormValid = (index:any) => {
   return Object.values(formData.value[index]).every(
     (value) => value.trim() !== ""
   );
