@@ -32,13 +32,16 @@
 </template>
 
 <script setup language="ts">
-import { ref } from 'vue';
+import { ref, onBeforeUnmount } from 'vue';
 const fullName = ref('');
 const panNumber = ref('');
 const dob = ref('');
 const email = ref('');
 const phone = ref('');
 
+onBeforeUnmount(() => {
+  console.log("before distroyed");
+})
 const submitForm = () => {
   // Here you can handle form submission, such as sending data to backend, etc.
   // For this example, let's just log the form data
