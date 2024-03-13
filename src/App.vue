@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { getAuth } from 'firebase/auth';
 import Home from './components/Home.vue';
-import { onMounted, ref } from 'vue';
-import { store } from './stores/store';
+import { onMounted, ref, inject } from 'vue';
 import queries from './plugins/db/queries/quries';
+
+const store = inject('store')
 
 
 const currentUser = ref({});

@@ -40,10 +40,11 @@
 import firestore from "@/plugins/db/fireBaseInit";
 import queries from "@/plugins/db/queries/quries";
 import router from "@/router";
-import { store } from "@/stores/store";
 import { getAuth } from "firebase/auth";
 import { QuerySnapshot, doc } from "firebase/firestore";
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, inject } from 'vue';
+
+const store = inject('store')
 
 const users = ref<any[]>([]);
 
