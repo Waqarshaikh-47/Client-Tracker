@@ -1,9 +1,36 @@
 <script setup lang="ts">
-import Home from './components/Home.vue'
+import { getAuth } from 'firebase/auth';
+import Home from './components/Home.vue';
+import { onMounted, ref } from 'vue';
+import { store } from './stores/store';
+import queries from './plugins/db/queries/quries';
+
+
+const currentUser = ref({});
+const fetchCurrentUser = () => {
+  const auth = getAuth();
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      currentUser.value = {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+      };
+      store.commit('setUser', currentUser.value);
+    } else {
+      currentUser.value = {};
+    }
+  });
+};
+
+onMounted(async () => {
+  await fetchCurrentUser(); // Wait for fetchCurrentUser to complete
+});
+
 </script>
 
 <template>
- <Home/>
+  <Home />
 </template>
 
 <style scoped>

@@ -38,6 +38,10 @@
 
 <script setup lang="ts">
 import firestore from "@/plugins/db/fireBaseInit";
+import queries from "@/plugins/db/queries/quries";
+import router from "@/router";
+import { store } from "@/stores/store";
+import { getAuth } from "firebase/auth";
 import { QuerySnapshot, doc } from "firebase/firestore";
 import { ref, onMounted } from 'vue';
 
@@ -51,13 +55,21 @@ const fetchData = async () => {
       users.value.push(userDoc.data());
     });
   } catch (error) {
+    // router.push('/notAuthorized')
     console.error('Error fetching users:', error);
   }
 };
 
 // Call the fetchData function to fetch users when the component is mounted
-onMounted(() => {
+onMounted(async () => {
   fetchData();
+  console.log(store.state.user.email);
+  const userData = store.state.user;
+  const userRoleData = await queries.fetchUserDataByEmail(userData.email);
+  userData.roles = userRoleData[0].role;
+  userData.displayName =userRoleData[0].name;
+  store.commit('setUser',userData)
+  console.log(userData);
 });
 
 </script>
