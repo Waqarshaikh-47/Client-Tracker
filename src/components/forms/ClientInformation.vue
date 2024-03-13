@@ -28,6 +28,7 @@
       </div>
       <div class="d-flex justify-content-between mt-4 mb-4">
           <button
+            :disabled="legIndex == 0"
             @click.prevent="previousButton"
             type="button"
             class="btn btn-secondary"
@@ -38,7 +39,7 @@
           type="submit"
             class="btn btn-primary"
           >
-            {{ true ? "Save & Continue" : "Next" }}
+            {{ isLastForm ? "Save & Continue" : "Next" }}
           </button>
         </div>
     </form>
@@ -46,43 +47,31 @@
 </template>
 
 <script setup language="ts">
-import { ref,onBeforeUnmount, onMounted } from 'vue';
-import { store } from "@/stores/store";
-import { ClientInformation } from '@/schemas/forms/ClientInformation'; // Adjust the path as per your project structure
-
+import { ref, inject , onMounted } from 'vue';
+import { ClientInformation } from '@/schemas/forms/ClientInformation';
+const store = inject('store');
+const props = defineProps({
+  legIndex: Number,
+  isLastForm : Boolean,
+})
 const emit = defineEmits(['next-step', 'prev-step'])
-
-const fullName = ref('');
-const panNumber = ref('');
-const dob = ref('');
-const email = ref('');
-const phone = ref('');
-
-const submitForm = () => {
-  // Here you can handle form submission, such as sending data to backend, etc.
-  // For this example, let's just log the form data
-  let clientInformationFormData = {
-    fullName: fullName.value,
-    panNumber: panNumber.value,
-    dob: dob.value,
-    email: email.value,
-    phone: phone.value
-  }
-  store.commit('setClientInformationFormData', clientInformationFormData)
-  emit('next-step')
-
-  // Reset form fields after submission
-  
-};
 const clientInformationData = new ClientInformation();
 
-onMounted(() => {
-  console.log(clientInformationData);
-})
-onBeforeUnmount(() => {
-  console.log("store this in vuex",clientInformationData);
+const submitForm = () => {
+  store.commit('setClientInformationFormData', clientInformationData)
+    console.log(store.state.clientInformationFormData);
 
+  emit('next-step')  
+};
+
+const previousButton = () => {
+  emit('prev-step')
+}
+
+onMounted(() => {
+  // console.log(clientInformationData);
 })
+
 </script>
 
 <style scoped>

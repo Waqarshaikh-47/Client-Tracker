@@ -45,10 +45,10 @@
 <script setup lang="ts">
 import SignInComponent from "@/components/signIn/SignIn.vue";
 import SignUpComponent from "@/components/signIn/SignUp.vue";
-import { store } from "@/stores/store";
-import { onMounted } from "vue";
+import { useStore } from 'vuex';
+import { onMounted, inject } from "vue";
 import * as bootstrap from "bootstrap"; // Import all exports from the 'bootstrap' module
-
+const store = useStore()
 onMounted(() => {
   const authModal = new bootstrap.Modal(document.getElementById('authModal')!);
   authModal.show();

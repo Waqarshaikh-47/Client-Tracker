@@ -5,7 +5,7 @@
       <div class="mb-3">
         <label for="name" class="form-label">Name</label>
         <input
-          v-model="name"
+          v-model="indiaPostFormData.name"
           type="text"
           class="form-control"
           id="name"
@@ -18,7 +18,7 @@
           >Annual Rate of Interest (%)</label
         >
         <input
-          v-model="annualInterestRate"
+          v-model="indiaPostFormData.annualInterestRate"
           type="number"
           class="form-control"
           id="annualInterestRate"
@@ -29,7 +29,7 @@
       <div class="mb-3">
         <label for="startDate" class="form-label">Start Date</label>
         <input
-          v-model="startDate"
+          v-model="indiaPostFormData.startDate"
           type="date"
           class="form-control"
           id="startDate"
@@ -39,7 +39,7 @@
       <div class="mb-3">
         <label for="tenure" class="form-label">Tenure End Date</label>
         <input
-          v-model="tenureEndDate"
+          v-model="indiaPostFormData.tenureEndDate"
           type="date"
           class="form-control"
           id="tenureEndDate"
@@ -51,7 +51,7 @@
           >Interest Compounding Frequency</label
         >
         <select
-          v-model="compoundingFrequency"
+          v-model="indiaPostFormData.compoundingFrequency"
           class="form-select"
           id="compoundingFrequency"
           required
@@ -63,35 +63,61 @@
           <option value="quarterly">Quarterly</option>
         </select>
       </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <div class="d-flex justify-content-between mt-4 mb-4">
+        <button
+          :disabled="legIndex == 0"
+          @click.prevent="previousButton"
+          type="button"
+          class="btn btn-secondary"
+        >
+          Previous
+        </button>
+        <button type="submit" class="btn btn-primary">
+          {{ isLastForm ? "Save & Continue" : "Next" }}
+        </button>
+      </div>
     </form>
   </div>
 </template>
 
 <script setup language="ts">
-import { ref } from "vue";
-const name = ref("");
-const annualInterestRate = ref("");
-const startDate = ref("");
-const tenureEndDate = ref("");
-const compoundingFrequency = ref("");
+import { ref, inject } from "vue";
+import { IndiaPostOfficeDetails } from "@/schemas/forms/IndiaPostOfficeDetails";
+const store = inject("store");
+const props = defineProps({
+  legIndex: Number,
+  isLastForm: Boolean,
+});
+const emit = defineEmits(["next-step", "prev-step"]);
+const indiaPostFormData = new IndiaPostOfficeDetails();
 
 const submitForm = () => {
-  // Here you can handle form submission, such as calculating interest, etc.
-  // For this example, let's just log the form data
-  console.log({
-    name: name.value,
-    annualInterestRate: annualInterestRate.value,
-    startDate: startDate.value,
-    tenureEndDate: tenureEndDate.value,
-    compoundingFrequency: compoundingFrequency.value,
-  });
+  store.commit("setClientInformationFormData", indiaPostFormData);
+  emit("next-step");
+};
 
-  // Reset form fields after submission
-  name.value = "";
-  annualInterestRate.value = "";
-  startDate.value = "";
-  tenureEndDate.value = "";
-  compoundingFrequency.value = "";
+const previousButton = () => {
+  emit("prev-step");
 };
 </script>
+<style scoped>
+.btn-primary {
+  background-color: #3d444b;
+  border-color: #3d444b;
+}
+
+.btn-primary:hover {
+  background-color: #000000;
+  border-color: #000000;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #5a6167;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+  border-color: #5a6167;
+}
+</style>

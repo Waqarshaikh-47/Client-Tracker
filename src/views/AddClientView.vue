@@ -21,27 +21,9 @@
     <!-- Progress Tabs -->
 
     <!-- Forms -->
-    <template v-for="(step, index) in steps" :key="index">
+    <template v-for="(step, index) in steps" :key="index + step.componentName">
       <div v-show="index === currentStep">
-        <component :is="step.componentName" @prev-step="prevStep" @next-step="nextStep" />
-        <div class="d-flex justify-content-between mt-4">
-          <button
-            @click.prevent="prevStep"
-            type="button"
-            class="btn btn-secondary"
-            :disabled="index === 0"
-          >
-            Previous
-          </button>
-          <button
-            @click.prevent="nextStep"
-            type="button"
-            class="btn btn-primary"
-            :disabled="!step.isValid && index !== 0"
-          >
-            {{ steps.length - 1 == index ? "Save & Continue" : "Next" }}
-          </button>
-        </div>
+        <component :is="step.componentName" @prev-step="prevStep" @next-step="nextStep" :legIndex="index" :isLastForm="index == (steps.length -1)" />
       </div>
     </template>
     <!-- Forms -->
@@ -49,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref,shallowRef } from "vue";
 import ClientInformation from "@/components/forms/ClientInformation.vue";
 import MutualFunds from "@/components/forms/MutualFunds.vue";
 import GoldInvestments from "@/components/forms/GoldInvestments.vue";
@@ -61,13 +43,13 @@ const steps = ref([
   {
     name: "Client Information",
     isValid: false,
-    componentName: ClientInformation,
+    componentName: shallowRef(ClientInformation),
   },
-  { name: "Mutual Fund", isValid: false, componentName: MutualFunds },
-  { name: "Gold Investment", isValid: false, componentName: GoldInvestments },
-  { name: "Fixed Deposit Info", isValid: false, componentName: FixedDeposit },
-  { name: "India Post Office", isValid: false, componentName: IndiaPostOffice },
-  { name: "Insurance Policy", isValid: false, componentName: InsurancePolicy },
+  { name: "Mutual Fund", isValid: false, componentName: shallowRef(MutualFunds) },
+  { name: "Gold Investment", isValid: false, componentName: shallowRef(GoldInvestments) },
+  { name: "Fixed Deposit Info", isValid: false, componentName: shallowRef(FixedDeposit) },
+  { name: "India Post Office", isValid: false, componentName: shallowRef(IndiaPostOffice) },
+  { name: "Insurance Policy", isValid: false, componentName: shallowRef(InsurancePolicy) },
 ]);
 
 const formData = ref([

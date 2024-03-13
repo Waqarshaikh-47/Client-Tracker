@@ -1,22 +1,33 @@
-import Vuex from "vuex";
+import { createStore } from 'vuex';
+import { ClientInformation } from '@/schemas/forms/ClientInformation';
 
-export const store = new Vuex.Store({
-  state: {
-    user: {},
-    clientInformationFormData: {
-      fullName: '',
-      panNumber: '',
-      dob: '',
-      email: '',
-      phone: '',
-    }
+
+// Define your initial state
+const state = {
+  user: {},
+  clientInformationFormData: {
+    fullName: '',
+    panNumber: '',
+    dob: '',
+    email: '',
+    phone: '',
+  }
+};
+
+// Define mutations to update the state
+const mutations = {
+  setUser(state: any, data: object) {
+    state.user = data;
   },
-  mutations: {
-    setUser(state: any, data: object) {
-      state.user = data;
-    },
-  setClientInformationFormData(state: any, data: any) {
-      state.clientInformationFormData = data;
-    },
+setClientInformationFormData(state: any, data: any) {
+    state.clientInformationFormData = data;
   },
+};
+
+// Create the Vuex store
+const store = createStore({
+  state,
+  mutations,
 });
+
+export default store;

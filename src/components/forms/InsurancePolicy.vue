@@ -5,7 +5,7 @@
       <div class="mb-3">
         <label for="name" class="form-label">Name</label>
         <input
-          v-model="name"
+          v-model="insuranceFormData.name"
           type="text"
           class="form-control"
           id="name"
@@ -16,7 +16,7 @@
       <div class="mb-3">
         <label for="startDate" class="form-label">Start Date</label>
         <input
-          v-model="startDate"
+          v-model="insuranceFormData.startDate"
           type="date"
           class="form-control"
           id="startDate"
@@ -26,7 +26,7 @@
       <div class="mb-3">
         <label for="policyNumber" class="form-label">Policy Number</label>
         <input
-          v-model="policyNumber"
+          v-model="insuranceFormData.policyNumber"
           type="text"
           class="form-control"
           id="policyNumber"
@@ -36,7 +36,7 @@
       </div>
       <div class="mb-3">
         <label for="planType" class="form-label">Plan Type</label>
-        <select v-model="planType" class="form-select" id="planType" required>
+        <select v-model="insuranceFormData.planType" class="form-select" id="planType" required>
           <option value="Traditional Plan">Traditional Plan</option>
           <option value="ULIP">ULIP</option>
           <option value="Term Plan">Term Plan</option>
@@ -45,14 +45,14 @@
         </select>
         <div
           v-if="
-            planType != 'Traditional Plan' &&
-            planType != 'ULIP' &&
-            planType != 'Term Plan' &&
-            planType != 'Pension Plan'
+            insuranceFormData.planType != 'Traditional Plan' &&
+            insuranceFormData.planType != 'ULIP' &&
+            insuranceFormData.planType != 'Term Plan' &&
+            insuranceFormData.planType != 'Pension Plan'
           "
         >
           <input
-            v-model="planType"
+            v-model="insuranceFormData.planType"
             type="text"
             class="form-control"
             id="planType"
@@ -64,7 +64,7 @@
       <div class="mb-3">
         <label for="companyName" class="form-label">Company Name</label>
         <input
-          v-model="companyName"
+          v-model="insuranceFormData.companyName"
           type="text"
           class="form-control"
           id="companyName"
@@ -75,7 +75,7 @@
       <div class="mb-3">
         <label for="planName" class="form-label">Plan Name</label>
         <input
-          v-model="planName"
+          v-model="insuranceFormData.planName"
           type="text"
           class="form-control"
           id="planName"
@@ -86,7 +86,7 @@
       <div class="mb-3">
         <label for="paymentMode" class="form-label">Payment Mode</label>
         <select
-          v-model="paymentMode"
+          v-model="insuranceFormData.paymentMode"
           class="form-select"
           id="paymentMode"
           required
@@ -101,7 +101,7 @@
       <div class="mb-3">
         <label for="premiumAmount" class="form-label">Premium Amount</label>
         <input
-          v-model="premiumAmount"
+          v-model="insuranceFormData.premiumAmount"
           type="number"
           class="form-control"
           id="premiumAmount"
@@ -112,7 +112,7 @@
       <div class="mb-3">
         <label for="sumAssured" class="form-label">Sum Assured</label>
         <input
-          v-model="sumAssured"
+          v-model="insuranceFormData.sumAssured"
           type="number"
           class="form-control"
           id="sumAssured"
@@ -125,7 +125,7 @@
           >Premium Payment Term</label
         >
         <input
-          v-model="premiumPayTerm"
+          v-model="insuranceFormData.premiumPayTerm"
           type="number"
           class="form-control"
           id="premiumPayTerm"
@@ -136,7 +136,7 @@
       <div class="mb-3">
         <label for="policyTerm" class="form-label">Policy Term</label>
         <input
-          v-model="policyTerm"
+          v-model="insuranceFormData.policyTerm"
           type="number"
           class="form-control"
           id="policyTerm"
@@ -147,7 +147,7 @@
       <div class="mb-3">
         <label for="maturityDate" class="form-label">Maturity Date</label>
         <input
-          v-model="maturityDate"
+          v-model="insuranceFormData.maturityDate"
           type="date"
           class="form-control"
           id="maturityDate"
@@ -157,66 +157,70 @@
       <div class="mb-3">
         <label for="remark" class="form-label">Remark</label>
         <textarea
-          v-model="remark"
+          v-model="insuranceFormData.remark"
           class="form-control"
           id="remark"
           rows="3"
           placeholder="Enter any remarks"
         ></textarea>
       </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <div class="d-flex justify-content-between mt-4 mb-4">
+        <button
+          :disabled="legIndex == 0"
+          @click.prevent="previousButton"
+          type="button"
+          class="btn btn-secondary"
+        >
+          Previous
+        </button>
+        <button type="submit" class="btn btn-primary">
+          {{ isLastForm ? "Save & Continue" : "Next" }}
+        </button>
+      </div>
     </form>
   </div>
 </template>
 
 <script setup language="ts">
-import { ref } from "vue";
-const name = ref("");
-const startDate = ref("");
-const policyNumber = ref("");
-const planType = ref("");
-const companyName = ref("");
-const planName = ref("");
-const paymentMode = ref("");
-const premiumAmount = ref("");
-const sumAssured = ref("");
-const premiumPayTerm = ref("");
-const policyTerm = ref("");
-const maturityDate = ref("");
-const remark = ref("");
+import { ref,inject } from "vue";
+import { InsurancePolicyDetails } from "@/schemas/forms/InsurancePolicyDetails";
+
+const store = inject("store");
+const props = defineProps({
+  legIndex: Number,
+  isLastForm: Boolean,
+});
+const emit = defineEmits(["next-step", "prev-step"]);
+const insuranceFormData = new InsurancePolicyDetails();
 
 const submitForm = () => {
-  // Here you can handle form submission, such as sending data to backend, etc.
-  // For this example, let's just log the form data
-  console.log({
-    name: name.value,
-    startDate: startDate.value,
-    policyNumber: policyNumber.value,
-    planType: planType.value,
-    companyName: companyName.value,
-    planName: planName.value,
-    paymentMode: paymentMode.value,
-    premiumAmount: premiumAmount.value,
-    sumAssured: sumAssured.value,
-    premiumPayTerm: premiumPayTerm.value,
-    policyTerm: policyTerm.value,
-    maturityDate: maturityDate.value,
-    remark: remark.value,
-  });
+  store.commit("setClientInformationFormData", insuranceFormData);
+  emit("next-step");
+};
 
-  // Reset form fields after submission
-  name.value = "";
-  startDate.value = "";
-  policyNumber.value = "";
-  planType.value = "";
-  companyName.value = "";
-  planName.value = "";
-  paymentMode.value = "";
-  premiumAmount.value = "";
-  sumAssured.value = "";
-  premiumPayTerm.value = "";
-  policyTerm.value = "";
-  maturityDate.value = "";
-  remark.value = "";
+const previousButton = () => {
+  emit("prev-step");
 };
 </script>
+
+<style scoped>
+.btn-primary {
+  background-color: #3d444b;
+  border-color: #3d444b;
+}
+
+.btn-primary:hover {
+  background-color: #000000;
+  border-color: #000000;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #5a6167;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+  border-color: #5a6167;
+}
+</style>

@@ -5,7 +5,7 @@
       <div class="mb-3">
         <label for="name" class="form-label">Name</label>
         <input
-          v-model="name"
+          v-model="fixedDepositFormData.name"
           type="text"
           class="form-control"
           id="name"
@@ -18,7 +18,7 @@
           >Investment Amount</label
         >
         <input
-          v-model="investmentAmount"
+          v-model="fixedDepositFormData.investmentAmount"
           type="number"
           class="form-control"
           id="investmentAmount"
@@ -31,7 +31,7 @@
           >Annual Rate of Interest (%)</label
         >
         <input
-          v-model="annualInterestRate"
+          v-model="fixedDepositFormData.annualInterestRate"
           type="number"
           class="form-control"
           id="annualInterestRate"
@@ -42,7 +42,7 @@
       <div class="mb-3">
         <label for="startDate" class="form-label">Start Date</label>
         <input
-          v-model="startDate"
+          v-model="fixedDepositFormData.startDate"
           type="date"
           class="form-control"
           id="startDate"
@@ -54,7 +54,7 @@
           >Tenure (in months or years)</label
         >
         <input
-          v-model="tenure"
+          v-model="fixedDepositFormData.tenure"
           type="number"
           class="form-control"
           id="tenure"
@@ -65,35 +65,63 @@
           >Enter the number of months or years for the tenure.</small
         >
       </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <div class="d-flex justify-content-between mt-4 mb-4">
+        <button
+          :disabled="legIndex == 0"
+          @click.prevent="previousButton"
+          type="button"
+          class="btn btn-secondary"
+        >
+          Previous
+        </button>
+        <button type="submit" class="btn btn-primary">
+          {{ isLastForm ? "Save & Continue" : "Next" }}
+        </button>
+      </div>
     </form>
   </div>
 </template>
 
 <script setup language="ts">
-import { ref } from "vue";
-const name = ref("");
-const investmentAmount = ref("");
-const annualInterestRate = ref("");
-const startDate = ref("");
-const tenure = ref("");
+import { ref, inject } from "vue";
+import { FixedDepositDetails } from "@/schemas/forms/FixedDeposit";
+
+const store = inject("store");
+const props = defineProps({
+  legIndex: Number,
+  isLastForm: Boolean,
+});
+const emit = defineEmits(["next-step", "prev-step"]);
+const fixedDepositFormData = new FixedDepositDetails();
 
 const submitForm = () => {
-  // Here you can handle form submission, such as sending data to backend, etc.
-  // For this example, let's just log the form data
-  console.log({
-    name: name.value,
-    investmentAmount: investmentAmount.value,
-    annualInterestRate: annualInterestRate.value,
-    startDate: startDate.value,
-    tenure: tenure.value,
-  });
+  store.commit("setClientInformationFormData", fixedDepositFormData);
+  emit("next-step");
+};
 
-  // Reset form fields after submission
-  name.value = "";
-  investmentAmount.value = "";
-  annualInterestRate.value = "";
-  startDate.value = "";
-  tenure.value = "";
+const previousButton = () => {
+  emit("prev-step");
 };
 </script>
+
+<style scoped>
+.btn-primary {
+  background-color: #3d444b;
+  border-color: #3d444b;
+}
+
+.btn-primary:hover {
+  background-color: #000000;
+  border-color: #000000;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #5a6167;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+  border-color: #5a6167;
+}
+</style>

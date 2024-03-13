@@ -10,10 +10,11 @@ import "bootstrap/dist/css/bootstrap.css";
 
 import App from "./App.vue";
 import router from "./router";
-import { store } from "./stores/store";
+import  store  from "./stores/store";
 const app = createApp(App);
 
 app.use(router);
-app.use(store);
+app.provide('store', store);
+
 
 app.mount("#app");
