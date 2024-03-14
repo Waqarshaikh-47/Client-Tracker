@@ -1,4 +1,3 @@
-// ClientInformation.ts
 export class ClientInformation {
     fullName: string;
     panNumber: string;

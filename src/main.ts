@@ -15,6 +15,7 @@ const app = createApp(App);
 
 app.use(router);
 app.provide('store', store);
+app.use(store)
 
 
 app.mount("#app");
