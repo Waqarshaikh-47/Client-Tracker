@@ -95,7 +95,7 @@ const emit = defineEmits(["next-step", "prev-step"]);
 const fixedDepositFormData = new FixedDepositDetails();
 
 const submitForm = () => {
-  store.commit("setClientInformationFormData", fixedDepositFormData);
+  store.commit("setFixedDepositFormData", fixedDepositFormData);
   emit("next-step");
 };
 

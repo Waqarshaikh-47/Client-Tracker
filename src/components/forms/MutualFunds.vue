@@ -100,7 +100,7 @@ const emit = defineEmits(["next-step", "prev-step"]);
 const mutualFundFormData = new MutualFundDetails();
 
 const submitForm = () => {
-  store.commit("setClientInformationFormData", mutualFundFormData);
+  store.commit("setMutualFundFormData", mutualFundFormData);
   emit("next-step");
 };
 

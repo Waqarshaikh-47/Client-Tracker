@@ -92,7 +92,7 @@ const emit = defineEmits(["next-step", "prev-step"]);
 const indiaPostFormData = new IndiaPostOfficeDetails();
 
 const submitForm = () => {
-  store.commit("setClientInformationFormData", indiaPostFormData);
+  store.commit("setIndiaPostFormData", indiaPostFormData);
   emit("next-step");
 };
 

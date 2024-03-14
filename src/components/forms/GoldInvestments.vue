@@ -97,7 +97,7 @@ const investmentDate = ref("");
 const goldType = ref("");
 
 const submitForm = () => {
-  store.commit("setClientInformationFormData", goldInvestmentFormData);
+  store.commit("setGoldInvestmentFormData", goldInvestmentFormData);
   emit("next-step");
 };
 

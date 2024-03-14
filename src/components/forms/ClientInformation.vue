@@ -59,8 +59,6 @@ const clientInformationData = new ClientInformation();
 
 const submitForm = () => {
   store.commit('setClientInformationFormData', clientInformationData)
-    console.log(store.state.clientInformationFormData);
-
   emit('next-step')  
 };
 

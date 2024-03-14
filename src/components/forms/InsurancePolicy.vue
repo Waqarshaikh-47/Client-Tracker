@@ -194,7 +194,7 @@ const emit = defineEmits(["next-step", "prev-step"]);
 const insuranceFormData = new InsurancePolicyDetails();
 
 const submitForm = () => {
-  store.commit("setClientInformationFormData", insuranceFormData);
+  store.commit("setInsurancePolicyFormData", insuranceFormData);
   emit("next-step");
 };
 
