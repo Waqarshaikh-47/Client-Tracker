@@ -58,9 +58,9 @@ const authSuccess = (user: any) => {
   // Handle the event here
   console.log('Authentication successful');
   console.log('Authentication successful', user);
-  const authModal = new bootstrap.Modal(document.getElementById('authModal')!);
   store.commit('setUser', user)
-  authModal.hide();
+  // console.log(document.getElementsByClassName());
+  
 }
 </script>
 

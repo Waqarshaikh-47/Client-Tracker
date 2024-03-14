@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-
+import router from '@/router';
 
 const email = ref('');
 const password = ref('');
@@ -26,6 +26,9 @@ const register = () => {
             // Signed in
             const user = userCredential.user;
             console.log("user register succesfully", user);
+            const authModal = document.getElementById('authModal');
+            authModal.classList.remove('show').remove('fade');
+            router.push("/")
         })
         .catch((error) => {
             // Handle Errors here.

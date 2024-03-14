@@ -30,11 +30,14 @@ const emit = defineEmits(['auth-success'])
 
 const register = () => {
     signInWithEmailAndPassword(getAuth(), email.value, password.value)
-        .then((userCredential) => {
-            // Signed in
-            const user = userCredential.user;
-            console.log("user register succesfully", user);
-            emit('auth-success', user);
+    .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        console.log("user register succesfully", user);
+        emit('auth-success', user);
+        const authModal = document.getElementById('authModal');
+        authModal.classList.remove('show')
+        router.push('/');            
         })
         .catch((error) => {
             // Handle Errors here.
