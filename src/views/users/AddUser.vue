@@ -36,6 +36,7 @@
   import { ref, inject, onMounted } from 'vue';
   import { User } from '@/schemas/user/User';
   import queries from "@/plugins/db/queries/quries";
+  import router from '@/router';
   const store = inject('store');
 
   const userData = ref(new User('', '', []));

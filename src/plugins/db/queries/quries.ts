@@ -30,7 +30,7 @@ const queries: any = {
       alert('User added successfully');
       
     } catch (error) {
-      alert('error',error);
+      alert('error'+error);
       console.error("Error adding user:", error);
       throw error;
     }
