@@ -90,6 +90,7 @@ const closeAuthModel = () => {
 
 .modal-header {
   background-color: #343a40;
+  border-bottom: none; /* Remove the bottom border */
 }
 
 .modal-body {
@@ -98,6 +99,7 @@ const closeAuthModel = () => {
 
 .modal-footer {
   background-color: #343a40;
+  border-top: none; /* Remove the top border */
 }
 
 .btn-secondary {
