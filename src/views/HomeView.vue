@@ -63,9 +63,11 @@ import queries from "@/plugins/db/queries/quries";
 import router from "@/router";
 import { getAuth } from "firebase/auth";
 import { QuerySnapshot, doc } from "firebase/firestore";
-import { ref, onMounted, inject } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useStore } from 'vuex';
 
-const store = inject('store')
+
+const store = useStore()
 
 const users = ref<any[]>([]);
 

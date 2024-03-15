@@ -81,9 +81,11 @@
 </template>
 
 <script setup language="ts">
-import { ref, inject } from "vue";
+import { ref } from "vue";
 import { IndiaPostOfficeDetails } from "@/schemas/forms/IndiaPostOfficeDetails";
-const store = inject("store");
+import { useStore } from 'vuex';
+
+const store = useStore()
 const props = defineProps({
   legIndex: Number,
   isLastForm: Boolean,

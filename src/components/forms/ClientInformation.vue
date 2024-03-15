@@ -47,9 +47,11 @@
 </template>
 
 <script setup language="ts">
-import { ref, inject , onMounted } from 'vue';
+import { ref , onMounted } from 'vue';
 import { ClientInformation } from '@/schemas/forms/ClientInformation';
-const store = inject('store');
+import { useStore } from 'vuex';
+
+const store = useStore()
 const props = defineProps({
   legIndex: Number,
   isLastForm : Boolean,

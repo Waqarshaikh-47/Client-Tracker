@@ -78,11 +78,12 @@
 </template>
 
 <script setup language="ts">
-import { ref, inject } from "vue";
+import { ref } from "vue";
+import { useStore } from 'vuex';
 import { GoldInvestmentDetails } from "@/schemas/forms/GoldInvestmentDetails";
 
 
-const store = inject('store');
+const store = useStore()
 const props = defineProps({
   legIndex: Number,
   isLastForm: Boolean,

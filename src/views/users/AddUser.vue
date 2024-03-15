@@ -33,12 +33,13 @@
   </template>
   
   <script setup lang="ts">
-  import { ref, inject, onMounted } from 'vue';
+  import { ref, onMounted } from 'vue';
   import { User } from '@/schemas/user/User';
   import queries from "@/plugins/db/queries/quries";
   import router from '@/router';
-  const store = inject('store');
+  import { useStore } from 'vuex';
 
+  const store = useStore()
   const userData = ref(new User('', '', []));
   const roles = ref(['Admin', 'Read', 'Write']); // Example roles, replace with your actual roles
   const selectedRoles = ref([]);

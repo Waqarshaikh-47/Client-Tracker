@@ -46,7 +46,7 @@
 import SignInComponent from "@/components/signIn/SignIn.vue";
 import SignUpComponent from "@/components/signIn/SignUp.vue";
 import { useStore } from 'vuex';
-import { onMounted, inject } from "vue";
+import { onMounted } from "vue";
 import * as bootstrap from "bootstrap"; // Import all exports from the 'bootstrap' module
 const store = useStore()
 onMounted(() => {

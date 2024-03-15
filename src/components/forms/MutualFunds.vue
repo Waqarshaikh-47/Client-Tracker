@@ -88,10 +88,12 @@
 </template>
 
 <script setup language="ts">
-import { ref , inject} from "vue";
+import { ref } from "vue";
 import { MutualFundDetails } from "@/schemas/forms/MutualFundDetails";
+import { useStore } from 'vuex';
 
-const store = inject("store");
+
+const store = useStore()
 const props = defineProps({
   legIndex: Number,
   isLastForm: Boolean,
