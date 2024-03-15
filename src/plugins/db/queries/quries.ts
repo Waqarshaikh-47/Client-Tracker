@@ -1,7 +1,7 @@
 // queries.ts
 
 import firestore from "@/plugins/db/fireBaseInit";
-
+import { User } from '@/schemas/user/User';
 const queries: any = {
   async fetchUserDataByEmail(email: string) {
     console.log(email);
@@ -22,6 +22,19 @@ const queries: any = {
     }
   },
 
+  async addUser(userData: User) {
+    try {
+      const userDataPlainObject = { ...userData }; // Convert User object to plain JavaScript object
+      await firestore.collection("users").add(userDataPlainObject);
+      console.log("User added successfully");
+      alert('User added successfully');
+      
+    } catch (error) {
+      alert('error'+error);
+      console.error("Error adding user:", error);
+      throw error;
+    }
+  },
   // Define more query functions here
 };
 

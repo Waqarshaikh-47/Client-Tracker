@@ -32,6 +32,27 @@
           </div>
         </div>
       </div>
+      <!-- Only for admin users -->
+      <template v-if="roles.includes('admin')">
+        <div class="row">
+          <div class="col-md-6" @click="$router.push({name:'new-user'})">
+            <div class="card shadow">
+              <div class="card-body">
+                <h5 class="card-title">Add New User</h5>
+                <p class="card-text">add agent that could fill data</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6" @click="$router.push({name:'clients'})">
+            <div class="card shadow">
+              <div class="card-body">
+                <h5 class="card-title">View Users</h5>
+                <p class="card-text">list all users</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -47,6 +68,8 @@ import { ref, onMounted, inject } from 'vue';
 const store = inject('store')
 
 const users = ref<any[]>([]);
+
+const roles = ref<string[]>([])
 
 // Use async/await to properly handle asynchronous data fetching
 const fetchData = async () => {
@@ -71,6 +94,7 @@ onMounted(async () => {
   userData.displayName =userRoleData[0].name;
   store.commit('setUser',userData)
   console.log(userData);
+  roles.value = userData.roles;
 });
 
 </script>

@@ -5,6 +5,7 @@ import AddClientView from "@/views/AddClientView.vue";
 import SignupSignIn from "@/views/SignupSignIn.vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import AboutView from "@/views/AboutView.vue";
+import AddUser from "@/views/users/AddUser.vue";
 import NotAuthorized from "@/views/NotAuthorized.vue";
 
 const router = createRouter({
@@ -43,6 +44,14 @@ const router = createRouter({
       path: "/about",
       name: "about",
       component: AboutView,
+    },
+    {
+      path: "/new-user",
+      name: "new-user",
+      component: AddUser,
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path:'/notAuthorized',
