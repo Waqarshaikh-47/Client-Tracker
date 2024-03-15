@@ -1,6 +1,11 @@
+<template>
+  <Home />
+  <Loader/>
+</template>
 <script setup lang="ts">
 import { getAuth } from 'firebase/auth';
 import Home from './components/Home.vue';
+import Loader from './components/utilities/Loader.vue';
 import { onMounted, ref} from 'vue';
 import { useStore } from 'vuex';
 import queries from './plugins/db/queries/quries';
@@ -30,10 +35,6 @@ onMounted(async () => {
 });
 
 </script>
-
-<template>
-  <Home />
-</template>
 
 <style scoped>
 header {

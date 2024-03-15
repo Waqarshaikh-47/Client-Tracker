@@ -29,12 +29,12 @@
 
               <!-- Sign Up Tab -->
               <div class="tab-pane fade" id="signUp" role="tabpanel" aria-labelledby="signUpTab">
-                <SignUpComponent />
+                <SignUpComponent @sign-auth-success="closeAuthModel"/>
               </div>
             </div>
           </div>
           <div class="modal-footer border-0">
-            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-secondary btn-sm" @click="closeAuthModel" data-bs-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
@@ -46,12 +46,18 @@
 import SignInComponent from "@/components/signIn/SignIn.vue";
 import SignUpComponent from "@/components/signIn/SignUp.vue";
 import { useStore } from 'vuex';
-import { onMounted } from "vue";
+import { onMounted , ref } from "vue";
 import * as bootstrap from "bootstrap"; // Import all exports from the 'bootstrap' module
+import router from '@/router';
+
 const store = useStore()
+
+const authModal:any = ref<bootstrap.Modal>();
+
+
 onMounted(() => {
-  const authModal = new bootstrap.Modal(document.getElementById('authModal')!);
-  authModal.show();
+  authModal.value = new bootstrap.Modal(document.getElementById('authModal')!);
+  authModal.value.show();
 });
 
 const authSuccess = (user: any) => {
@@ -59,8 +65,12 @@ const authSuccess = (user: any) => {
   console.log('Authentication successful');
   console.log('Authentication successful', user);
   store.commit('setUser', user)
-  // console.log(document.getElementsByClassName());
-  
+  authModal.value.hide();
+  router.push({name:'home'})
+}
+
+const closeAuthModel = () => {
+  authModal.value.hide();
 }
 </script>
 

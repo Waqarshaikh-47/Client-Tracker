@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits } from 'vue';
+import { ref } from 'vue';
 import {
     getAuth,
     signInWithEmailAndPassword,
@@ -20,27 +20,26 @@ import {
     GoogleAuthProvider
 } from 'firebase/auth';
 import router from '@/router';
+import { useStore } from 'vuex';
 
-
-// const { emit } = defineEmits() as any;
-
+const store = useStore()
 const email = ref('');
 const password = ref('');
 const emit = defineEmits(['auth-success'])
 
 const register = () => {
+    store.commit('setLoading', true);
     signInWithEmailAndPassword(getAuth(), email.value, password.value)
     .then((userCredential) => {
         // Signed in
+        store.commit('setLoading', false);
         const user = userCredential.user;
         console.log("user register succesfully", user);
         emit('auth-success', user);
-        const authModal = document.getElementById('authModal');
-        authModal.classList.remove('show')
-        router.push('/');            
         })
         .catch((error) => {
             // Handle Errors here.
+            store.commit('setLoading', false);
             const errorCode = error.code;
             const errorMessage = error.message;
             // The email of the user's account used.

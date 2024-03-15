@@ -54,6 +54,7 @@ const state = {
     investmentAmount: "",
     remark: "",
   },
+  isLoading: false,
 };
 
 // Define mutations to update the state
@@ -78,6 +79,9 @@ const mutations = {
   },
   setMutualFundFormData(state: any, data: object) {
     state.mutualFundFormData = data;
+  },
+  setLoading(state: any, status:boolean) {
+    state.isLoading = status;
   },
 };
 
