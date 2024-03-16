@@ -1,8 +1,19 @@
 <template>
   <div class="container mt-5">
     <h1 class="text-light">Client Lists</h1>
-    
-    <!-- Nav Tabs -->
+    <p class="text-success">data from firebase</p>
+    <div>
+      <ul class="list-group">
+        <li v-for="(user, index) in userData" :key="index" class="list-group-item">
+          <p><strong>Client Information for User {{ index + 1 }}</strong></p>
+          <ul>
+            <li v-for="(value, key) in user.clientInformationFormData" :key="key">
+              {{ key }}: {{ value }}
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
     <ul class="nav nav-tabs mt-3" id="clientTabs" role="tablist">
       <li class="nav-item" role="presentation">
         <button class="nav-link active" id="active-client-tab" data-bs-toggle="tab" data-bs-target="#active-client" type="button" role="tab" aria-controls="active-client" aria-selected="true">Active Client List</button>
@@ -70,13 +81,29 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onBeforeMount, onMounted, ref } from 'vue';
+import queries from "@/plugins/db/queries/quries";
+
 
 interface Contact {
   name: string;
   mobile: string;
 }
+interface Client{
 
+}
+
+onBeforeMount(async()=>{
+  userData.value =await  queries.getAllClientsInformation();
+  console.log(userData);
+  
+})
+
+
+onMounted(async()=>{
+})
+
+let userData = ref<any>([]);
 // Array of Active Clients
 const activeClients = ref<Contact[]>([
   { name: 'John Doe', mobile: '1234567890' },
