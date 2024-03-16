@@ -1,7 +1,24 @@
 <template>
   <div class="container mt-5">
     <h1>Fixed Deposit Details</h1>
-    <form @submit.prevent="submitForm">
+
+    <!-- View Mode -->
+    <div v-if="!isEditing">
+      <p><strong>Name:</strong> {{ fixedDepositFormData.name }}</p>
+      <p>
+        <strong>Investment Amount:</strong>
+        {{ fixedDepositFormData.investmentAmount }}
+      </p>
+      <p>
+        <strong>Annual Rate of Interest (%):</strong>
+        {{ fixedDepositFormData.annualInterestRate }}
+      </p>
+      <p><strong>Start Date:</strong> {{ fixedDepositFormData.startDate }}</p>
+      <p><strong>Tenure:</strong> {{ fixedDepositFormData.tenure }}</p>
+    </div>
+
+    <!-- Edit Mode -->
+    <form v-else @submit.prevent="submitForm">
       <div class="mb-3">
         <label for="name" class="form-label">Name</label>
         <input
@@ -66,44 +83,57 @@
           >Enter the number of months or years for the tenure.</small
         >
       </div>
-      <div class="d-flex justify-content-between mt-4 mb-4">
-        <button
-          :disabled="legIndex == 0"
-          @click.prevent="previousButton"
-          type="button"
-          class="btn btn-secondary"
-        >
-          Previous
-        </button>
-        <button type="submit" class="btn btn-primary">
-          {{ isLastForm ? "Save & Continue" : "Next" }}
-        </button>
-      </div>
     </form>
+    <div class="d-flex justify-content-between mt-4 mb-4">
+      <button @click="toggleEditMode" class="btn btn-primary">
+        {{ isEditing ? "Save" : "Edit" }}
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup language="ts">
 import { ref } from "vue";
-import { useStore } from 'vuex';
+import { useStore } from "vuex";
 import { FixedDepositDetails } from "@/schemas/forms/FixedDeposit";
 
-const store = useStore()
+const store = useStore();
 const props = defineProps({
   legIndex: Number,
   isLastForm: Boolean,
 });
 const emit = defineEmits(["next-step", "prev-step"]);
-const fixedDepositFormData = new FixedDepositDetails();
+const fixedDepositFormData = ref(new FixedDepositDetails());
+const isEditing = ref(false);
 
 const submitForm = () => {
-  store.commit("setFixedDepositFormData", fixedDepositFormData);
+  store.commit("setFixedDepositFormData", fixedDepositFormData.value);
   emit("next-step");
+};
+
+const toggleEditMode = () => {
+  isEditing.value = !isEditing.value;
+  if (!isEditing.value) {
+    // Reset form data if cancelling edit mode
+    fixedDepositFormData.value = new FixedDepositDetails();
+  }
 };
 
 const previousButton = () => {
   emit("prev-step");
 };
+
+// Fetch initial fixed deposit data or set from store
+const fetchFixedDepositData = () => {
+  // Simulated data for example
+  fixedDepositFormData.value.name = "Fixed Deposit Name";
+  fixedDepositFormData.value.investmentAmount = 10000;
+  fixedDepositFormData.value.annualInterestRate = 8;
+  fixedDepositFormData.value.startDate = "2023-03-01";
+  fixedDepositFormData.value.tenure = 12;
+};
+
+fetchFixedDepositData();
 </script>
 
 <style scoped>

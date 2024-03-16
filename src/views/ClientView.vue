@@ -25,8 +25,7 @@
                   <i class="bi bi-three-dots"></i>
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <li><a class="dropdown-item" @click="viewContact(index)">View</a></li>
-                  <li><a class="dropdown-item" @click="editContact(index)">Edit</a></li>
+                  <li><a class="dropdown-item" @click="viewContact(index,client)">View</a></li>
                 </ul>
               </div>
             </li>
@@ -50,8 +49,7 @@
                   <i class="bi bi-three-dots"></i>
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <li><a class="dropdown-item" @click="viewContact(index)">View</a></li>
-                  <li><a class="dropdown-item" @click="editContact(index)">Edit</a></li>
+                  <li><a class="dropdown-item" @click="viewContact(index,contact)">View</a></li>
                 </ul>
               </div>
             </li>
@@ -69,6 +67,8 @@
 import { onBeforeMount, onMounted, ref } from 'vue';
 import queries from "@/plugins/db/queries/quries";
 import { useStore } from 'vuex';
+import router from '@/router';
+
 
 const store = useStore()
 
@@ -95,9 +95,13 @@ const activeClients = ref<any[]>([]);
 // Array of Pending Clients
 const pendingClients = ref<any[]>([]);
 
-const viewContact = (index: number): void => {
+const viewContact = (index: number,clientData:any): void => {
   // You can implement the view functionality here
-  console.log("View Contact:", activeClients.value[index]);
+  console.log("View Contact:", clientData);
+  store.commit('setViewClientData', clientData);
+  let getData = store.state.viewClientData
+  console.log(getData.clientInformationFormData.fullName)
+  router.push({name:'client-details'})
 };
 
 const editContact = (index: number): void => {

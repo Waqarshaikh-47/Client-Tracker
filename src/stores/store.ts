@@ -55,6 +55,7 @@ const state = {
     remark: "",
   },
   isLoading: false,
+  viewClientData : ''
 };
 
 // Define mutations to update the state
@@ -82,6 +83,9 @@ const mutations = {
   },
   setLoading(state: any, status:boolean) {
     state.isLoading = status;
+  },
+  setViewClientData(state: any, data:object) {
+    state.viewClientData = data;
   },
 };
 

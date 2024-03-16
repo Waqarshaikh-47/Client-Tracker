@@ -9,7 +9,7 @@
       </div>
       <div class="mb-3">
         <label for="startDate" class="form-label">Start Date</label>
-        <input v-model="insuranceFormData.startDate" type="date" class="form-control" id="startDate" required />
+        <input v-model="insuranceFormData.startDate" type="date" class="form-control" id="startDate" required style="max-width: 200px;" />
       </div>
       <div class="mb-3">
         <label for="policyNumber" class="form-label">Policy Number</label>
@@ -25,11 +25,11 @@
           <option value="Pension Plan">Pension Plan</option>
           <option value="" selected>Other</option>
         </select>
-        <div v-if="insuranceFormData.planType != 'Traditional Plan' &&
-      insuranceFormData.planType != 'ULIP' &&
-      insuranceFormData.planType != 'Term Plan' &&
-      insuranceFormData.planType != 'Pension Plan'
-      ">
+        <div v-if="insuranceFormData.planType !== 'Traditional Plan' &&
+          insuranceFormData.planType !== 'ULIP' &&
+          insuranceFormData.planType !== 'Term Plan' &&
+          insuranceFormData.planType !== 'Pension Plan'
+        ">
           <input v-model="insuranceFormData.planType" type="text" class="form-control" id="planType" placeholder="Other"
             required />
         </div>
@@ -76,7 +76,7 @@
       </div>
       <div class="mb-3">
         <label for="maturityDate" class="form-label">Maturity Date</label>
-        <input v-model="insuranceFormData.maturityDate" type="date" class="form-control" id="maturityDate" required />
+        <input v-model="insuranceFormData.maturityDate" type="date" class="form-control" id="maturityDate" required style="max-width: 200px;" />
       </div>
       <div class="mb-3">
         <label for="remark" class="form-label">Remark</label>
@@ -97,9 +97,8 @@
 
 <script setup language="ts">
 import { ref } from "vue";
-import { InsurancePolicyDetails } from "@/schemas/forms/InsurancePolicyDetails";
 import { useStore } from 'vuex';
-import queries from "@/plugins/db/queries/quries";
+import { InsurancePolicyDetails } from "@/schemas/forms/InsurancePolicyDetails";
 
 const store = useStore()
 
@@ -126,8 +125,7 @@ const saveClientsData = () => {
   }
 
   console.log(data);
-  queries.addClientInformationData(data)
-
+  // Save data to database or perform other actions
 }
 
 const submitForm = () => {

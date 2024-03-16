@@ -7,6 +7,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import AboutView from "@/views/AboutView.vue";
 import AddUser from "@/views/users/AddUser.vue";
 import NotAuthorized from "@/views/NotAuthorized.vue";
+import ClientDetailsView from "@/views/ClientDetailsView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -57,6 +58,11 @@ const router = createRouter({
       path:'/notAuthorized',
       name:'notAuthorized',
       component: NotAuthorized,
+    },
+    {
+      path:'/clients/client-details',
+      name:'client-details',
+      component: ClientDetailsView,
     }
   ],
 });

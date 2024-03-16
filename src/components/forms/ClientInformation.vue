@@ -14,7 +14,7 @@
       </div>
       <div class="mb-3">
         <label for="dob" class="form-label">Date of Birth</label>
-        <input v-model="clientInformationData.dob" type="date" class="form-control" id="dob" required>
+        <input v-model="clientInformationData.dob" type="date" class="form-control" id="dob" required style="max-width: 200px;">
       </div>
       <div class="mb-3">
         <label for="email" class="form-label">Email Address</label>
@@ -23,37 +23,34 @@
       </div>
       <div class="mb-3">
         <label for="phone" class="form-label">Phone Number</label>
-        <input v-model="clientInformationData.panNumber" type="tel" class="form-control" id="phone" placeholder="Enter your phone number"
+        <input v-model="clientInformationData.phone" type="tel" class="form-control" id="phone" placeholder="Enter your phone number"
           required>
       </div>
       <div class="d-flex justify-content-between mt-4 mb-4">
-          <button
-          type="submit"
-            class="btn btn-primary"
-          >
-            {{ "Save & Continue" }}
-          </button>
-        </div>
+        <button type="submit" class="btn btn-primary">
+          {{ "Save & Continue" }}
+        </button>
+      </div>
     </form>
   </div>
 </template>
 
 <script setup language="ts">
-import { ref , onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { ClientInformation } from '@/schemas/forms/ClientInformation';
 import { useStore } from 'vuex';
 
 const store = useStore()
 const props = defineProps({
   legIndex: Number,
-  isLastForm : Boolean,
+  isLastForm: Boolean,
 })
 const emit = defineEmits(['next-step', 'prev-step'])
 const clientInformationData = new ClientInformation();
 
 const submitForm = () => {
   store.commit('setClientInformationFormData', clientInformationData)
-  emit('next-step')  
+  emit('next-step')
 };
 
 const previousButton = () => {
@@ -85,5 +82,10 @@ onMounted(() => {
 .btn-secondary:hover {
   background-color: #5a6268;
   border-color: #5a6167;
+}
+
+/* Added style for the max-width of date input */
+input[type="date"] {
+  max-width: 200px;
 }
 </style>

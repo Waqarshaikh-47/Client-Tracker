@@ -1,7 +1,26 @@
 <template>
   <div class="container mt-5">
     <h1>INDIA POST OFFICE</h1>
-    <form @submit.prevent="submitForm">
+
+    <!-- View Mode -->
+    <div v-if="!isEditing">
+      <p><strong>Name:</strong> {{ indiaPostFormData.name }}</p>
+      <p>
+        <strong>Annual Rate of Interest (%):</strong>
+        {{ indiaPostFormData.annualInterestRate }}
+      </p>
+      <p><strong>Start Date:</strong> {{ indiaPostFormData.startDate }}</p>
+      <p>
+        <strong>Tenure End Date:</strong> {{ indiaPostFormData.tenureEndDate }}
+      </p>
+      <p>
+        <strong>Interest Compounding Frequency:</strong>
+        {{ indiaPostFormData.compoundingFrequency }}
+      </p>
+    </div>
+
+    <!-- Edit Mode -->
+    <form v-else @submit.prevent="submitForm">
       <div class="mb-3">
         <label for="name" class="form-label">Name</label>
         <input
@@ -38,7 +57,7 @@
         />
       </div>
       <div class="mb-3">
-        <label for="tenure" class="form-label">Tenure End Date</label>
+        <label for="tenureEndDate" class="form-label">Tenure End Date</label>
         <input
           v-model="indiaPostFormData.tenureEndDate"
           type="date"
@@ -65,45 +84,59 @@
           <option value="quarterly">Quarterly</option>
         </select>
       </div>
-      <div class="d-flex justify-content-between mt-4 mb-4">
-        <button
-          :disabled="legIndex == 0"
-          @click.prevent="previousButton"
-          type="button"
-          class="btn btn-secondary"
-        >
-          Previous
-        </button>
-        <button type="submit" class="btn btn-primary">
-          {{ isLastForm ? "Save & Continue" : "Next" }}
-        </button>
-      </div>
     </form>
+    <div class="d-flex justify-content-between mt-4 mb-4">
+      <button @click="toggleEditMode" class="btn btn-primary">
+        {{ isEditing ? "Save" : "Edit" }}
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup language="ts">
 import { ref } from "vue";
-import { useStore } from 'vuex';
+import { useStore } from "vuex";
 import { IndiaPostOfficeDetails } from "@/schemas/forms/IndiaPostOfficeDetails";
 
-const store = useStore()
+const store = useStore();
 const props = defineProps({
   legIndex: Number,
   isLastForm: Boolean,
 });
 const emit = defineEmits(["next-step", "prev-step"]);
-const indiaPostFormData = new IndiaPostOfficeDetails();
+const indiaPostFormData = ref(new IndiaPostOfficeDetails());
+const isEditing = ref(false);
 
 const submitForm = () => {
-  store.commit("setIndiaPostFormData", indiaPostFormData);
+  store.commit("setIndiaPostFormData", indiaPostFormData.value);
   emit("next-step");
+};
+
+const toggleEditMode = () => {
+  isEditing.value = !isEditing.value;
+  if (!isEditing.value) {
+    // Reset form data if cancelling edit mode
+    indiaPostFormData.value = new IndiaPostOfficeDetails();
+  }
 };
 
 const previousButton = () => {
   emit("prev-step");
 };
+
+// Fetch initial India Post Office data or set from store
+const fetchIndiaPostData = () => {
+  // Simulated data for example
+  indiaPostFormData.value.name = "India Post Office Name";
+  indiaPostFormData.value.annualInterestRate = 5;
+  indiaPostFormData.value.startDate = "2023-01-15";
+  indiaPostFormData.value.tenureEndDate = "2025-01-15";
+  indiaPostFormData.value.compoundingFrequency = "monthly";
+};
+
+fetchIndiaPostData();
 </script>
+
 <style scoped>
 .btn-primary {
   background-color: #3d444b;
