@@ -7,10 +7,10 @@
         :key="index"
         class="progress-tab"
         :class="{
-          'active': index === currentStep,
-          'completed': index < currentStep,
+          active: index === currentStep,
+          completed: index < currentStep,
         }"
-        @click="setCurrentStep(index)"
+        @click="isTabDisabled(index)"
       >
         <div class="progress-tab-content">
           <span class="step-number">{{ index + 1 }}</span>
@@ -23,7 +23,13 @@
     <!-- Forms -->
     <template v-for="(step, index) in steps" :key="index + step.componentName">
       <div v-show="index === currentStep">
-        <component :is="step.componentName" @prev-step="prevStep" @next-step="nextStep" :legIndex="index" :isLastForm="index == (steps.length -1)" />
+        <component
+          :is="step.componentName"
+          @prev-step="prevStep"
+          @next-step="nextStep"
+          :legIndex="index"
+          :isLastForm="index == steps.length - 1"
+        />
       </div>
     </template>
     <!-- Forms -->
@@ -31,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref,shallowRef } from "vue";
+import { ref, shallowRef } from "vue";
 import ClientInformation from "@/components/forms/ClientInformation.vue";
 import MutualFunds from "@/components/forms/MutualFunds.vue";
 import GoldInvestments from "@/components/forms/GoldInvestments.vue";
@@ -40,22 +46,12 @@ import IndiaPostOffice from "@/components/forms/IndiaPostOffice.vue";
 import InsurancePolicy from "@/components/forms/InsurancePolicy.vue";
 
 const steps = ref([
-  {
-    name: "Client Information",
-    isValid: false,
-    componentName: shallowRef(ClientInformation),
-  },
-  { name: "Mutual Fund", isValid: false, componentName: shallowRef(MutualFunds) },
-  { name: "Gold Investment", isValid: false, componentName: shallowRef(GoldInvestments) },
-  { name: "Fixed Deposit Info", isValid: false, componentName: shallowRef(FixedDeposit) },
-  { name: "India Post Office", isValid: false, componentName: shallowRef(IndiaPostOffice) },
-  { name: "Insurance Policy", isValid: false, componentName: shallowRef(InsurancePolicy) },
-]);
-
-const formData = ref([
-  { name: "", email: "", message: "" },
-  { name: "", email: "", message: "" },
-  { name: "", email: "", message: "" },
+  { name: "Client Information", componentName: shallowRef(ClientInformation) },
+  { name: "Mutual Fund", componentName: shallowRef(MutualFunds) },
+  { name: "Gold Investment", componentName: shallowRef(GoldInvestments) },
+  { name: "Fixed Deposit Info", componentName: shallowRef(FixedDeposit) },
+  { name: "India Post Office", componentName: shallowRef(IndiaPostOffice) },
+  { name: "Insurance Policy", componentName: shallowRef(InsurancePolicy) },
 ]);
 
 const currentStep = ref(0);
@@ -72,14 +68,11 @@ const prevStep = () => {
   }
 };
 
-const setCurrentStep = (index:any) => {
-  currentStep.value = index;
-};
-
-const isFormValid = (index:any) => {
-  return Object.values(formData.value[index]).every(
-    (value) => value.trim() !== ""
-  );
+const isTabDisabled = (index: any) => {
+  if (currentStep.value != 0) {
+    currentStep.value = index;
+  }
+  return true;
 };
 </script>
 

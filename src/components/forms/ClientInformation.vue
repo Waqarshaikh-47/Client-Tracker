@@ -28,18 +28,10 @@
       </div>
       <div class="d-flex justify-content-between mt-4 mb-4">
           <button
-            :disabled="legIndex == 0"
-            @click.prevent="previousButton"
-            type="button"
-            class="btn btn-secondary"
-          >
-            Previous
-          </button>
-          <button
           type="submit"
             class="btn btn-primary"
           >
-            {{ isLastForm ? "Save & Continue" : "Next" }}
+            {{ "Save & Continue" }}
           </button>
         </div>
     </form>

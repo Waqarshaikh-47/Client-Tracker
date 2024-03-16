@@ -1,19 +1,6 @@
 <template>
   <div class="container mt-5">
     <h1 class="text-light">Client Lists</h1>
-    <p class="text-success">data from firebase</p>
-    <div>
-      <ul class="list-group">
-        <li v-for="(user, index) in userData" :key="index" class="list-group-item">
-          <p><strong>Client Information for User {{ index + 1 }}</strong></p>
-          <ul>
-            <li v-for="(value, key) in user.clientInformationFormData" :key="key">
-              {{ key }}: {{ value }}
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </div>
     <ul class="nav nav-tabs mt-3" id="clientTabs" role="tablist">
       <li class="nav-item" role="presentation">
         <button class="nav-link active" id="active-client-tab" data-bs-toggle="tab" data-bs-target="#active-client" type="button" role="tab" aria-controls="active-client" aria-selected="true">Active Client List</button>
@@ -29,9 +16,9 @@
       <div class="tab-pane fade show active" id="active-client" role="tabpanel" aria-labelledby="active-client-tab">
         <ul class="list-group mt-3">
           <template v-if="activeClients.length">
-            <li v-for="(contact, index) in activeClients" :key="'active-' + index" class="list-group-item d-flex justify-content-between align-items-center">
+            <li v-for="(client, index) in activeClients" :key="'active-' + index" class="list-group-item d-flex justify-content-between align-items-center">
               <div>
-                <span class="fw-bold">{{ contact.name }}</span> - {{ contact.mobile }}
+                <span class="fw-bold">{{ client.clientInformationFormData.fullName }}</span> - {{ client.clientInformationFormData.email }}
               </div>
               <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
@@ -40,7 +27,6 @@
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   <li><a class="dropdown-item" @click="viewContact(index)">View</a></li>
                   <li><a class="dropdown-item" @click="editContact(index)">Edit</a></li>
-                  <li><a class="dropdown-item" @click="deleteContact(index, 'activeClients')">Delete</a></li>
                 </ul>
               </div>
             </li>
@@ -66,7 +52,6 @@
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   <li><a class="dropdown-item" @click="viewContact(index)">View</a></li>
                   <li><a class="dropdown-item" @click="editContact(index)">Edit</a></li>
-                  <li><a class="dropdown-item" @click="deleteContact(index, 'pendingClients')">Delete</a></li>
                 </ul>
               </div>
             </li>
@@ -83,21 +68,21 @@
 <script setup lang="ts">
 import { onBeforeMount, onMounted, ref } from 'vue';
 import queries from "@/plugins/db/queries/quries";
+import { useStore } from 'vuex';
 
+const store = useStore()
 
-interface Contact {
-  name: string;
-  mobile: string;
-}
-interface Client{
-
-}
-
-onBeforeMount(async()=>{
-  userData.value =await  queries.getAllClientsInformation();
-  console.log(userData);
-  
-})
+onBeforeMount(async () => {
+  try {
+    store.commit('setLoading', true);
+    const userData = await queries.getAllClientsInformation();
+      activeClients.value = userData;
+      store.commit('setLoading', false);
+  } catch (error:any) {
+    console.error('Error fetching client information:', error.message);
+    store.commit('setLoading', false);
+  }
+});
 
 
 onMounted(async()=>{
@@ -105,19 +90,10 @@ onMounted(async()=>{
 
 let userData = ref<any>([]);
 // Array of Active Clients
-const activeClients = ref<Contact[]>([
-  { name: 'John Doe', mobile: '1234567890' },
-  { name: 'Jane Smith', mobile: '9876543210' },
-  { name: 'Alice Johnson', mobile: '5551234567' },
-  { name: 'Bob Williams', mobile: '5559876543' }
-]);
+const activeClients = ref<any[]>([]);
 
 // Array of Pending Clients
-const pendingClients = ref<Contact[]>([
-  { name: 'Eva Brown', mobile: '3334445555' },
-  { name: 'Chris Lee', mobile: '6667778888' },
-  { name: 'Linda Davis', mobile: '9990001111' }
-]);
+const pendingClients = ref<any[]>([]);
 
 const viewContact = (index: number): void => {
   // You can implement the view functionality here
