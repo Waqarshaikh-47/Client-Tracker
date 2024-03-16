@@ -39,6 +39,7 @@
 import { ref, onMounted } from 'vue';
 import { ClientInformation } from '@/schemas/forms/ClientInformation';
 import { useStore } from 'vuex';
+import queries from '@/plugins/db/queries/quries';
 
 const store = useStore()
 const props = defineProps({
@@ -48,9 +49,35 @@ const props = defineProps({
 const emit = defineEmits(['next-step', 'prev-step'])
 const clientInformationData = new ClientInformation();
 
-const submitForm = () => {
+const saveClientsData = async() => {
+  const data = {
+    clientInformationFormData: { ...clientInformationData },
+    fixedDepositFormData: {  },
+    goldInvestmentFormData: {  },
+    indiaPostFormData: {  },
+    insurancePolicyFormData: { },
+    mutualFundFormData: {  },
+    startDate: Date(),
+    lastUpdated: Date(),
+    fillerInfo: {
+      name: store.state.user.displayName,
+      email: store.state.user.email,
+    }
+  }
+  console.log(data);
+  let clientId = await queries.addClientInformationData(data);
+  return clientId;
+  // Save data to database or perform other actions
+}
+const submitForm = async() => {
+  store.commit('setLoading', true);
   store.commit('setClientInformationFormData', clientInformationData)
-  emit('next-step')
+  let clientId = await saveClientsData();
+  store.commit('setClientId', clientId);
+  store.commit('setLoading', false);
+  setTimeout(() => {
+    emit('next-step');
+  }, 3500);
 };
 
 const previousButton = () => {
