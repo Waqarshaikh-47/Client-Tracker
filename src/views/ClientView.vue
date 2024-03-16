@@ -2,7 +2,7 @@
   <div class="container mt-5">
     <h1 class="text-light">Client Lists</h1>
     <p class="text-success">data from firebase</p>
-    <template v-if="userData.length">
+    <div>
       <ul class="list-group">
         <li v-for="(user, index) in userData" :key="index" class="list-group-item">
           <p><strong>Client Information for User {{ index + 1 }}</strong></p>
@@ -13,7 +13,7 @@
           </ul>
         </li>
       </ul>
-    </template>
+    </div>
     <ul class="nav nav-tabs mt-3" id="clientTabs" role="tablist">
       <li class="nav-item" role="presentation">
         <button class="nav-link active" id="active-client-tab" data-bs-toggle="tab" data-bs-target="#active-client" type="button" role="tab" aria-controls="active-client" aria-selected="true">Active Client List</button>
@@ -94,7 +94,7 @@ interface Client{
 }
 
 onBeforeMount(async()=>{
-  userData = await queries.getAllClientsInformation();
+  userData.value =await  queries.getAllClientsInformation();
   console.log(userData);
   
 })

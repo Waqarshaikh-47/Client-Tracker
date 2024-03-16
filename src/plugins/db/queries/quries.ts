@@ -37,8 +37,8 @@ const queries: any = {
 
   async getAllClientsInformation() {
     try {
-      const res = await firestore.collection("client-info").get();
       let data: any[] = [];
+      const res = await firestore.collection("client-info").get();
       res.forEach((userDoc: any) => {
         data.push(userDoc.data());
       });
