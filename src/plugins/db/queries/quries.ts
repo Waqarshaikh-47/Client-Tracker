@@ -39,8 +39,13 @@ const queries: any = {
     try {
       let data: any[] = [];
       const res = await firestore.collection("client-info").get();
+      
       res.forEach((userDoc: any) => {
-        data.push(userDoc.data());
+        let clientInfo = {
+          id:userDoc.id,
+          clientData:userDoc.data()
+        }
+        data.push(clientInfo);
       });
       return data;
     } catch (error) {

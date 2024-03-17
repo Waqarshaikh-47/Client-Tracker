@@ -3,53 +3,79 @@
     <h1 class="text-light">Client Lists</h1>
     <ul class="nav nav-tabs mt-3" id="clientTabs" role="tablist">
       <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="active-client-tab" data-bs-toggle="tab" data-bs-target="#active-client" type="button" role="tab" aria-controls="active-client" aria-selected="true">Active Client List</button>
+        <button class="nav-link active" id="active-client-tab" data-bs-toggle="tab" data-bs-target="#active-client"
+          type="button" role="tab" aria-controls="active-client" aria-selected="true">Active Client List</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link" id="pending-client-tab" data-bs-toggle="tab" data-bs-target="#pending-client" type="button" role="tab" aria-controls="pending-client" aria-selected="false">Pending Client List</button>
+        <button class="nav-link" id="pending-client-tab" data-bs-toggle="tab" data-bs-target="#pending-client"
+          type="button" role="tab" aria-controls="pending-client" aria-selected="false">Pending Client List</button>
       </li>
     </ul>
-    
+
     <!-- Tab Content -->
     <div class="tab-content" id="clientTabsContent">
       <!-- Active Client List Tab -->
       <div class="tab-pane fade show active" id="active-client" role="tabpanel" aria-labelledby="active-client-tab">
         <ul class="list-group mt-3">
           <template v-if="activeClients.length">
-            <li v-for="(client, index) in activeClients" :key="'active-' + index" class="list-group-item d-flex justify-content-between align-items-center">
-              <div>
-                <span class="fw-bold">{{ client.clientInformationFormData.fullName }}</span> - {{ client.clientInformationFormData.email }}
-              </div>
-              <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                  <i class="bi bi-three-dots"></i>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <li><a class="dropdown-item" @click="viewContact(index,client)">View</a></li>
-                </ul>
-              </div>
-            </li>
+            <table class="table table-dark">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Created at</th>
+                  <th>Last updated</th>
+                  <th>updated By</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(client, index) in activeClients" :key="'active-' + index">
+                  <td>
+                    <span class="fw-bold">{{ client.clientData.clientInformationFormData.fullName }}</span>
+                  </td>
+                  <td>{{ client.clientData.clientInformationFormData.email }}</td>
+                  <td>{{ formatDate(client.clientData.startDate) }}</td>
+                  <td>{{ formatDate(client.clientData.lastUpdated) }}</td>
+                  <td>{{ client.clientData.fillerInfo.email }}</td>
+                  <td>
+                    <div class="dropdown">
+                      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-three-dots"></i>
+                      </button>
+                      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <li><a class="dropdown-item" @click="viewContact(index, client)">View</a></li>
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </template>
+
           <template v-else>
             <li class="list-group-item">No active clients found.</li>
           </template>
         </ul>
       </div>
-      
+
       <!-- Pending Client List Tab -->
       <div class="tab-pane fade" id="pending-client" role="tabpanel" aria-labelledby="pending-client-tab">
         <ul class="list-group mt-3">
           <template v-if="pendingClients.length">
-            <li v-for="(contact, index) in pendingClients" :key="'pending-' + index" class="list-group-item d-flex justify-content-between align-items-center">
+            <li v-for="(contact, index) in pendingClients" :key="'pending-' + index"
+              class="list-group-item d-flex justify-content-between align-items-center">
               <div>
                 <span class="fw-bold">{{ contact.name }}</span> - {{ contact.mobile }}
               </div>
               <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                  data-bs-toggle="dropdown" aria-expanded="false">
                   <i class="bi bi-three-dots"></i>
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <li><a class="dropdown-item" @click="viewContact(index,contact)">View</a></li>
+                  <li><a class="dropdown-item" @click="viewContact(index, contact)">View</a></li>
                 </ul>
               </div>
             </li>
@@ -76,16 +102,18 @@ onBeforeMount(async () => {
   try {
     store.commit('setLoading', true);
     const userData = await queries.getAllClientsInformation();
-      activeClients.value = userData;
-      store.commit('setLoading', false);
-  } catch (error:any) {
+    console.log(userData);
+
+    activeClients.value = userData;
+    store.commit('setLoading', false);
+  } catch (error: any) {
     console.error('Error fetching client information:', error.message);
     store.commit('setLoading', false);
   }
 });
 
 
-onMounted(async()=>{
+onMounted(async () => {
 })
 
 let userData = ref<any>([]);
@@ -95,13 +123,13 @@ const activeClients = ref<any[]>([]);
 // Array of Pending Clients
 const pendingClients = ref<any[]>([]);
 
-const viewContact = (index: number,clientData:any): void => {
+const viewContact = (index: number, clientData: any): void => {
   // You can implement the view functionality here
   console.log("View Contact:", clientData);
   store.commit('setViewClientData', clientData);
   let getData = store.state.viewClientData
   console.log(getData.clientInformationFormData.fullName)
-  router.push({name:'client-details'})
+  router.push({ name: 'client-details' })
 };
 
 const editContact = (index: number): void => {
@@ -117,49 +145,63 @@ const deleteContact = (index: number, listType: string): void => {
     pendingClients.value.splice(index, 1);
   }
 };
+
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  const day = date.getDate();
+  const month = date.getMonth() + 1; // Adding 1 to get the correct month (zero-based index)
+  const year = date.getFullYear();
+
+  // Pad day and month with leading zero if necessary
+  const formattedDay = String(day).padStart(2, '0');
+  const formattedMonth = String(month).padStart(2, '0');
+
+  return `${formattedDay}/${formattedMonth}/${year}`;
+}
 </script>
 
 <style>
-  /* Custom Styles */
-  .nav-tabs {
-    background-color: #343a40;
-    border-radius: 5px;
-  }
-  
-  .nav-tabs .nav-link {
-    color: white;
-    border: 1px solid transparent;
-    border-radius: 0;
-  }
-  
-  .nav-tabs .nav-link.active {
-    background-color: #212529;
-    border-color: #212529;
-    color: #fff; /* Selected tab text color */
-  }
-  
-  .nav-tabs .nav-link:hover {
-    background-color: #454d55;
-  }
-  
-  .list-group-item {
-    background-color: #454d55;
-    border-color: #343a40;
-    color: white;
-  }
-  
-  .list-group-item:hover {
-    background-color: #495057;
-  }
-  
-  .dropdown-toggle::after {
-    display: none;
-  }
-  
-  .container {
-    background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
-    color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-  }
+/* Custom Styles */
+.nav-tabs {
+  background-color: #343a40;
+  border-radius: 5px;
+}
+
+.nav-tabs .nav-link {
+  color: white;
+  border: 1px solid transparent;
+  border-radius: 0;
+}
+
+.nav-tabs .nav-link.active {
+  background-color: #212529;
+  border-color: #212529;
+  color: #fff;
+  /* Selected tab text color */
+}
+
+.nav-tabs .nav-link:hover {
+  background-color: #454d55;
+}
+
+.list-group-item {
+  background-color: #454d55;
+  border-color: #343a40;
+  color: white;
+}
+
+.list-group-item:hover {
+  background-color: #495057;
+}
+
+.dropdown-toggle::after {
+  display: none;
+}
+
+.container {
+  background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
+  color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+}
 </style>
