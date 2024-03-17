@@ -41,7 +41,6 @@ const register = () => {
         // Signed in
         store.commit('setLoading', false);
         const user = userCredential.user;
-        console.log("user register successfully", user);
         emit('auth-success', user);
         })
         .catch((error) => {

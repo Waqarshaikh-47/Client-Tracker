@@ -240,7 +240,6 @@ const saveClientsData = () => {
     },
   };
 
-  console.log(data);
   queries.addClientInformationData(data);
 };
 

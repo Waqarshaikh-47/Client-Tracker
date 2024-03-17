@@ -51,7 +51,6 @@
   };
   
   onMounted(() => {
-    // console.log(userData.value);
     if(store.state.user.roles.includes('admin')){
         router.push('/notAuthorized');
     }

@@ -81,7 +81,7 @@
           Previous
         </button>
         <button type="submit" class="btn btn-primary">
-          {{ isLastForm ? "Save & Continue" : "Next" }}
+          Save & Continue
         </button>
       </div>
     </form>
@@ -89,7 +89,7 @@
 </template>
 
 <script setup language="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useStore } from 'vuex';
 import { MutualFundDetails } from "@/schemas/forms/MutualFundDetails";
 import queries from '@/plugins/db/queries/quries';
@@ -101,7 +101,10 @@ const props = defineProps({
 });
 const emit = defineEmits(["next-step", "prev-step"]);
 const mutualFundFormData = new MutualFundDetails();
-
+onMounted(()=>{
+  // Data initialization when field is not required
+  mutualFundFormData.remark = ''
+})
 const updateClientsData = async() => {
   let clientId = store.state.clientId;
   const data = {
@@ -112,18 +115,21 @@ const updateClientsData = async() => {
       email: store.state.user.email,
     }
   }
-  console.log("update",data);
   await queries.updateClientInformationData(clientId,data);
 }
 
-const submitForm = () => {
-  store.commit('setLoading', true);
-  store.commit("setMutualFundFormData", mutualFundFormData);
-  store.commit('setLoading', false);
-  updateClientsData();
-  setTimeout(() => {
-    emit("next-step");
-  }, 3500);
+const submitForm = async() => {
+  try {
+    store.commit('setLoading', true);
+    store.commit("setMutualFundFormData", mutualFundFormData);
+    await updateClientsData();
+    store.commit('setLoading', false);
+      emit("next-step");
+  } catch (error) {
+    // Show alert notification
+    store.commit('setLoading', false);
+    alert("Something went wrong. Please try again.");
+  }
 };
 
 const previousButton = () => {

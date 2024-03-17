@@ -57,7 +57,7 @@
           <option value="22 Carat">22 Carat</option>
           <option value="24 Carat">24 Carat</option>
         </select>
-        <div v-if="goldType != '22 Carat' && goldType != '24 Carat'">
+        <div v-if="goldInvestmentFormData.goldType != '22 Carat' && goldInvestmentFormData.goldType != '24 Carat'">
           <input v-model="goldInvestmentFormData.goldType" type="text" class="form-control" id="goldType" placeholder="Enter gold type" required>
         </div>
       </div>
@@ -71,56 +71,57 @@
           Previous
         </button>
         <button type="submit" class="btn btn-primary">
-          {{ isLastForm ? "Save & Continue" : "Next" }}
+          Save & Continue
         </button>
       </div>
     </form>
   </div>
 </template>
 
-<script setup language="ts">
+<script setup lang="ts">
 import { ref } from "vue";
 import { useStore } from 'vuex';
 import { GoldInvestmentDetails } from "@/schemas/forms/GoldInvestmentDetails";
+import { cloneDeep } from 'lodash';
 import queries from '@/plugins/db/queries/quries';
 
-
-const store = useStore()
+const store = useStore();
 const props = defineProps({
   legIndex: Number,
   isLastForm: Boolean,
 });
-const emit = defineEmits(["next-step", "prev-step"]);
-const goldInvestmentFormData = new GoldInvestmentDetails();
+const emit = defineEmits(["next-step","prev-step"]);
+const goldInvestmentFormData = ref(new GoldInvestmentDetails('',0,0,'',''));
+const originalData = cloneDeep(goldInvestmentFormData.value);
 
-const name = ref("");
-const investmentValue = ref("");
-const quantity = ref("");
-const investmentDate = ref("");
-const goldType = ref("");
-
-
-const updateClientsData = async() => {
+const updateClientsData = async () => {
   let clientId = store.state.clientId;
+  let newData = cloneDeep(goldInvestmentFormData.value);
   const data = {
-    goldInvestmentFormData: { ...goldInvestmentFormData },
+    goldInvestmentFormData: { ...newData },
     lastUpdated: Date(),
     fillerInfo: {
       name: store.state.user.displayName,
       email: store.state.user.email,
     }
-  }
-  console.log("update",data);
-  await queries.updateClientInformationData(clientId,data);
-}
-const submitForm = () => {
-  store.commit('setLoading', true);
-  store.commit("setGoldInvestmentFormData", goldInvestmentFormData);
-  store.commit('setLoading', false);
-  updateClientsData();
-  setTimeout(() => {
+  };
+  await queries.updateClientInformationData(clientId, data);
+};
+
+const submitForm = async () => {
+  try {
+    store.commit('setLoading', true);
+    store.commit("setGoldInvestmentFormData", goldInvestmentFormData.value);
+    await updateClientsData();
+    store.commit('setLoading', false);
     emit("next-step");
-  }, 3500);
+  } catch (error) {
+    // Show alert notification
+    alert("Something went wrong. Please try again.");
+    store.commit('setLoading', false);
+    // Reset form to original values
+    Object.assign(goldInvestmentFormData.value, cloneDeep(originalData));
+  }
 };
 
 const previousButton = () => {
