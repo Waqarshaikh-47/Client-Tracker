@@ -99,6 +99,7 @@
 import { ref } from "vue";
 import { useStore } from 'vuex';
 import { InsurancePolicyDetails } from "@/schemas/forms/InsurancePolicyDetails";
+import queries from '@/plugins/db/queries/quries';
 
 const store = useStore()
 
@@ -109,30 +110,25 @@ const props = defineProps({
 const emit = defineEmits(["next-step", "prev-step"]);
 const insuranceFormData = new InsurancePolicyDetails();
 
-const saveClientsData = () => {
+const updateClientsData = async() => {
+  let clientId = store.state.clientId;
   const data = {
-    clientInformationFormData: { ...store.state.clientInformationFormData },
-    fixedDepositFormData: { ...store.state.fixedDepositFormData },
-    goldInvestmentFormData: { ...store.state.goldInvestmentFormData },
-    indiaPostFormData: { ...store.state.indiaPostFormData },
-    insurancePolicyFormData: { ...store.state.insurancePolicyFormData },
-    mutualFundFormData: { ...store.state.mutualFundFormData },
-    timestamp: Date.now(),
+    insurancePolicyFormData: { ...insuranceFormData },
+    lastUpdated: Date(),
     fillerInfo: {
       name: store.state.user.displayName,
       email: store.state.user.email,
     }
   }
-
-  console.log(data);
-  // Save data to database or perform other actions
+  console.log("update",data);
+  await queries.updateClientInformationData(clientId,data);
 }
 
 const submitForm = () => {
+  store.commit('setLoading', true);
   store.commit("setInsurancePolicyFormData", insuranceFormData);
-
-  saveClientsData();
-  // emit("next-step");
+  store.commit('setLoading', false);
+  updateClientsData();
 };
 
 const previousButton = () => {

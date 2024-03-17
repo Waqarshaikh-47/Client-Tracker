@@ -87,6 +87,7 @@
 import { ref } from "vue";
 import { useStore } from 'vuex';
 import { FixedDepositDetails } from "@/schemas/forms/FixedDeposit";
+import queries from '@/plugins/db/queries/quries';
 
 const store = useStore()
 const props = defineProps({
@@ -96,10 +97,28 @@ const props = defineProps({
 const emit = defineEmits(["next-step", "prev-step"]);
 const fixedDepositFormData = new FixedDepositDetails();
 
+const updateClientsData = async() => {
+  let clientId = store.state.clientId;
+  const data = {
+    fixedDepositFormData: { ...fixedDepositFormData },
+    lastUpdated: Date(),
+    fillerInfo: {
+      name: store.state.user.displayName,
+      email: store.state.user.email,
+    }
+  }
+  console.log("update",data);
+  await queries.updateClientInformationData(clientId,data);
+}
 const submitForm = () => {
+  store.commit('setLoading', true);
+
   store.commit("setFixedDepositFormData", fixedDepositFormData);
-  emit("next-step");
-};
+  store.commit('setLoading', false);
+  updateClientsData();
+  setTimeout(() => {
+    emit("next-step");
+  }, 3500);};
 
 const previousButton = () => {
   emit("prev-step");

@@ -82,6 +82,7 @@
 import { ref } from "vue";
 import { useStore } from 'vuex';
 import { GoldInvestmentDetails } from "@/schemas/forms/GoldInvestmentDetails";
+import queries from '@/plugins/db/queries/quries';
 
 
 const store = useStore()
@@ -98,9 +99,28 @@ const quantity = ref("");
 const investmentDate = ref("");
 const goldType = ref("");
 
+
+const updateClientsData = async() => {
+  let clientId = store.state.clientId;
+  const data = {
+    goldInvestmentFormData: { ...goldInvestmentFormData },
+    lastUpdated: Date(),
+    fillerInfo: {
+      name: store.state.user.displayName,
+      email: store.state.user.email,
+    }
+  }
+  console.log("update",data);
+  await queries.updateClientInformationData(clientId,data);
+}
 const submitForm = () => {
+  store.commit('setLoading', true);
   store.commit("setGoldInvestmentFormData", goldInvestmentFormData);
-  emit("next-step");
+  store.commit('setLoading', false);
+  updateClientsData();
+  setTimeout(() => {
+    emit("next-step");
+  }, 3500);
 };
 
 const previousButton = () => {

@@ -3,6 +3,7 @@ import { createStore } from "vuex";
 // Define your initial state
 const state = {
   user: {},
+  clientId:'',
   clientInformationFormData: {
     fullName: "",
     panNumber: "",
@@ -62,6 +63,9 @@ const state = {
 const mutations = {
   setUser(state: any, data: object) {
     state.user = data;
+  },
+  setClientId(state: any, id:string){
+    state.clientId = id;
   },
   setClientInformationFormData(state: any, data: object) {
     state.clientInformationFormData = data;

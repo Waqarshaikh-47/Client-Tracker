@@ -51,16 +51,30 @@ const queries: any = {
 
   async addClientInformationData(data: object) {
     try {
-      await firestore.collection("client-info").add({ ...data });
-      console.log("User added successfully");
+      let res = await firestore.collection("client-info").add({ ...data });
+      console.log("User added successfully", res);
       alert("User added successfully");
+      return res.id;
     } catch (error) {
       alert("error" + error);
       console.error("Error adding user:", error);
       throw error;
     }
   },
-  // Define more query functions here
+  async updateClientInformationData(clientId: string, updatedFields: object) {
+    try {
+      await firestore
+        .collection("client-info")
+        .doc(clientId)
+        .update(updatedFields);
+      console.log("Client information updated successfully");
+      alert("Client information updated successfully");
+    } catch (error) {
+      alert("Error updating client information: " + error);
+      console.error("Error updating client information:", error);
+      throw error;
+    }
+  },
 };
 
 export default queries;
