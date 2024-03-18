@@ -170,7 +170,6 @@ onBeforeMount(async () => {
   try {
     store.commit("setLoading", true);
     const userData = await queries.getAllClientsInformation();
-    console.log(userData)
     filteredActiveClients.value = userData;
     activeClients = userData;
     store.commit("setLoading", false);
@@ -205,10 +204,10 @@ const searchClients = (tabName:string) => {
     if (searchQuery.value) {
       let filterValue = filter(activeClients, (client) => {
         return (
-          client.clientInformationFormData.fullName
+          client.clientData.clientInformationFormData.fullName
             .toLowerCase()
             .includes(searchQuery.value.toLowerCase()) ||
-          client.clientInformationFormData.panNumber
+          client.clientData.clientInformationFormData.panNumber
             .toLowerCase()
             .includes(searchQuery.value.toLowerCase())
         );
@@ -221,11 +220,13 @@ const searchClients = (tabName:string) => {
     // Filter for pending list
     if (searchQuery.value) {
       let filterValue = filter(activeClients, (client) => {
+        console.log('search',client);
+        
         return (
-          client.clientInformationFormData.fullName
+          client.clientData.clientInformationFormData.fullName
             .toLowerCase()
             .includes(searchQuery.value.toLowerCase()) ||
-          client.clientInformationFormData.panNumber
+          client.clientData.clientInformationFormData.panNumber
             .toLowerCase()
             .includes(searchQuery.value.toLowerCase())
         );
