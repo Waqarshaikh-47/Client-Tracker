@@ -64,15 +64,15 @@
         <ul class="list-group mt-3">
           <template v-if="filteredActiveClients.length">
             <li
-              v-for="(client, index) in filteredActiveClients"
-              :key="'active-' + index"
+              v-for="(activeClient, activeIndex) in filteredActiveClients"
+              :key="'active-' + activeIndex"
               class="list-group-item d-flex justify-content-between align-items-center"
             >
               <div>
                 <span class="fw-bold">{{
-                  client.clientInformationFormData.fullName
+                  activeClient.clientData.clientInformationFormData.fullName
                 }}</span>
-                - {{ client.clientInformationFormData.email }}
+                - {{ activeClient.clientData.clientInformationFormData.email }}
               </div>
               <div class="dropdown">
                 <button
@@ -86,7 +86,7 @@
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   <li>
-                    <a class="dropdown-item" @click="viewContact(index, client)"
+                    <a class="dropdown-item" @click="viewContact(activeIndex, activeClient.clientData)"
                       >View</a
                     >
                   </li>
@@ -94,6 +94,7 @@
               </div>
             </li>
           </template>
+
           <template v-else>
             <li class="list-group-item">No active clients found.</li>
           </template>
@@ -169,6 +170,7 @@ onBeforeMount(async () => {
   try {
     store.commit("setLoading", true);
     const userData = await queries.getAllClientsInformation();
+    console.log(userData)
     filteredActiveClients.value = userData;
     activeClients = userData;
     store.commit("setLoading", false);
@@ -248,6 +250,19 @@ const deleteContact = (index: number, listType: string): void => {
     pendingClients.splice(index, 1);
   }
 };
+
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  const day = date.getDate();
+  const month = date.getMonth() + 1; // Adding 1 to get the correct month (zero-based index)
+  const year = date.getFullYear();
+
+  // Pad day and month with leading zero if necessary
+  const formattedDay = String(day).padStart(2, '0');
+  const formattedMonth = String(month).padStart(2, '0');
+
+  return `${formattedDay}/${formattedMonth}/${year}`;
+}
 </script>
 
 <style>
