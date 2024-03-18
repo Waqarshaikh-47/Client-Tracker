@@ -9,24 +9,26 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-6" @click="$router.push({name:'new-client'})">
-          <div class="card shadow">
-            <div class="card-body">
-              <h5 class="card-title">New Client</h5>
-              <p class="card-text">This is the first card.</p>
+      <template v-if="roles.includes('write')">
+        <div class="row">
+          <div class="col-md-6" @click="$router.push({name:'new-client'})">
+            <div class="card shadow">
+              <div class="card-body">
+                <h5 class="card-title">New Client</h5>
+                <p class="card-text">This is the first card.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6" @click="$router.push({name:'clients'})">
+            <div class="card shadow">
+              <div class="card-body">
+                <h5 class="card-title">View Clients</h5>
+                <p class="card-text">This is the second card.</p>
+              </div>
             </div>
           </div>
         </div>
-        <div class="col-md-6" @click="$router.push({name:'clients'})">
-          <div class="card shadow">
-            <div class="card-body">
-              <h5 class="card-title">View Clients</h5>
-              <p class="card-text">This is the second card.</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      </template>
       <!-- Only for admin users -->
       <template v-if="roles.includes('admin')">
         <div class="row">
