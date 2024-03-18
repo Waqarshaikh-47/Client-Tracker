@@ -53,7 +53,7 @@
           class="form-control"
           id="startDate"
           required
-          style="max-width: 200px;"
+          style="max-width: 200px"
         />
       </div>
       <div class="mb-3">
@@ -64,7 +64,7 @@
           class="form-control"
           id="tenureEndDate"
           required
-          style="max-width: 200px;"
+          style="max-width: 200px"
         />
       </div>
       <div class="mb-3">
@@ -106,6 +106,7 @@ const props = defineProps({
 const emit = defineEmits(["next-step", "prev-step"]);
 const indiaPostFormData = ref(new IndiaPostOfficeDetails());
 const isEditing = ref(false);
+const currentFormInfo = store.state.viewClientData.indiaPostFormData;
 
 const submitForm = () => {
   store.commit("setIndiaPostFormData", indiaPostFormData.value);
@@ -116,7 +117,7 @@ const toggleEditMode = () => {
   isEditing.value = !isEditing.value;
   if (!isEditing.value) {
     // Reset form data if cancelling edit mode
-    indiaPostFormData.value = new IndiaPostOfficeDetails();
+    // indiaPostFormData.value = new IndiaPostOfficeDetails();
   }
 };
 
@@ -127,11 +128,13 @@ const previousButton = () => {
 // Fetch initial India Post Office data or set from store
 const fetchIndiaPostData = () => {
   // Simulated data for example
-  indiaPostFormData.value.name = "India Post Office Name";
-  indiaPostFormData.value.annualInterestRate = 5;
-  indiaPostFormData.value.startDate = "2023-01-15";
-  indiaPostFormData.value.tenureEndDate = "2025-01-15";
-  indiaPostFormData.value.compoundingFrequency = "monthly";
+  indiaPostFormData.value = new IndiaPostOfficeDetails(
+    currentFormInfo.name,
+    currentFormInfo.annualInterestRate,
+    currentFormInfo.startDate,
+    currentFormInfo.tenureEndDate,
+    currentFormInfo.compoundingFrequency
+  );
 };
 
 fetchIndiaPostData();

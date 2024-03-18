@@ -34,7 +34,6 @@
       .then((userCredential) => {
         store.commit('setLoading', false);
         const user = userCredential.user;
-        console.log("user register successfully", user);
         router.push({ name: 'home' });
         emit('sign-auth-success');
       })

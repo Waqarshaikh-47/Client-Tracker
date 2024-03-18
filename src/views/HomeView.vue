@@ -70,13 +70,11 @@ const roles = ref<string[]>([])
 
 // Call the fetchData function to fetch users when the component is mounted
 onMounted(async () => {
-  console.log(store.state.user.email);
   const userData = store.state.user;
   const userRoleData = await queries.fetchUserDataByEmail(userData.email);
   userData.roles = userRoleData[0].role;
   userData.displayName =userRoleData[0].name;
   store.commit('setUser',userData)
-  console.log(userData);
   roles.value = userData.roles;
 });
 

@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, shallowRef } from "vue";
+import { ref, shallowRef, inject, onBeforeUnmount } from "vue";
 import ClientInformation from "@/components/viewClientForms/ClientInformation.vue";
 import MutualFunds from "@/components/viewClientForms/MutualFunds.vue";
 import GoldInvestments from "@/components/viewClientForms/GoldInvestments.vue";
@@ -45,6 +45,7 @@ import FixedDeposit from "@/components/viewClientForms/FixedDeposit.vue";
 import IndiaPostOffice from "@/components/viewClientForms/IndiaPostOffice.vue";
 import InsurancePolicy from "@/components/viewClientForms/InsurancePolicy.vue";
 
+const store:any = inject('store')
 const steps = ref([
   { name: "Client Information", componentName: shallowRef(ClientInformation) },
   { name: "Mutual Fund", componentName: shallowRef(MutualFunds) },
@@ -53,6 +54,10 @@ const steps = ref([
   { name: "India Post Office", componentName: shallowRef(IndiaPostOffice) },
   { name: "Insurance Policy", componentName: shallowRef(InsurancePolicy) },
 ]);
+
+onBeforeUnmount(() => {
+  store.commit("setViewClientData", '');
+});
 
 const currentStep = ref(0);
 

@@ -18,7 +18,7 @@
       </div>
       <div class="mb-3">
         <label for="planType" class="form-label">Plan Type</label>
-        <select v-model="insuranceFormData.planType" class="form-select" id="planType" required>
+        <select v-model="insuranceFormData.planType" class="form-select" id="planType" :required="insuranceFormData.planType ? false : true">
           <option value="Traditional Plan">Traditional Plan</option>
           <option value="ULIP">ULIP</option>
           <option value="Term Plan">Term Plan</option>
@@ -96,10 +96,11 @@
 </template>
 
 <script setup language="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useStore } from 'vuex';
 import { InsurancePolicyDetails } from "@/schemas/forms/InsurancePolicyDetails";
 import queries from '@/plugins/db/queries/quries';
+import cloneDeep from 'lodash/cloneDeep';
 
 const store = useStore()
 
@@ -108,27 +109,42 @@ const props = defineProps({
   isLastForm: Boolean,
 });
 const emit = defineEmits(["next-step", "prev-step"]);
-const insuranceFormData = new InsurancePolicyDetails();
+const insuranceFormData = ref(new InsurancePolicyDetails());
 
+onMounted(()=>{
+  // Data initialization when field is not required
+  insuranceFormData.value.remark = ''
+})
 const updateClientsData = async() => {
-  let clientId = store.state.clientId;
-  const data = {
-    insurancePolicyFormData: { ...insuranceFormData },
-    lastUpdated: Date(),
-    fillerInfo: {
-      name: store.state.user.displayName,
-      email: store.state.user.email,
+  try {
+    store.commit('setLoading', true);
+    let clientId = store.state.clientId;
+    let newData = cloneDeep(insuranceFormData.value)
+    const data = {
+      insurancePolicyFormData: {...newData},
+      lastUpdated: Date(),
+      fillerInfo: {
+        name: store.state.user.displayName,
+        email: store.state.user.email,
+      }
     }
+    await queries.updateClientInformationData(clientId,data);
+    store.commit('setLoading', false);
+  } catch (error) {
+    store.commit('setLoading', false);
+    alert("Something went wrong. Please try again.");
   }
-  console.log("update",data);
-  await queries.updateClientInformationData(clientId,data);
 }
 
 const submitForm = () => {
-  store.commit('setLoading', true);
-  store.commit("setInsurancePolicyFormData", insuranceFormData);
-  store.commit('setLoading', false);
-  updateClientsData();
+  try {
+    store.commit("setInsurancePolicyFormData", {...cloneDeep(insuranceFormData.value)});
+    updateClientsData();
+  } catch (error) {
+    console.error("Error setting insurance policy form data:", error);
+    alert("Something went wrong. Please try again.");
+    store.commit('setLoading', false);
+  } 
 };
 
 const previousButton = () => {

@@ -47,7 +47,7 @@ const props = defineProps({
   isLastForm: Boolean,
 })
 const emit = defineEmits(['next-step', 'prev-step'])
-const clientInformationData = new ClientInformation();
+const clientInformationData = new ClientInformation('','','','','');
 
 const saveClientsData = async() => {
   const data = {
@@ -64,20 +64,23 @@ const saveClientsData = async() => {
       email: store.state.user.email,
     }
   }
-  console.log(data);
   let clientId = await queries.addClientInformationData(data);
   return clientId;
   // Save data to database or perform other actions
 }
+
 const submitForm = async() => {
-  store.commit('setLoading', true);
-  store.commit('setClientInformationFormData', clientInformationData)
-  let clientId = await saveClientsData();
-  store.commit('setClientId', clientId);
-  store.commit('setLoading', false);
-  setTimeout(() => {
-    emit('next-step');
-  }, 3500);
+  try {
+    store.commit('setLoading', true);
+    store.commit('setClientInformationFormData', clientInformationData)
+    let clientId = await saveClientsData();
+    store.commit('setClientId', clientId);
+    store.commit('setLoading', false);
+      emit('next-step');
+  } catch (error) {
+    // Show alert notification
+    alert("Something went wrong. Please try again.");
+  }
 };
 
 const previousButton = () => {
@@ -85,7 +88,6 @@ const previousButton = () => {
 }
 
 onMounted(() => {
-  // console.log(clientInformationData);
 })
 
 </script>

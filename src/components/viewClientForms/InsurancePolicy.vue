@@ -49,7 +49,7 @@
           class="form-control"
           id="startDate"
           required
-          style="max-width: 200px;"
+          style="max-width: 200px"
         />
       </div>
       <div class="mb-3">
@@ -186,7 +186,7 @@
           class="form-control"
           id="maturityDate"
           required
-          style="max-width: 200px;"
+          style="max-width: 200px"
         />
       </div>
       <div class="mb-3">
@@ -215,14 +215,14 @@ import { InsurancePolicyDetails } from "@/schemas/forms/InsurancePolicyDetails";
 import queries from "@/plugins/db/queries/quries";
 
 const store = useStore();
+const currentFormInfo = store.state.viewClientData.insurancePolicyFormData;
 
 const props = defineProps({
   legIndex: Number,
   isLastForm: Boolean,
 });
 const emit = defineEmits(["next-step", "prev-step"]);
-const insuranceFormData =
-  ref < InsurancePolicyDetails > new InsurancePolicyDetails();
+const insuranceFormData = ref(new InsurancePolicyDetails());
 const isEditing = ref(false);
 
 const saveClientsData = () => {
@@ -240,7 +240,6 @@ const saveClientsData = () => {
     },
   };
 
-  console.log(data);
   queries.addClientInformationData(data);
 };
 
@@ -258,6 +257,27 @@ const toggleEditMode = () => {
 const previousButton = () => {
   emit("prev-step");
 };
+
+const fetchInsuranceFormData = () => {
+  // Simulated data for example
+  insuranceFormData.value = new InsurancePolicyDetails(
+    currentFormInfo.name,
+    currentFormInfo.startDate,
+    currentFormInfo.policyNumber,
+    currentFormInfo.planType,
+    currentFormInfo.companyName,
+    currentFormInfo.planName,
+    currentFormInfo.paymentMode,
+    currentFormInfo.premiumAmount,
+    currentFormInfo.sumAssured,
+    currentFormInfo.premiumPayTerm,
+    currentFormInfo.policyTerm,
+    currentFormInfo.maturityDate,
+    currentFormInfo.remark
+  );
+};
+
+fetchInsuranceFormData();
 </script>
 
 <style scoped>

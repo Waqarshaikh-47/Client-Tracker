@@ -14,6 +14,7 @@
     "@types/bootstrap": "^5.2.10",
     "bootstrap": "^5.3.3",
     "firebase": "^10.8.1",
+    "lodash": "^4.17.21",
     "pinia": "^2.1.7",
     "rollup": "^4.12.1",
     "vue": "^3.4.21",
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "@tsconfig/node20": "^20.1.2",
+    "@types/lodash": "^4.17.0",
     "@types/node": "^20.11.10",
     "@vitejs/plugin-vue": "^5.0.3",
     "@vitejs/plugin-vue-jsx": "^3.1.0",

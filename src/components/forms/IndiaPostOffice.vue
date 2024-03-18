@@ -75,7 +75,7 @@
           Previous
         </button>
         <button type="submit" class="btn btn-primary">
-          {{ isLastForm ? "Save & Continue" : "Next" }}
+         Save & Continue
         </button>
       </div>
     </form>
@@ -97,31 +97,43 @@ const emit = defineEmits(["next-step", "prev-step"]);
 const indiaPostFormData = new IndiaPostOfficeDetails();
 
 const updateClientsData = async() => {
-  let clientId = store.state.clientId;
-  const data = {
-    indiaPostFormData: { ...indiaPostFormData },
-    lastUpdated: Date(),
-    fillerInfo: {
-      name: store.state.user.displayName,
-      email: store.state.user.email,
+  try {
+    let clientId = store.state.clientId;
+    const data = {
+      indiaPostFormData: { ...indiaPostFormData },
+      lastUpdated: Date(),
+      fillerInfo: {
+        name: store.state.user.displayName,
+        email: store.state.user.email,
+      }
     }
+    await queries.updateClientInformationData(clientId,data);
+  } catch (error) {
+    alert("Something went wrong. Please try again.");
+    // You can handle the error here, like showing a toast message
+    // For now, let's re-throw the error to propagate it
   }
-  console.log("update",data);
-  await queries.updateClientInformationData(clientId,data);
 }
-const submitForm = () => {
-  store.commit('setLoading', true);
-  store.commit("setIndiaPostFormData", indiaPostFormData);
-  store.commit('setLoading', false);
-  updateClientsData();
-  setTimeout(() => {
+
+const submitForm = async() => {
+  try {
+    store.commit('setLoading', true);
+    store.commit("setIndiaPostFormData", indiaPostFormData);
+    await updateClientsData();
+    store.commit('setLoading', false);
     emit("next-step");
-  }, 3500);};
+  } catch (error) {
+    store.commit('setLoading', false);
+    // You can handle the error here, like showing a toast message
+    // For now, let's re-throw the error to propagate it
+  }
+};
 
 const previousButton = () => {
   emit("prev-step");
 };
 </script>
+
 <style scoped>
 .btn-primary {
   background-color: #3d444b;

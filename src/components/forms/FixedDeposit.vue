@@ -98,27 +98,40 @@ const emit = defineEmits(["next-step", "prev-step"]);
 const fixedDepositFormData = new FixedDepositDetails();
 
 const updateClientsData = async() => {
-  let clientId = store.state.clientId;
-  const data = {
-    fixedDepositFormData: { ...fixedDepositFormData },
-    lastUpdated: Date(),
-    fillerInfo: {
-      name: store.state.user.displayName,
-      email: store.state.user.email,
+  try {
+    let clientId = store.state.clientId;
+    const data = {
+      fixedDepositFormData: { ...fixedDepositFormData },
+      lastUpdated: Date(),
+      fillerInfo: {
+        name: store.state.user.displayName,
+        email: store.state.user.email,
+      }
     }
+    await queries.updateClientInformationData(clientId,data);
+  } catch (error) {
+    console.error("Error updating client data:", error);
+    // You can handle the error here, like showing a toast message
+    // For now, let's re-throw the error to propagate it
+    throw error;
   }
-  console.log("update",data);
-  await queries.updateClientInformationData(clientId,data);
 }
-const submitForm = () => {
-  store.commit('setLoading', true);
 
-  store.commit("setFixedDepositFormData", fixedDepositFormData);
-  store.commit('setLoading', false);
-  updateClientsData();
-  setTimeout(() => {
-    emit("next-step");
-  }, 3500);};
+const submitForm = async() => {
+  try {
+    store.commit('setLoading', true);
+    store.commit("setFixedDepositFormData", fixedDepositFormData);
+    await updateClientsData();
+    store.commit('setLoading', false);
+      emit("next-step");
+  } catch (error) {
+    console.error("Error submitting form:", error);
+    store.commit('setLoading', false);
+    // You can handle the error here, like showing a toast message
+    // For now, let's re-throw the error to propagate it
+    throw error;
+  }
+};
 
 const previousButton = () => {
   emit("prev-step");

@@ -67,7 +67,7 @@
           class="form-control"
           id="investmentDate"
           required
-          style="max-width: 200px;"
+          style="max-width: 200px"
         />
       </div>
       <div class="mb-3">
@@ -116,6 +116,7 @@ const props = defineProps({
   legIndex: Number,
   isLastForm: Boolean,
 });
+const currentFormInfo = store.state.viewClientData.goldInvestmentFormData;
 const emit = defineEmits(["next-step", "prev-step"]);
 const goldInvestmentFormData = ref(new GoldInvestmentDetails());
 const isEditing = ref(false);
@@ -129,7 +130,7 @@ const toggleEditMode = () => {
   isEditing.value = !isEditing.value;
   if (!isEditing.value) {
     // Reset form data if cancelling edit mode
-    goldInvestmentFormData.value = new GoldInvestmentDetails();
+    // goldInvestmentFormData.value = new GoldInvestmentDetails();
   }
 };
 
@@ -140,11 +141,13 @@ const previousButton = () => {
 // Fetch initial gold investment data or set from store
 const fetchGoldInvestmentData = () => {
   // Simulated data for example
-  goldInvestmentFormData.value.name = "Gold Investment Name";
-  goldInvestmentFormData.value.investmentValue = 5000;
-  goldInvestmentFormData.value.quantity = 10;
-  goldInvestmentFormData.value.investmentDate = "2023-03-15";
-  goldInvestmentFormData.value.goldType = "22 Carat";
+  goldInvestmentFormData.value = new GoldInvestmentDetails(
+    currentFormInfo.name,
+    currentFormInfo.investmentValue,
+    currentFormInfo.quantity,
+    currentFormInfo.investmentDate,
+    currentFormInfo.goldType
+  );
 };
 
 fetchGoldInvestmentData();

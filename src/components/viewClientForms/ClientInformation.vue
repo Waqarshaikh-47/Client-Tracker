@@ -45,7 +45,7 @@
           class="form-control"
           id="dob"
           required
-          style="max-width: 200px;"
+          style="max-width: 200px"
         />
       </div>
       <div class="mb-3">
@@ -90,6 +90,7 @@ const props = defineProps({
   isLastForm: Boolean,
 });
 const emit = defineEmits(["next-step", "prev-step"]);
+const currentFormInfo = store.state.viewClientData.clientInformationFormData;
 const clientInformationData = ref(new ClientInformation());
 const isEditing = ref(false);
 
@@ -100,10 +101,10 @@ const submitForm = () => {
 
 const toggleEditMode = () => {
   isEditing.value = !isEditing.value;
-  if (!isEditing.value) {
-    // Reset form data if cancelling edit mode
-    clientInformationData.value = new ClientInformation();
-  }
+  // if (!isEditing.value) {
+  //   // Reset form data if cancelling edit mode
+  //   clientInformationData.value = new ClientInformation();
+  // }
 };
 
 const previousButton = () => {
@@ -114,11 +115,13 @@ const previousButton = () => {
 // This assumes you have a method to fetch the data, like an API call or Vuex action
 const fetchClientInformation = () => {
   // Simulated data for example
-  clientInformationData.value.fullName = "John Doe";
-  clientInformationData.value.panNumber = "ABCDE1234F";
-  clientInformationData.value.dob = "1990-01-01";
-  clientInformationData.value.email = "johndoe@example.com";
-  clientInformationData.value.phone = "1234567890";
+  clientInformationData.value = new ClientInformation(
+    currentFormInfo.fullName,
+    currentFormInfo.panNumber,
+    currentFormInfo.dob,
+    currentFormInfo.email,
+    currentFormInfo.phone
+  );
 };
 
 fetchClientInformation();

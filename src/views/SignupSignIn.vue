@@ -62,8 +62,6 @@ onMounted(() => {
 
 const authSuccess = (user: any) => {
   // Handle the event here
-  console.log('Authentication successful');
-  console.log('Authentication successful', user);
   store.commit('setUser', user)
   authModal.value.hide();
   router.push({name:'home'})
