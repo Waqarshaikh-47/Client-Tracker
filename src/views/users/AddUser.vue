@@ -1,36 +1,50 @@
 <template>
-    <div class="container mt-5">
-      <h1>New User Information</h1>
-      <p class="text-danger">please fill this details carefully</p>
-      <form @submit.prevent="submitForm">
-        <div class="mb-3">
-          <label for="displayName" class="form-label">Display Name</label>
-          <input v-model="userData.displayName" type="text" class="form-control" id="displayName" placeholder="Enter user's display name" required>
+  <div class="container mt-5">
+    <h1 class="mb-4">Add New Employee</h1>
+    <p class="text-danger">Please fill in these details carefully:</p>
+    <form @submit.prevent="submitForm">
+      <div class="mb-3">
+        <label for="displayName" class="form-label">Employee's Full Name</label>
+        <input
+          v-model="userData.displayName"
+          type="text"
+          class="form-control"
+          id="displayName"
+          placeholder="Enter employee's full name"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Employee's Email</label>
+        <input
+          v-model="userData.email"
+          type="email"
+          class="form-control"
+          id="email"
+          placeholder="Enter employee's email address"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Employee Roles</label>
+        <div v-for="(role, index) in roles" :key="index" class="form-check">
+          <input
+            v-model="selectedRoles"
+            :value="role"
+            type="checkbox"
+            class="form-check-input"
+            :id="'role_' + index"
+          />
+          <label :for="'role_' + index" class="form-check-label">{{ role }}</label>
         </div>
-        <div class="mb-3">
-          <label for="email" class="form-label">Email Address</label>
-          <input v-model="userData.email" type="email" class="form-control" id="email" placeholder="Enter user's email address" required>
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Roles</label>
-          <div v-for="(role, index) in roles" :key="index" class="form-check">
-            <input v-model="userData.roles" :value="role" type="checkbox" class="form-check-input" :id="'role_' + index">
-            <label :for="'role_' + index" class="form-check-label">{{ role }}</label>
-          </div>
-        </div>
-        <div class="d-flex justify-content-between mt-4 mb-4">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            @click="submitForm"
-          >
-            Submit
-          </button>
+      </div>
+      <div class="d-grid gap-2 mt-4">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  </div>
+</template>
 
-        </div>
-      </form>
-    </div>
-  </template>
   
   <script setup lang="ts">
   import { ref, onMounted } from 'vue';
