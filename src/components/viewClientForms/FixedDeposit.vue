@@ -64,7 +64,7 @@
           class="form-control"
           id="startDate"
           required
-          style="max-width: 200px;"
+          style="max-width: 200px"
         />
       </div>
       <div class="mb-3">
@@ -105,6 +105,7 @@ const props = defineProps({
 const emit = defineEmits(["next-step", "prev-step"]);
 const fixedDepositFormData = ref(new FixedDepositDetails());
 const isEditing = ref(false);
+const currentFormInfo = store.state.viewClientData.fixedDepositFormData;
 
 const submitForm = () => {
   store.commit("setFixedDepositFormData", fixedDepositFormData.value);
@@ -115,7 +116,7 @@ const toggleEditMode = () => {
   isEditing.value = !isEditing.value;
   if (!isEditing.value) {
     // Reset form data if cancelling edit mode
-    fixedDepositFormData.value = new FixedDepositDetails();
+    // fixedDepositFormData.value = new FixedDepositDetails();
   }
 };
 
@@ -126,11 +127,14 @@ const previousButton = () => {
 // Fetch initial fixed deposit data or set from store
 const fetchFixedDepositData = () => {
   // Simulated data for example
-  fixedDepositFormData.value.name = "Fixed Deposit Name";
-  fixedDepositFormData.value.investmentAmount = 10000;
-  fixedDepositFormData.value.annualInterestRate = 8;
-  fixedDepositFormData.value.startDate = "2023-03-01";
-  fixedDepositFormData.value.tenure = 12;
+  console.log(currentFormInfo);
+  fixedDepositFormData.value = new FixedDepositDetails(
+    currentFormInfo.name,
+    currentFormInfo.investmentAmount,
+    currentFormInfo.annualInterestRate,
+    currentFormInfo.startDate,
+    currentFormInfo.tenure
+  );
 };
 
 fetchFixedDepositData();

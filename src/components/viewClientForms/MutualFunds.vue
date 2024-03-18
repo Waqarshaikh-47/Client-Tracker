@@ -109,12 +109,13 @@ const props = defineProps({
   isLastForm: Boolean,
 });
 const emit = defineEmits(["next-step", "prev-step"]);
-const mutualFundFormData = new MutualFundDetails();
+const mutualFundFormData = ref(new MutualFundDetails());
 const isEditing = ref(false);
+const currentFormInfo = store.state.viewClientData.mutualFundFormData;
 
 const submitForm = () => {
-  store.commit("setMutualFundFormData", mutualFundFormData);
-  emit("next-step");
+  // store.commit("setMutualFundFormData", mutualFundFormData);
+  // emit("next-step");
 };
 
 const previousButton = () => {
@@ -122,17 +123,26 @@ const previousButton = () => {
 };
 
 const toggleEditMode = () => {
-  isEditing.value = !isEditing.value;
-  if (!isEditing.value) {
-    // Reset form data if not editing
-    mutualFundFormData.name = "";
-    mutualFundFormData.startDate = "";
-    mutualFundFormData.investmentType = "";
-    mutualFundFormData.companyName = "";
-    mutualFundFormData.investmentAmount = "";
-    mutualFundFormData.remark = "";
+  if (isEditing.value) {
+    // Submit form here
+
   }
+  isEditing.value = !isEditing.value;
 };
+
+const fetchMutualFundFormData = () => {
+  // Simulated data for example
+  mutualFundFormData.value = new MutualFundDetails(
+    currentFormInfo.name,
+    currentFormInfo.startDate,
+    currentFormInfo.investmentType,
+    currentFormInfo.companyName,
+    currentFormInfo.investmentAmount,
+    currentFormInfo.remark,
+  );
+};
+
+fetchMutualFundFormData();
 </script>
 
 <style scoped>

@@ -154,7 +154,7 @@ import { onBeforeMount, onMounted, ref, computed , watch ,inject} from "vue";
 import queries from "@/plugins/db/queries/quries";
 import { useStore } from "vuex";
 import router from "@/router";
-import { filter } from "lodash";
+import { cloneDeep, filter } from "lodash";
 
 const store = useStore();
 
@@ -184,8 +184,8 @@ const activateTab = (tabId:string) => {
 
 const viewContact = (index: number, clientData: any): void => {
   // You can implement the view functionality here
-  console.log("View Contact:", clientData);
-  store.commit("setViewClientData", clientData);
+  let clientDataClone = cloneDeep(clientData)
+  store.commit("setViewClientData", clientDataClone);
   let getData = store.state.viewClientData;
   console.log(getData.clientInformationFormData.fullName);
   router.push({ name: "client-details" });
