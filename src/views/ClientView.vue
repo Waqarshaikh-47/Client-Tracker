@@ -62,41 +62,37 @@
         aria-labelledby="active-client-tab"
       >
         <ul class="list-group mt-3">
-          <template v-if="activeClients.length">
-            <table class="table table-dark">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Created at</th>
-                  <th>Last updated</th>
-                  <th>updated By</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(client, index) in activeClients" :key="'active-' + index">
-                  <td>
-                    <span class="fw-bold">{{ client.clientData.clientInformationFormData.fullName }}</span>
-                  </td>
-                  <td>{{ client.clientData.clientInformationFormData.email }}</td>
-                  <td>{{ formatDate(client.clientData.startDate) }}</td>
-                  <td>{{ formatDate(client.clientData.lastUpdated) }}</td>
-                  <td>{{ client.clientData.fillerInfo.email }}</td>
-                  <td>
-                    <div class="dropdown">
-                      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-three-dots"></i>
-                      </button>
-                      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <li><a class="dropdown-item" @click="viewContact(index, client)">View</a></li>
-                      </ul>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+          <template v-if="filteredActiveClients.length">
+            <li
+              v-for="(client, index) in filteredActiveClients"
+              :key="'active-' + index"
+              class="list-group-item d-flex justify-content-between align-items-center"
+            >
+              <div>
+                <span class="fw-bold">{{
+                  client.clientData.clientInformationFormData.fullName
+                }}</span>
+                - {{ client.clientData.clientInformationFormData.email }}
+              </div>
+              <div class="dropdown">
+                <button
+                  class="btn btn-secondary dropdown-toggle"
+                  type="button"
+                  id="dropdownMenuButton"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i class="bi bi-three-dots"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <li>
+                    <a class="dropdown-item" @click="viewContact(index, client)"
+                      >View</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </li>
           </template>
 
           <template v-else>
@@ -174,6 +170,8 @@ onBeforeMount(async () => {
   try {
     store.commit("setLoading", true);
     const userData = await queries.getAllClientsInformation();
+    console.log(userData);
+    
     filteredActiveClients.value = userData;
     activeClients = userData;
     store.commit("setLoading", false);
@@ -208,10 +206,10 @@ const searchClients = (tabName:string) => {
     if (searchQuery.value) {
       let filterValue = filter(activeClients, (client) => {
         return (
-          client.clientInformationFormData.fullName
+          client.clientData.clientInformationFormData.fullName
             .toLowerCase()
             .includes(searchQuery.value.toLowerCase()) ||
-          client.clientInformationFormData.panNumber
+          client.clientData.clientInformationFormData.panNumber
             .toLowerCase()
             .includes(searchQuery.value.toLowerCase())
         );
@@ -224,11 +222,13 @@ const searchClients = (tabName:string) => {
     // Filter for pending list
     if (searchQuery.value) {
       let filterValue = filter(activeClients, (client) => {
+        console.log('search',client);
+        
         return (
-          client.clientInformationFormData.fullName
+          client.clientData.clientInformationFormData.fullName
             .toLowerCase()
             .includes(searchQuery.value.toLowerCase()) ||
-          client.clientInformationFormData.panNumber
+          client.clientData.clientInformationFormData.panNumber
             .toLowerCase()
             .includes(searchQuery.value.toLowerCase())
         );
