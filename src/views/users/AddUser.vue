@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted,type Ref } from 'vue';
 import { User } from '@/schemas/user/User';
 import queries from "@/plugins/db/queries/quries";
 import router from '@/router';
@@ -56,7 +56,7 @@ import { useStore } from 'vuex';
 const store = useStore();
 const userData = ref(new User('', '', []));
 const roles = ref(['Admin', 'Read', 'Write']); // Example roles, replace with your actual roles
-const selectedRoles = ref([]);
+const selectedRoles: Ref<string[]> = ref([]);
 
 const toggleRole = (role: string) => {
   if (selectedRoles.value.includes(role)) {
