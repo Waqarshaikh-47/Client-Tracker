@@ -66,6 +66,29 @@ const queries: any = {
       throw error;
     }
   },
+
+  async updateUser(email: string, updatedFields: Partial<User>) {
+    try {
+      await firestore
+        .collection("users")
+        .where("email", "==", email)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            // Convert updatedFields to a plain JavaScript object
+            const updatedFieldsObject = { ...updatedFields };
+            doc.ref.update(updatedFieldsObject);
+          });
+        });
+      console.log("User information updated successfully");
+      alert("User information updated successfully");
+    } catch (error) {
+      alert("Error updating user information: " + error);
+      console.error("Error updating user information:", error);
+      throw error;
+    }
+  },
+  
   async updateClientInformationData(clientId: string, updatedFields: object) {
     try {
       await firestore

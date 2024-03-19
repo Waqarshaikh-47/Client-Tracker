@@ -9,7 +9,7 @@
           </div>
         </div>
       </div>
-      <template v-if="roles.includes('write')">
+      <template v-if="roles && (roles.includes('Write') || roles.includes('Admin') )">
         <div class="row">
           <div class="col-md-6" @click="$router.push({name:'new-client'})">
             <div class="card shadow">
@@ -30,7 +30,7 @@
         </div>
       </template>
       <!-- Only for admin users -->
-      <template v-if="roles.includes('admin')">
+      <template v-if="roles && roles.includes('Admin')">
         <div class="row">
           <div class="col-md-6" @click="$router.push({name:'new-user'})">
             <div class="card shadow">
@@ -70,13 +70,25 @@ const roles = ref<string[]>([])
 
 // Call the fetchData function to fetch users when the component is mounted
 onMounted(async () => {
-  const userData = store.state.user;
+  let userData = store.state.user;
   const userRoleData = await queries.fetchUserDataByEmail(userData.email);
-  userData.roles = userRoleData[0].role;
-  userData.displayName =userRoleData[0].name;
-  store.commit('setUser',userData)
-  roles.value = userData.roles;
+  console.log("userRoleData: ", userRoleData[0]);
+  
+  // Check the structure of userRoleData[0] to ensure it contains the expected properties
+  if (userRoleData[0]) {
+    // Update userData directly
+    userData.roles = userRoleData[0].roles; // Assuming 'roles' is an array
+    userData.displayName = userRoleData[0].displayName;
+    store.commit('setUser', userData);
+    console.log("userData: ", userData);
+  
+    // Update the roles ref value
+    roles.value = userData.roles;
+    console.log("roles",roles.value);
+    
+  }
 });
+
 
 </script>
 
