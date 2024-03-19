@@ -56,7 +56,17 @@ const state = {
     remark: "",
   },
   isLoading: false,
-  viewClientData : ''
+  viewClientData : {
+    clientInformationFormData: {},
+    fillerInfo: {},
+    fixedDepositFormData: {},
+    goldInvestmentFormData: {},
+    indiaPostFormData: {},
+    insurancePolicyFormData: {},
+    lastUpdated: "",
+    mutualFundFormData: {},
+    startDate: ""
+  }
 };
 
 // Define mutations to update the state

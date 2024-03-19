@@ -56,7 +56,17 @@ const steps = ref([
 ]);
 
 onBeforeUnmount(() => {
-  store.commit("setViewClientData", '');
+  store.commit("setViewClientData", {
+      clientInformationFormData: {},
+      fillerInfo: {},
+      fixedDepositFormData: {},
+      goldInvestmentFormData: {},
+      indiaPostFormData: {},
+      insurancePolicyFormData: {},
+      lastUpdated: "",
+      mutualFundFormData: {},
+      startDate: ""
+    });
 });
 
 const currentStep = ref(0);

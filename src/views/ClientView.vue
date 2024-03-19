@@ -69,7 +69,7 @@
               class="list-group-item d-flex justify-content-between align-items-center"
             >
               <div>
-                <span class="fw-bold">{{
+                <span class="fw-bold">{{ activeIndex + 1 }} {{
                   activeClient.clientData.clientInformationFormData.fullName
                 }}</span>
                 - {{ activeClient.clientData.clientInformationFormData.email }}
@@ -116,7 +116,7 @@
               class="list-group-item d-flex justify-content-between align-items-center"
             >
               <div>
-                <span class="fw-bold">{{ pendingClient.clientData.clientInformationFormData.fullName }}</span> -
+                <span class="fw-bold">{{ pendingIndex + 1 }} {{ pendingClient.clientData.clientInformationFormData.fullName }}</span> -
                 {{ pendingClient.clientData.clientInformationFormData.email }}
               </div>
               <div class="dropdown">
@@ -170,11 +170,11 @@ onBeforeMount(async () => {
   try {
     store.commit("setLoading", true);
     const userData = await queries.getAllClientsInformation();
-    filteredActiveClients.value = userData;
-    userData[1].clientData.mutualFundFormData.companyName = ''
     activeClients = categorizeClients(userData).active;
     pendingClients = categorizeClients(userData).pending;
-    searchClients('pending-client-tab') // set filtered list initially
+    filteredActiveClients.value = categorizeClients(userData).active;
+    filteredPendingClients.value = categorizeClients(userData).pending;
+    // searchClients('pending-client-tab') // set filtered list initially
     store.commit("setLoading", false);
   } catch (error: any) {
     console.error("Error fetching client information:", error.message);
@@ -268,8 +268,8 @@ interface ClientData {
 }
 
 function categorizeClients(clients: { id: string, clientData: ClientData }[]): { active: { id: string, clientData: ClientData }[], pending: { id: string, clientData: ClientData }[] } {
-  const activeClients: { id: string, clientData: ClientData }[] = [];
-  const pendingClients: { id: string, clientData: ClientData }[] = [];
+  const activeClientsList: { id: string, clientData: ClientData }[] = [];
+  const pendingClientsList: { id: string, clientData: ClientData }[] = [];
 
   const formsToCheck = [
     'fixedDepositFormData',
@@ -296,13 +296,13 @@ function categorizeClients(clients: { id: string, clientData: ClientData }[]): {
     });
 
     if (isPending) {
-      pendingClients.push(client);
+      pendingClientsList.push(client);
     } else {
-      activeClients.push(client);
+      activeClientsList.push(client);
     }
   });
 
-  return { active: activeClients, pending: pendingClients };
+  return { active: activeClientsList, pending: pendingClientsList };
 }
 
 
