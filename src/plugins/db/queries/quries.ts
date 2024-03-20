@@ -39,12 +39,29 @@ const queries: any = {
     try {
       let data: any[] = [];
       const res = await firestore.collection("client-info").get();
-      
+
       res.forEach((userDoc: any) => {
         let clientInfo = {
-          id:userDoc.id,
-          clientData:userDoc.data()
-        }
+          id: userDoc.id,
+          clientData: userDoc.data(),
+        };
+        data.push(clientInfo);
+      });
+      return data;
+    } catch (error) {
+      console.log();
+      return [];
+    }
+  },
+  async getAllUsersInformation() {
+    try {
+      let data: any[] = [];
+      const res = await firestore.collection("users").get();
+      res.forEach((userDoc: any) => {
+        let clientInfo = {
+          id: userDoc.id,
+          clientData: userDoc.data(),
+        };
         data.push(clientInfo);
       });
       return data;
@@ -63,6 +80,18 @@ const queries: any = {
     } catch (error) {
       alert("error" + error);
       console.error("Error adding user:", error);
+      throw error;
+    }
+  },
+
+  async deleteUser(userId: string) {
+    try {
+      await firestore.collection("users").doc(userId).delete();
+      console.log("User deleted successfully");
+      alert("User deleted successfully");
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      alert("Error deleting user: " + error);
       throw error;
     }
   },
@@ -88,7 +117,7 @@ const queries: any = {
       throw error;
     }
   },
-  
+
   async updateClientInformationData(clientId: string, updatedFields: object) {
     try {
       await firestore

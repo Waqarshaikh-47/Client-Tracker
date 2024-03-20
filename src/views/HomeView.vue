@@ -40,7 +40,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-6" @click="$router.push({name:'clients'})">
+          <div class="col-md-6" @click="$router.push({name:'users'})">
             <div class="card shadow">
               <div class="card-body">
                 <h5 class="card-title">View Users</h5>

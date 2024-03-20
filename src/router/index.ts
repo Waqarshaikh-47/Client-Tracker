@@ -8,6 +8,7 @@ import AboutView from "@/views/AboutView.vue";
 import AddUser from "@/views/users/AddUser.vue";
 import NotAuthorized from "@/views/NotAuthorized.vue";
 import ClientDetailsView from "@/views/ClientDetailsView.vue";
+import UsersView from "@/views/UsersView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,6 +25,14 @@ const router = createRouter({
       path: "/clients",
       name: "clients",
       component: ClientView,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/users",
+      name: "users",
+      component: UsersView,
       meta: {
         requiresAuth: true,
       },
@@ -63,8 +72,11 @@ const router = createRouter({
       path:'/clients/client-details',
       name:'client-details',
       component: ClientDetailsView,
-    }
-  ],
+      meta: {
+        requiresAuth: true,
+      },
+    },
+      ],
 });
 
 const getCurrentUser = () => {
