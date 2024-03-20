@@ -69,7 +69,7 @@
               class="list-group-item d-flex justify-content-between align-items-center"
             >
               <div>
-                <span class="fw-bold">{{
+                <span class="fw-bold">{{ activeIndex + 1 }} {{
                   activeClient.clientData.clientInformationFormData.fullName
                 }}</span>
                 - {{ activeClient.clientData.clientInformationFormData.email }}
@@ -111,13 +111,13 @@
         <ul class="list-group mt-3">
           <template v-if="filteredPendingClients.length">
             <li
-              v-for="(contact, index) in filteredPendingClients"
-              :key="'pending-' + index"
+              v-for="(pendingClient, pendingIndex) in filteredPendingClients"
+              :key="'pending-' + pendingIndex"
               class="list-group-item d-flex justify-content-between align-items-center"
             >
               <div>
-                <span class="fw-bold">{{ contact.name }}</span> -
-                {{ contact.mobile }}
+                <span class="fw-bold">{{ pendingIndex + 1 }} {{ pendingClient.clientData.clientInformationFormData.fullName }}</span> -
+                {{ pendingClient.clientData.clientInformationFormData.email }}
               </div>
               <div class="dropdown">
                 <button
@@ -133,7 +133,7 @@
                   <li>
                     <a
                       class="dropdown-item"
-                      @click="viewContact(index, contact)"
+                      @click="viewContact(pendingIndex, pendingClient.clientData)"
                       >View</a
                     >
                   </li>
@@ -170,8 +170,11 @@ onBeforeMount(async () => {
   try {
     store.commit("setLoading", true);
     const userData = await queries.getAllClientsInformation();
-    filteredActiveClients.value = userData;
-    activeClients = userData;
+    activeClients = categorizeClients(userData).active;
+    pendingClients = categorizeClients(userData).pending;
+    filteredActiveClients.value = categorizeClients(userData).active;
+    filteredPendingClients.value = categorizeClients(userData).pending;
+    // searchClients('pending-client-tab') // set filtered list initially
     store.commit("setLoading", false);
   } catch (error: any) {
     console.error("Error fetching client information:", error.message);
@@ -187,8 +190,6 @@ const viewContact = (index: number, clientData: any): void => {
   // You can implement the view functionality here
   let clientDataClone = cloneDeep(clientData)
   store.commit("setViewClientData", clientDataClone);
-  let getData = store.state.viewClientData;
-  console.log(getData.clientInformationFormData.fullName);
   router.push({ name: "client-details" });
 };
 
@@ -216,12 +217,10 @@ const searchClients = (tabName:string) => {
     } else {
       filteredActiveClients.value = activeClients;
     }
-  } else {
+  } else if(tabName == "pending-client-tab") {
     // Filter for pending list
     if (searchQuery.value) {
-      let filterValue = filter(activeClients, (client) => {
-        console.log('search',client);
-        
+      let filterValue = filter(pendingClients, (client) => {        
         return (
           client.clientData.clientInformationFormData.fullName
             .toLowerCase()
@@ -231,16 +230,15 @@ const searchClients = (tabName:string) => {
             .includes(searchQuery.value.toLowerCase())
         );
       });
-      filteredActiveClients.value = filterValue;
+      filteredPendingClients.value = filterValue;
     } else {
-      filteredActiveClients.value = activeClients;
+      filteredPendingClients.value = pendingClients;
     }
   }
 };
 
 const editContact = (index: number): void => {
   // You can implement the edit functionality here
-  console.log("Edit Contact:", activeClients[index]);
 };
 
 const deleteContact = (index: number, listType: string): void => {
@@ -264,6 +262,50 @@ const formatDate = (dateString: string) => {
 
   return `${formattedDay}/${formattedMonth}/${year}`;
 }
+
+interface ClientData {
+  [key: string]: any;
+}
+
+function categorizeClients(clients: { id: string, clientData: ClientData }[]): { active: { id: string, clientData: ClientData }[], pending: { id: string, clientData: ClientData }[] } {
+  const activeClientsList: { id: string, clientData: ClientData }[] = [];
+  const pendingClientsList: { id: string, clientData: ClientData }[] = [];
+
+  const formsToCheck = [
+    'fixedDepositFormData',
+    'goldInvestmentFormData',
+    'indiaPostFormData',
+    'insurancePolicyFormData',
+    'mutualFundFormData'
+  ];
+
+  clients.forEach(client => {
+    const data = client.clientData;
+
+    // Flag to check if client is pending
+    let isPending = false;
+
+    formsToCheck.forEach(form => {
+      if (Object.keys(data[form]).some(key => data[form][key] !== '')) {
+        // Form has a key with a value
+        if (Object.keys(data[form]).some(key => data[form][key] === '')) {
+          // Form also has a key with an empty value
+          isPending = true;
+        }
+      }
+    });
+
+    if (isPending) {
+      pendingClientsList.push(client);
+    } else {
+      activeClientsList.push(client);
+    }
+  });
+
+  return { active: activeClientsList, pending: pendingClientsList };
+}
+
+
 </script>
 
 <style>
