@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col">
           <div class="welcome-message">
-            <h1>Welcome to Our Website!</h1>
+            <h1>Welcome to GrowSmart Finserv!</h1>
             <p>We are glad to have you here.</p>
           </div>
         </div>
@@ -15,7 +15,7 @@
             <div class="card shadow">
               <div class="card-body">
                 <h5 class="card-title">New Client</h5>
-                <p class="card-text">This is the first card.</p>
+                <p class="card-text">Add a new client here.</p>
               </div>
             </div>
           </div>
@@ -23,7 +23,7 @@
             <div class="card shadow">
               <div class="card-body">
                 <h5 class="card-title">View Clients</h5>
-                <p class="card-text">This is the second card.</p>
+                <p class="card-text">View all clients here.</p>
               </div>
             </div>
           </div>
@@ -57,7 +57,7 @@
 <script setup lang="ts">
 import queries from "@/plugins/db/queries/quries";
 import router from "@/router";
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, inject } from 'vue';
 import { useStore } from 'vuex';
 
 
@@ -71,9 +71,10 @@ const roles = ref<string[]>([])
 // Call the fetchData function to fetch users when the component is mounted
 onMounted(async () => {
   let userData = store.state.user;
+  store.commit('setLoading',true)
   const userRoleData = await queries.fetchUserDataByEmail(userData.email);
-  console.log("userRoleData: ", userRoleData[0]);
-  
+  store.commit('setLoading',false)
+  console.log(userRoleData)
   // Check the structure of userRoleData[0] to ensure it contains the expected properties
   if (userRoleData[0]) {
     // Update userData directly
@@ -102,14 +103,14 @@ onMounted(async () => {
 
 .welcome-message {
   text-align: center;
-  color: #fff;
+  color: #198754;
 }
 
 .card {
   margin: 20px auto;
   border: none;
   background-color: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  color: #adb5bd;
   transition: transform 0.3s ease;
 }
 

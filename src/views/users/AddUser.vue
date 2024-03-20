@@ -69,15 +69,22 @@ const toggleRole = (role: string) => {
 const submitForm = async () => {
   userData.value.roles = selectedRoles.value;
   console.log("form submitted", userData.value);
-  
+  console.log(userData.value.roles)
   // Check if the email already exists in the database
+  store.commit('setLoading',true)
   const userRoleData = await queries.fetchUserDataByEmail(userData.value.email);
+  store.commit('setLoading',false)
   if (userRoleData.length > 0) {
     // If the user exists, update their data
+    store.commit('setLoading',true)
     await queries.updateUser(userData.value.email, userData.value);
+    store.commit('setLoading',false)
   } else {
     // If the user doesn't exist, add new client data
+    store.commit('setLoading',true)
     await queries.addUser(userData.value);
+    store.commit('setLoading',false)
+
   }
 };
 

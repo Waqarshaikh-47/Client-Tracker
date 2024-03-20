@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand"  @click="$router.push('/')">Home</a>
+      <a class="navbar-brand title-color"  @click="$router.push('/')">GrowSmart</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -50,4 +50,15 @@ const handleSignout = () => {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+
+.title-color {
+  color: #198754;
+  transition: color 0.3s ease; /* Smooth transition effect */
+}
+
+.title-color:hover {
+  color: #06fc89; /* Change color on hover */
+}
+
+</style>

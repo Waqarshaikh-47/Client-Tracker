@@ -45,6 +45,7 @@ const register = () => {
         })
         .catch((error) => {
             // Handle Errors here.
+            alert(error)
             store.commit('setLoading', false);
             const errorCode = error.code;
             const errorMessage = error.message;

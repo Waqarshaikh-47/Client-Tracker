@@ -32,6 +32,7 @@
     store.commit('setLoading', true);
     createUserWithEmailAndPassword(getAuth(), email.value, password.value)
       .then((userCredential) => {
+        console.log(userCredential)
         store.commit('setLoading', false);
         const user = userCredential.user;
         router.push({ name: 'home' });
@@ -39,6 +40,7 @@
       })
       .catch((error) => {
         store.commit('setLoading', false);
+        alert(error)
         const errorCode = error.code;
         const errorMessage = error.message;
         const email = error.email;
