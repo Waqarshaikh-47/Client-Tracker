@@ -57,7 +57,7 @@
 <script setup lang="ts">
 import queries from "@/plugins/db/queries/quries";
 import router from "@/router";
-import { ref, onMounted, inject } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
 
 
