@@ -55,7 +55,7 @@ import { useStore } from 'vuex';
 
 const store = useStore();
 const userData = ref(new User('', '', []));
-const roles = ref(['Admin', 'Read', 'Write']); // Example roles, replace with your actual roles
+const roles = ref(['Admin', 'Write']); // Example roles, replace with your actual roles
 const selectedRoles: Ref<string[]> = ref([]);
 
 const toggleRole = (role: string) => {

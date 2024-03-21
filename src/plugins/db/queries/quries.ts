@@ -132,6 +132,18 @@ const queries: any = {
       throw error;
     }
   },
+
+  async deleteClientInformationData(clientID: string) {
+    try {
+      await firestore.collection("client-info").doc(clientID).delete();
+      console.log("Client-data  deleted successfully");
+      alert("Client-data  deleted successfully");
+    } catch (error) {
+      console.error("Error deleting Client-data :", error);
+      alert("Error deleting Client-data : " + error);
+      throw error;
+    }
+  }
 };
 
 export default queries;
