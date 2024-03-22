@@ -116,7 +116,7 @@ const props = defineProps({
   legIndex: Number,
   isLastForm: Boolean,
 });
-const currentFormInfo = store.state.viewClientData.goldInvestmentFormData;
+const currentFormInfo = store.state.viewClientData.clientData.goldInvestmentFormData;
 const emit = defineEmits(["next-step", "prev-step"]);
 const goldInvestmentFormData = ref(new GoldInvestmentDetails());
 const isEditing = ref(false);

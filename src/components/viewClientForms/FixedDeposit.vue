@@ -105,7 +105,7 @@ const props = defineProps({
 const emit = defineEmits(["next-step", "prev-step"]);
 const fixedDepositFormData = ref(new FixedDepositDetails());
 const isEditing = ref(false);
-const currentFormInfo = store.state.viewClientData.fixedDepositFormData;
+const currentFormInfo = store.state.viewClientData.clientData.fixedDepositFormData;
 
 const submitForm = () => {
   store.commit("setFixedDepositFormData", fixedDepositFormData.value);

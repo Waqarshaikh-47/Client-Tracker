@@ -86,7 +86,7 @@
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   <li>
-                    <a class="dropdown-item" @click="viewContact(activeIndex, activeClient.clientData)"
+                    <a class="dropdown-item" @click="viewContact(activeIndex, activeClient)"
                       >View</a
                     >
                   </li>
@@ -133,7 +133,7 @@
                   <li>
                     <a
                       class="dropdown-item"
-                      @click="viewContact(pendingIndex, pendingClient.clientData)"
+                      @click="viewContact(pendingIndex, pendingClient)"
                       >View</a
                     >
                   </li>
@@ -174,7 +174,7 @@ onBeforeMount(async () => {
     pendingClients = categorizeClients(userData).pending;
     filteredActiveClients.value = categorizeClients(userData).active;
     filteredPendingClients.value = categorizeClients(userData).pending;
-    // searchClients('pending-client-tab') // set filtered list initially
+    console.log(activeClients)
     store.commit("setLoading", false);
   } catch (error: any) {
     console.error("Error fetching client information:", error.message);

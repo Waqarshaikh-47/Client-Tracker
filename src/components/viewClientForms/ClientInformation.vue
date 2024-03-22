@@ -83,6 +83,9 @@
 import { ref } from "vue";
 import { ClientInformation } from "@/schemas/forms/ClientInformation";
 import { useStore } from "vuex";
+import { cloneDeep } from "lodash";
+import queries from '@/plugins/db/queries/quries';
+
 
 const store = useStore();
 const props = defineProps({
@@ -90,26 +93,26 @@ const props = defineProps({
   isLastForm: Boolean,
 });
 const emit = defineEmits(["next-step", "prev-step"]);
-const currentFormInfo = store.state.viewClientData.clientInformationFormData;
+const currentFormInfo = store.state.viewClientData.clientData.clientInformationFormData;
 const clientInformationData = ref(new ClientInformation());
 const isEditing = ref(false);
 
 const submitForm = () => {
-  store.commit("setClientInformationFormData", clientInformationData.value);
-  emit("next-step");
+  // store.commit("setClientInformationFormData", clientInformationData.value);
+  // emit("next-step");
 };
 
 const toggleEditMode = () => {
+  if (isEditing.value) {
+    let clientData = cloneDeep(store.state)
+    console.log(clientData)
+    updateClientsData()
+    // Reset form data if cancelling edit mode
+  }
   isEditing.value = !isEditing.value;
-  // if (!isEditing.value) {
-  //   // Reset form data if cancelling edit mode
-  //   clientInformationData.value = new ClientInformation();
-  // }
+
 };
 
-const previousButton = () => {
-  emit("prev-step");
-};
 
 // Fetch initial client information data or set from store
 // This assumes you have a method to fetch the data, like an API call or Vuex action
@@ -123,8 +126,25 @@ const fetchClientInformation = () => {
     currentFormInfo.phone
   );
 };
-
 fetchClientInformation();
+
+
+const updateClientsData = async() => {
+  try {
+    let clientId = store.state.viewClientData.clientData.id;
+    const data = {
+      clientInformationFormData: { ...clientInformationData.value },
+      lastUpdated: Date(),
+    }
+    await queries.updateClientInformationData(clientId,data);
+  } catch (error) {
+    console.error("Error updating client data:", error);
+    // You can handle the error here, like showing a toast message
+    // For now, let's re-throw the error to propagate it
+    throw error;
+  }
+}
+
 </script>
 
 <style scoped>

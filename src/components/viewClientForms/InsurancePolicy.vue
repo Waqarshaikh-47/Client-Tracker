@@ -215,7 +215,7 @@ import { InsurancePolicyDetails } from "@/schemas/forms/InsurancePolicyDetails";
 import queries from "@/plugins/db/queries/quries";
 
 const store = useStore();
-const currentFormInfo = store.state.viewClientData.insurancePolicyFormData;
+const currentFormInfo = store.state.viewClientData.clientData.insurancePolicyFormData;
 
 const props = defineProps({
   legIndex: Number,

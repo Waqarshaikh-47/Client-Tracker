@@ -57,15 +57,18 @@ const state = {
   },
   isLoading: false,
   viewClientData : {
-    clientInformationFormData: {},
-    fillerInfo: {},
-    fixedDepositFormData: {},
-    goldInvestmentFormData: {},
-    indiaPostFormData: {},
-    insurancePolicyFormData: {},
-    lastUpdated: "",
-    mutualFundFormData: {},
-    startDate: ""
+    id : '',
+    clientData : {
+      clientInformationFormData: {},
+      fillerInfo: {},
+      fixedDepositFormData: {},
+      goldInvestmentFormData: {},
+      indiaPostFormData: {},
+      insurancePolicyFormData: {},
+      lastUpdated: "",
+      mutualFundFormData: {},
+      startDate: ""
+    }
   }
 };
 

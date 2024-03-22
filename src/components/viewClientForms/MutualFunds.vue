@@ -102,6 +102,9 @@
 import { ref } from "vue";
 import { MutualFundDetails } from "@/schemas/forms/MutualFundDetails";
 import { useStore } from "vuex";
+import queries from '@/plugins/db/queries/quries';
+import { cloneDeep } from "lodash";
+
 
 const store = useStore();
 const props = defineProps({
@@ -111,7 +114,7 @@ const props = defineProps({
 const emit = defineEmits(["next-step", "prev-step"]);
 const mutualFundFormData = ref(new MutualFundDetails());
 const isEditing = ref(false);
-const currentFormInfo = store.state.viewClientData.mutualFundFormData;
+const currentFormInfo = store.state.viewClientData.clientData.mutualFundFormData;
 
 const submitForm = () => {
   // store.commit("setMutualFundFormData", mutualFundFormData);
@@ -125,6 +128,7 @@ const previousButton = () => {
 const toggleEditMode = () => {
   if (isEditing.value) {
     // Submit form here
+    updateClientsData()
 
   }
   isEditing.value = !isEditing.value;
@@ -143,6 +147,28 @@ const fetchMutualFundFormData = () => {
 };
 
 fetchMutualFundFormData();
+
+
+const updateClientsData = async() => {
+  try {
+    let clientId = store.state.viewClientData.clientData.id;
+    const data = {
+      mutualFundFormData: { ...mutualFundFormData.value },
+      lastUpdated: Date(),
+    }
+    let newData = store.state.viewClientData.clientData
+    newData.mutualFundFormData = {...mutualFundFormData.value}
+    newData.lastUpdated = Date()
+    newData = cloneDeep(newData)
+    console.log({newData})
+    await queries.updateClientInformationData(clientId,newData);
+  } catch (error) {
+    console.error("Error updating client data:", error);
+    // You can handle the error here, like showing a toast message
+    // For now, let's re-throw the error to propagate it
+    throw error;
+  }
+}
 </script>
 
 <style scoped>

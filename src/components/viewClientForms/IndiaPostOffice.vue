@@ -106,7 +106,7 @@ const props = defineProps({
 const emit = defineEmits(["next-step", "prev-step"]);
 const indiaPostFormData = ref(new IndiaPostOfficeDetails());
 const isEditing = ref(false);
-const currentFormInfo = store.state.viewClientData.indiaPostFormData;
+const currentFormInfo = store.state.viewClientData.clientData.indiaPostFormData;
 
 const submitForm = () => {
   store.commit("setIndiaPostFormData", indiaPostFormData.value);

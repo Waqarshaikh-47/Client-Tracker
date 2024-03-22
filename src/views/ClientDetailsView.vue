@@ -1,6 +1,14 @@
 <template>
   <div class="container mt-5">
     <!-- Progress Tabs -->
+    <button
+      class="btn btn-primary mt-1 mb-1"
+      data-bs-toggle="modal"
+      data-bs-target="#printPdfModal"
+    >
+      <i class="bi bi-file-pdf"></i> Print PDF
+    </button>
+
     <div class="progress-tabs mb-4">
       <div
         v-for="(step, index) in steps"
@@ -33,6 +41,38 @@
       </div>
     </template>
     <!-- Forms -->
+    <!-- Models Start-->
+    <div class="modal fade" id="printPdfModal" tabindex="-1" aria-labelledby="printPdfModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-light">
+          <div class="modal-header">
+            <h5 class="modal-title" id="printPdfModalLabel">Print PDF</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <p>Select forms to include in the PDF:</p>
+              <div class="form-check" v-for="(form, index) in forms" :key="index">
+                <input class="form-check-input" type="checkbox" :id="`form${index}`" :value="form" v-model="selectedForms">
+                <label class="form-check-label" :for="`form${index}`">
+                  {{ form }}
+                </label>
+              </div>
+            </div>
+            <!-- Add your PDF content here -->
+            <div ref="printContent" style="display: none;" >
+      <h1>GrowSmart Finserv</h1>
+      <PdfForms :selected-forms="selectedForms"/>
+    </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" @click="printPdf">Print</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Models End-->
   </div>
 </template>
 
@@ -44,8 +84,11 @@ import GoldInvestments from "@/components/viewClientForms/GoldInvestments.vue";
 import FixedDeposit from "@/components/viewClientForms/FixedDeposit.vue";
 import IndiaPostOffice from "@/components/viewClientForms/IndiaPostOffice.vue";
 import InsurancePolicy from "@/components/viewClientForms/InsurancePolicy.vue";
+import PdfForms from "@/components/viewClientForms/PdfForms.vue"
+import * as bootstrap from "bootstrap"; // Import all exports from the 'bootstrap' module
 
 const store:any = inject('store')
+const authModal:any = ref<bootstrap.Modal>();
 const steps = ref([
   { name: "Client Information", componentName: shallowRef(ClientInformation) },
   { name: "Mutual Fund", componentName: shallowRef(MutualFunds) },
@@ -55,8 +98,19 @@ const steps = ref([
   { name: "Insurance Policy", componentName: shallowRef(InsurancePolicy) },
 ]);
 
+let forms = ref([
+        "Client Information",
+        "Mutual Fund",
+        "Gold Investment",
+        "Fixed Deposit Info",
+        "India Post Office",
+        "Insurance Policy"
+      ])
+ let selectedForms =  ref([])
 onBeforeUnmount(() => {
-  store.commit("setViewClientData", {
+  let initializeClientData = {
+    id : '',
+    clientData : {
       clientInformationFormData: {},
       fillerInfo: {},
       fixedDepositFormData: {},
@@ -66,7 +120,9 @@ onBeforeUnmount(() => {
       lastUpdated: "",
       mutualFundFormData: {},
       startDate: ""
-    });
+    }
+  }
+  store.commit("setViewClientData",initializeClientData );
 });
 
 const currentStep = ref(0);
@@ -86,6 +142,56 @@ const prevStep = () => {
 const setCurrentTab = (index: any) => {
   currentStep.value = index;
 };
+
+
+const printPdf = ()=>{
+  console.log("Selected Forms:", selectedForms.value);
+  printPDF()
+}
+
+const printContent:any = ref(null);
+
+const printPDF = () => {
+  const content = printContent.value;
+
+  if (!content) {
+    console.error('Print content element not found');
+    return;
+  }
+
+  const printWindow = window.open('', '_blank');
+  if (!printWindow) {
+    console.error('Failed to open print window');
+    return;
+  }
+
+  printWindow.document.open();
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>GrowSmart</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+          }
+          h1 {
+            color: #333;
+          }
+          p {
+            color: #666;
+          }
+        </style>
+      </head>
+      <body>
+        ${content.innerHTML}
+      </body>
+    </html>
+  `);
+  printWindow.document.close();
+  printWindow.print();
+};
+
 </script>
 
 <style scoped>
