@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand title-color"  @click="$router.push('/')">GrowSmart</a>
+      <a class="navbar-brand title-color"  @click="$router.push({name:'home'})">GrowSmart</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -17,9 +17,9 @@
         </ul>
         <form class="d-flex">
           <button class="btn btn-outline-success" type="submit" v-if="isLoggedIn"
-            @click="handleSignout">Sign-out</button>
+            @click.prevent="handleSignout">Sign-out</button>
             <button class="btn btn-outline-success" type="submit" v-else
-            @click="handleSignIn">Sign-In</button>
+            @click.prevent="handleSignIn">Sign-In</button>
         </form>
       </div>
     </div>
@@ -48,11 +48,15 @@ const handleSignout = () => {
 
   signOut(auth).then(() => {
     router.push({name:'home'})
+    router.push({name:'register'})
   })
 }
 
 const handleSignIn = ()=>{
-  router.push({name:'register'})
+  router.push({name:'about'})
+  setTimeout(()=>{
+    router.push({name:'register'})
+  },0)
 }
 </script>
 
