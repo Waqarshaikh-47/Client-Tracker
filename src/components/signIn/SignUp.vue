@@ -10,7 +10,7 @@
       </div>
       <div class="d-flex mt-3">
         <p class="mr-2"><button @click="register" class="btn btn-primary">Submit</button></p>
-        <p class="mx-2"><button @click="signInWithGoogle" class="btn btn-danger">Sign In With Google</button></p>
+        <!-- <p class="mx-2"><button @click="signInWithGoogle" class="btn btn-danger">Sign In With Google</button></p> -->
       </div>
     </div>
   </template>
@@ -32,7 +32,6 @@
     store.commit('setLoading', true);
     createUserWithEmailAndPassword(getAuth(), email.value, password.value)
       .then((userCredential) => {
-        console.log(userCredential)
         store.commit('setLoading', false);
         const user = userCredential.user;
         router.push({ name: 'home' });

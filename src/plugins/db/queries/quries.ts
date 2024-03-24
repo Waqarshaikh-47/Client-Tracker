@@ -4,8 +4,6 @@ import firestore from "@/plugins/db/fireBaseInit";
 import { User } from "@/schemas/user/User";
 const queries: any = {
   async fetchUserDataByEmail(email: string) {
-    console.log(email);
-
     try {
       const querySnapshot = await firestore
         .collection("users")
@@ -26,7 +24,6 @@ const queries: any = {
     try {
       const userDataPlainObject = { ...userData }; // Convert User object to plain JavaScript object
       await firestore.collection("users").add(userDataPlainObject);
-      console.log("User added successfully");
       alert("User added successfully");
     } catch (error) {
       alert("error" + error);
@@ -49,7 +46,6 @@ const queries: any = {
       });
       return data;
     } catch (error) {
-      console.log();
       return [];
     }
   },
@@ -66,7 +62,6 @@ const queries: any = {
       });
       return data;
     } catch (error) {
-      console.log();
       return [];
     }
   },
@@ -74,7 +69,6 @@ const queries: any = {
   async addClientInformationData(data: object) {
     try {
       let res = await firestore.collection("client-info").add({ ...data });
-      console.log("User added successfully", res);
       alert("User added successfully");
       return res.id;
     } catch (error) {
@@ -87,7 +81,6 @@ const queries: any = {
   async deleteUser(userId: string) {
     try {
       await firestore.collection("users").doc(userId).delete();
-      console.log("User deleted successfully");
       alert("User deleted successfully");
     } catch (error) {
       console.error("Error deleting user:", error);
@@ -109,7 +102,6 @@ const queries: any = {
             doc.ref.update(updatedFieldsObject);
           });
         });
-      console.log("User information updated successfully");
       alert("User information updated successfully");
     } catch (error) {
       alert("Error updating user information: " + error);
@@ -124,7 +116,6 @@ const queries: any = {
         .collection("client-info")
         .doc(clientId)
         .update(updatedFields);
-      console.log("Client information updated successfully");
       alert("Client information updated successfully");
     } catch (error) {
       alert("Error updating client information: " + error);
@@ -136,7 +127,6 @@ const queries: any = {
   async deleteClientInformationData(clientID: string) {
     try {
       await firestore.collection("client-info").doc(clientID).delete();
-      console.log("Client-data  deleted successfully");
       alert("Client-data  deleted successfully");
     } catch (error) {
       console.error("Error deleting Client-data :", error);

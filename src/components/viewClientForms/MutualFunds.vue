@@ -160,7 +160,6 @@ const updateClientsData = async() => {
     newData.mutualFundFormData = {...mutualFundFormData.value}
     newData.lastUpdated = Date()
     newData = cloneDeep(newData)
-    console.log({newData})
     await queries.updateClientInformationData(clientId,newData);
   } catch (error) {
     console.error("Error updating client data:", error);

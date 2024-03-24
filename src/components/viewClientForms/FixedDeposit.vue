@@ -127,7 +127,6 @@ const previousButton = () => {
 // Fetch initial fixed deposit data or set from store
 const fetchFixedDepositData = () => {
   // Simulated data for example
-  console.log(currentFormInfo);
   fixedDepositFormData.value = new FixedDepositDetails(
     currentFormInfo.name,
     currentFormInfo.investmentAmount,

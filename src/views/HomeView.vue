@@ -59,6 +59,8 @@ import queries from "@/plugins/db/queries/quries";
 import router from "@/router";
 import { ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
+import { getAuth, signOut, type Auth } from 'firebase/auth';
+
 
 
 const store = useStore()
@@ -69,24 +71,32 @@ const roles = ref<string[]>([])
 // Use async/await to properly handle asynchronous data fetching
 
 // Call the fetchData function to fetch users when the component is mounted
+
+const handleSignout = () => {
+  let auth:Auth = getAuth();
+  signOut(auth).then(() => {
+  alert("Please contact the administrator for website access permissions.")
+  router.push({name:'home'})
+})
+}
+
 onMounted(async () => {
   let userData = store.state.user;
   store.commit('setLoading',true)
   const userRoleData = await queries.fetchUserDataByEmail(userData.email);
   store.commit('setLoading',false)
-  console.log(userRoleData)
   // Check the structure of userRoleData[0] to ensure it contains the expected properties
-  if (userRoleData[0]) {
+  if (userRoleData[0]  && userRoleData[0].roles  && (userRoleData[0].roles.includes("Admin") || userRoleData[0].roles.includes("Write"))) {
     // Update userData directly
     userData.roles = userRoleData[0].roles; // Assuming 'roles' is an array
     userData.displayName = userRoleData[0].displayName;
     store.commit('setUser', userData);
-    console.log("userData: ", userData);
   
     // Update the roles ref value
     roles.value = userData.roles;
-    console.log("roles",roles.value);
     
+  }else{
+    handleSignout()
   }
 });
 

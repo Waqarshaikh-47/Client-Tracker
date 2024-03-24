@@ -145,7 +145,6 @@ const setCurrentTab = (index: any) => {
 
 
 const printPdf = ()=>{
-  console.log("Selected Forms:", selectedForms.value);
   printPDF()
 }
 

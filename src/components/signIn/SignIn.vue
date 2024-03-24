@@ -11,7 +11,7 @@
         </div>
         <div class="d-flex mt-3">
             <p class="mr-2"><button @click="register" class="btn btn-primary">Submit</button></p>
-            <p class="mx-2"><button @click="signInWithGoogle" class="btn btn-danger">Sign In With Google</button></p>
+            <!-- <p class="mx-2"><button @click="signInWithGoogle" class="btn btn-danger">Sign In With Google</button></p> -->
         </div>
     </div>
 </template>
@@ -63,7 +63,6 @@ const signInWithGoogle = () => {
         emit('auth-success', result.user);
         router.push('/');
     }).catch((error) => {
-        console.log(error);
     })
 }
 

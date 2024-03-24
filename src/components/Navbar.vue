@@ -18,6 +18,8 @@
         <form class="d-flex">
           <button class="btn btn-outline-success" type="submit" v-if="isLoggedIn"
             @click="handleSignout">Sign-out</button>
+            <button class="btn btn-outline-success" type="submit" v-else
+            @click="handleSignIn">Sign-In</button>
         </form>
       </div>
     </div>
@@ -47,6 +49,10 @@ const handleSignout = () => {
   signOut(auth).then(() => {
     router.push({name:'home'})
   })
+}
+
+const handleSignIn = ()=>{
+  router.push({name:'register'})
 }
 </script>
 

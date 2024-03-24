@@ -105,7 +105,6 @@ const submitForm = () => {
 const toggleEditMode = () => {
   if (isEditing.value) {
     let clientData = cloneDeep(store.state)
-    console.log(clientData)
     updateClientsData()
     // Reset form data if cancelling edit mode
   }
