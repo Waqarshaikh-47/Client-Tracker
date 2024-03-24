@@ -4,28 +4,28 @@
 
     <!-- View Mode -->
     <div v-if="!isEditing">
-      <p><strong>Name:</strong> {{ insuranceFormData.name }}</p>
-      <p><strong>Start Date:</strong> {{ insuranceFormData.startDate }}</p>
+      <p><strong>Name:</strong> {{ insurancePolicyFormData.name }}</p>
+      <p><strong>Start Date:</strong> {{ insurancePolicyFormData.startDate }}</p>
       <p>
-        <strong>Policy Number:</strong> {{ insuranceFormData.policyNumber }}
+        <strong>Policy Number:</strong> {{ insurancePolicyFormData.policyNumber }}
       </p>
-      <p><strong>Plan Type:</strong> {{ insuranceFormData.planType }}</p>
-      <p><strong>Company Name:</strong> {{ insuranceFormData.companyName }}</p>
-      <p><strong>Plan Name:</strong> {{ insuranceFormData.planName }}</p>
-      <p><strong>Payment Mode:</strong> {{ insuranceFormData.paymentMode }}</p>
+      <p><strong>Plan Type:</strong> {{ insurancePolicyFormData.planType }}</p>
+      <p><strong>Company Name:</strong> {{ insurancePolicyFormData.companyName }}</p>
+      <p><strong>Plan Name:</strong> {{ insurancePolicyFormData.planName }}</p>
+      <p><strong>Payment Mode:</strong> {{ insurancePolicyFormData.paymentMode }}</p>
       <p>
-        <strong>Premium Amount:</strong> {{ insuranceFormData.premiumAmount }}
+        <strong>Premium Amount:</strong> {{ insurancePolicyFormData.premiumAmount }}
       </p>
-      <p><strong>Sum Assured:</strong> {{ insuranceFormData.sumAssured }}</p>
+      <p><strong>Sum Assured:</strong> {{ insurancePolicyFormData.sumAssured }}</p>
       <p>
         <strong>Premium Payment Term:</strong>
-        {{ insuranceFormData.premiumPayTerm }}
+        {{ insurancePolicyFormData.premiumPayTerm }}
       </p>
-      <p><strong>Policy Term:</strong> {{ insuranceFormData.policyTerm }}</p>
+      <p><strong>Policy Term:</strong> {{ insurancePolicyFormData.policyTerm }}</p>
       <p>
-        <strong>Maturity Date:</strong> {{ insuranceFormData.maturityDate }}
+        <strong>Maturity Date:</strong> {{ insurancePolicyFormData.maturityDate }}
       </p>
-      <p><strong>Remark:</strong> {{ insuranceFormData.remark }}</p>
+      <p><strong>Remark:</strong> {{ insurancePolicyFormData.remark }}</p>
     </div>
 
     <!-- Edit Mode -->
@@ -33,7 +33,7 @@
       <div class="mb-3">
         <label for="name" class="form-label">Name</label>
         <input
-          v-model="insuranceFormData.name"
+          v-model="insurancePolicyFormData.name"
           type="text"
           class="form-control"
           id="name"
@@ -44,7 +44,7 @@
       <div class="mb-3">
         <label for="startDate" class="form-label">Start Date</label>
         <input
-          v-model="insuranceFormData.startDate"
+          v-model="insurancePolicyFormData.startDate"
           type="date"
           class="form-control"
           id="startDate"
@@ -55,7 +55,7 @@
       <div class="mb-3">
         <label for="policyNumber" class="form-label">Policy Number</label>
         <input
-          v-model="insuranceFormData.policyNumber"
+          v-model="insurancePolicyFormData.policyNumber"
           type="text"
           class="form-control"
           id="policyNumber"
@@ -66,7 +66,7 @@
       <div class="mb-3">
         <label for="planType" class="form-label">Plan Type</label>
         <select
-          v-model="insuranceFormData.planType"
+          v-model="insurancePolicyFormData.planType"
           class="form-select"
           id="planType"
           required
@@ -79,14 +79,14 @@
         </select>
         <div
           v-if="
-            insuranceFormData.planType !== 'Traditional Plan' &&
-            insuranceFormData.planType !== 'ULIP' &&
-            insuranceFormData.planType !== 'Term Plan' &&
-            insuranceFormData.planType !== 'Pension Plan'
+            insurancePolicyFormData.planType !== 'Traditional Plan' &&
+            insurancePolicyFormData.planType !== 'ULIP' &&
+            insurancePolicyFormData.planType !== 'Term Plan' &&
+            insurancePolicyFormData.planType !== 'Pension Plan'
           "
         >
           <input
-            v-model="insuranceFormData.planType"
+            v-model="insurancePolicyFormData.planType"
             type="text"
             class="form-control"
             id="planType"
@@ -98,7 +98,7 @@
       <div class="mb-3">
         <label for="companyName" class="form-label">Company Name</label>
         <input
-          v-model="insuranceFormData.companyName"
+          v-model="insurancePolicyFormData.companyName"
           type="text"
           class="form-control"
           id="companyName"
@@ -109,7 +109,7 @@
       <div class="mb-3">
         <label for="planName" class="form-label">Plan Name</label>
         <input
-          v-model="insuranceFormData.planName"
+          v-model="insurancePolicyFormData.planName"
           type="text"
           class="form-control"
           id="planName"
@@ -120,7 +120,7 @@
       <div class="mb-3">
         <label for="paymentMode" class="form-label">Payment Mode</label>
         <select
-          v-model="insuranceFormData.paymentMode"
+          v-model="insurancePolicyFormData.paymentMode"
           class="form-select"
           id="paymentMode"
           required
@@ -135,7 +135,7 @@
       <div class="mb-3">
         <label for="premiumAmount" class="form-label">Premium Amount</label>
         <input
-          v-model="insuranceFormData.premiumAmount"
+          v-model="insurancePolicyFormData.premiumAmount"
           type="number"
           class="form-control"
           id="premiumAmount"
@@ -146,7 +146,7 @@
       <div class="mb-3">
         <label for="sumAssured" class="form-label">Sum Assured</label>
         <input
-          v-model="insuranceFormData.sumAssured"
+          v-model="insurancePolicyFormData.sumAssured"
           type="number"
           class="form-control"
           id="sumAssured"
@@ -159,7 +159,7 @@
           >Premium Payment Term</label
         >
         <input
-          v-model="insuranceFormData.premiumPayTerm"
+          v-model="insurancePolicyFormData.premiumPayTerm"
           type="number"
           class="form-control"
           id="premiumPayTerm"
@@ -170,7 +170,7 @@
       <div class="mb-3">
         <label for="policyTerm" class="form-label">Policy Term</label>
         <input
-          v-model="insuranceFormData.policyTerm"
+          v-model="insurancePolicyFormData.policyTerm"
           type="number"
           class="form-control"
           id="policyTerm"
@@ -181,7 +181,7 @@
       <div class="mb-3">
         <label for="maturityDate" class="form-label">Maturity Date</label>
         <input
-          v-model="insuranceFormData.maturityDate"
+          v-model="insurancePolicyFormData.maturityDate"
           type="date"
           class="form-control"
           id="maturityDate"
@@ -192,7 +192,7 @@
       <div class="mb-3">
         <label for="remark" class="form-label">Remark</label>
         <textarea
-          v-model="insuranceFormData.remark"
+          v-model="insurancePolicyFormData.remark"
           class="form-control"
           id="remark"
           rows="3"
@@ -222,58 +222,51 @@ const props = defineProps({
   isLastForm: Boolean,
 });
 const emit = defineEmits(["next-step", "prev-step"]);
-const insuranceFormData = ref(new InsurancePolicyDetails());
+const insurancePolicyFormData = ref(new InsurancePolicyDetails());
 const isEditing = ref(false);
 
-const saveClientsData = () => {
-  const data = {
-    clientInformationFormData: { ...store.state.clientInformationFormData },
-    fixedDepositFormData: { ...store.state.fixedDepositFormData },
-    goldInvestmentFormData: { ...store.state.goldInvestmentFormData },
-    indiaPostFormData: { ...store.state.indiaPostFormData },
-    insurancePolicyFormData: { ...insuranceFormData.value },
-    mutualFundFormData: { ...store.state.mutualFundFormData },
-    timestamp: Date.now(),
-    fillerInfo: {
-      name: store.state.user.displayName,
-      email: store.state.user.email,
-    },
-  };
-
-  queries.addClientInformationData(data);
-};
-
-const submitForm = () => {
-  store.commit("setInsurancePolicyFormData", insuranceFormData.value);
-
-  saveClientsData();
-  // emit("next-step");
-};
-
 const toggleEditMode = () => {
+  if (isEditing.value) {
+    updateClientsData()
+  }
   isEditing.value = !isEditing.value;
 };
+const updateClientsData = async() => {
+  store.commit('setLoading',true)
+  try {
+    let clientId = store.state.viewClientData.id;
+    const data = {
+      insurancePolicyFormData: { ...insurancePolicyFormData.value },
+      lastUpdated: Date(),
+    }
+    await queries.updateClientInformationData(clientId,data);
+    store.commit('setLoading',false)
+  } catch (error) {
+    console.error("Error updating client data:", error);
+    store.commit('setLoading',false)
 
-const previousButton = () => {
-  emit("prev-step");
-};
+    // You can handle the error here, like showing a toast message
+    // For now, let's re-throw the error to propagate it
+    throw error;
+  }
+}
 
 const fetchInsuranceFormData = () => {
   // Simulated data for example
-  insuranceFormData.value = new InsurancePolicyDetails(
-    currentFormInfo.name,
-    currentFormInfo.startDate,
-    currentFormInfo.policyNumber,
-    currentFormInfo.planType,
-    currentFormInfo.companyName,
-    currentFormInfo.planName,
-    currentFormInfo.paymentMode,
-    currentFormInfo.premiumAmount,
-    currentFormInfo.sumAssured,
-    currentFormInfo.premiumPayTerm,
-    currentFormInfo.policyTerm,
-    currentFormInfo.maturityDate,
-    currentFormInfo.remark
+  insurancePolicyFormData.value = new InsurancePolicyDetails(
+    currentFormInfo.name ? currentFormInfo.name : '',
+    currentFormInfo.startDate ? currentFormInfo.startDate : '',
+    currentFormInfo.policyNumber ? currentFormInfo.policyNumber : '',
+    currentFormInfo.planType ? currentFormInfo.planType : '',
+    currentFormInfo.companyName ? currentFormInfo.companyName : '',
+    currentFormInfo.planName ? currentFormInfo.planName : '',
+    currentFormInfo.paymentMode ? currentFormInfo.paymentMode : '',
+    currentFormInfo.premiumAmount ? currentFormInfo.premiumAmount : '',
+    currentFormInfo.sumAssured ? currentFormInfo.sumAssured : '',
+    currentFormInfo.premiumPayTerm ? currentFormInfo.premiumPayTerm : '',
+    currentFormInfo.policyTerm ? currentFormInfo.policyTerm : '',
+    currentFormInfo.maturityDate ? currentFormInfo.maturityDate : '',
+    currentFormInfo.remark ? currentFormInfo.remark : ''
   );
 };
 

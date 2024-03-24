@@ -97,6 +97,7 @@
 import { ref } from "vue";
 import { useStore } from "vuex";
 import { IndiaPostOfficeDetails } from "@/schemas/forms/IndiaPostOfficeDetails";
+import queries from '@/plugins/db/queries/quries';
 
 const store = useStore();
 const props = defineProps({
@@ -108,32 +109,36 @@ const indiaPostFormData = ref(new IndiaPostOfficeDetails());
 const isEditing = ref(false);
 const currentFormInfo = store.state.viewClientData.clientData.indiaPostFormData;
 
-const submitForm = () => {
-  store.commit("setIndiaPostFormData", indiaPostFormData.value);
-  emit("next-step");
-};
-
 const toggleEditMode = () => {
-  isEditing.value = !isEditing.value;
-  if (!isEditing.value) {
-    // Reset form data if cancelling edit mode
-    // indiaPostFormData.value = new IndiaPostOfficeDetails();
+  if (isEditing.value) {
+    updateClientsData()
   }
+  isEditing.value = !isEditing.value;
 };
+const updateClientsData = async() => {
+  store.commit('setLoading',true)
+  try {
+    let clientId = store.state.viewClientData.id;
+    const data = {
+      indiaPostFormData: { ...indiaPostFormData.value },
+      lastUpdated: Date(),
+    }
+    await queries.updateClientInformationData(clientId,data);
+    store.commit('setLoading',false)
+  } catch (error) {
+    console.error("Error updating client data:", error);
+    store.commit('setLoading',false)
+    throw error;
+  }
+}
 
-const previousButton = () => {
-  emit("prev-step");
-};
-
-// Fetch initial India Post Office data or set from store
 const fetchIndiaPostData = () => {
-  // Simulated data for example
   indiaPostFormData.value = new IndiaPostOfficeDetails(
-    currentFormInfo.name,
-    currentFormInfo.annualInterestRate,
-    currentFormInfo.startDate,
-    currentFormInfo.tenureEndDate,
-    currentFormInfo.compoundingFrequency
+    currentFormInfo.name ? currentFormInfo.name : '' ,
+    currentFormInfo.annualInterestRate ? currentFormInfo.annualInterestRate : '' ,
+    currentFormInfo.startDate ? currentFormInfo.startDate : '' ,
+    currentFormInfo.tenureEndDate ? currentFormInfo.tenureEndDate : '' ,
+    currentFormInfo.compoundingFrequency ? currentFormInfo.compoundingFrequency : '' 
   );
 };
 

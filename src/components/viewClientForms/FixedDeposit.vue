@@ -18,7 +18,7 @@
     </div>
 
     <!-- Edit Mode -->
-    <form v-else @submit.prevent="submitForm">
+    <form v-else>
       <div class="mb-3">
         <label for="name" class="form-label">Name</label>
         <input
@@ -96,6 +96,7 @@
 import { ref } from "vue";
 import { useStore } from "vuex";
 import { FixedDepositDetails } from "@/schemas/forms/FixedDeposit";
+import queries from '@/plugins/db/queries/quries';
 
 const store = useStore();
 const props = defineProps({
@@ -107,32 +108,45 @@ const fixedDepositFormData = ref(new FixedDepositDetails());
 const isEditing = ref(false);
 const currentFormInfo = store.state.viewClientData.clientData.fixedDepositFormData;
 
-const submitForm = () => {
-  store.commit("setFixedDepositFormData", fixedDepositFormData.value);
-  emit("next-step");
-};
+
+const updateClientsData = async() => {
+  store.commit('setLoading',true)
+  try {
+    let clientId = store.state.viewClientData.id;
+    const data = {
+      fixedDepositFormData: { ...fixedDepositFormData.value },
+      lastUpdated: Date(),
+    }
+    await queries.updateClientInformationData(clientId,data);
+    store.commit('setLoading',false)
+  } catch (error) {
+    console.error("Error updating client data:", error);
+    store.commit('setLoading',false)
+
+    // You can handle the error here, like showing a toast message
+    // For now, let's re-throw the error to propagate it
+    throw error;
+  }
+}
 
 const toggleEditMode = () => {
-  isEditing.value = !isEditing.value;
-  if (!isEditing.value) {
-    // Reset form data if cancelling edit mode
-    // fixedDepositFormData.value = new FixedDepositDetails();
+  if (isEditing.value) {
+    updateClientsData()
   }
+  isEditing.value = !isEditing.value;
+
 };
 
-const previousButton = () => {
-  emit("prev-step");
-};
 
 // Fetch initial fixed deposit data or set from store
 const fetchFixedDepositData = () => {
   // Simulated data for example
   fixedDepositFormData.value = new FixedDepositDetails(
-    currentFormInfo.name,
-    currentFormInfo.investmentAmount,
-    currentFormInfo.annualInterestRate,
-    currentFormInfo.startDate,
-    currentFormInfo.tenure
+    currentFormInfo.name ? currentFormInfo.name : '',
+    currentFormInfo.investmentAmount ? currentFormInfo.investmentAmount : '',
+    currentFormInfo.annualInterestRate ? currentFormInfo.annualInterestRate : '',
+    currentFormInfo.startDate ? currentFormInfo.startDate : '',
+    currentFormInfo.tenure ? currentFormInfo.tenure : ''
   );
 };
 

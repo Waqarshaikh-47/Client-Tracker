@@ -14,7 +14,7 @@
     </div>
 
     <!-- Edit Mode -->
-    <form v-else @submit.prevent="submitForm">
+    <form v-else>
       <div class="mb-3">
         <label for="fullName" class="form-label">Full Name</label>
         <input
@@ -97,16 +97,11 @@ const currentFormInfo = store.state.viewClientData.clientData.clientInformationF
 const clientInformationData = ref(new ClientInformation());
 const isEditing = ref(false);
 
-const submitForm = () => {
-  // store.commit("setClientInformationFormData", clientInformationData.value);
-  // emit("next-step");
-};
+
 
 const toggleEditMode = () => {
   if (isEditing.value) {
-    let clientData = cloneDeep(store.state)
     updateClientsData()
-    // Reset form data if cancelling edit mode
   }
   isEditing.value = !isEditing.value;
 
@@ -118,30 +113,30 @@ const toggleEditMode = () => {
 const fetchClientInformation = () => {
   // Simulated data for example
   clientInformationData.value = new ClientInformation(
-    currentFormInfo.fullName,
-    currentFormInfo.panNumber,
-    currentFormInfo.dob,
-    currentFormInfo.email,
-    currentFormInfo.phone
+    currentFormInfo.fullName ? currentFormInfo.fullName : '',
+    currentFormInfo.panNumber ? currentFormInfo.panNumber : '',
+    currentFormInfo.dob ? currentFormInfo.dob : '',
+    currentFormInfo.email ? currentFormInfo.email : '',
+    currentFormInfo.phone ? currentFormInfo.phone : ''
   );
 };
 fetchClientInformation();
 
 
 const updateClientsData = async() => {
+  store.commit('setLoading',true)
   try {
     let clientId = store.state.viewClientData.id;
     const data = {
       clientInformationFormData: { ...clientInformationData.value },
       lastUpdated: Date(),
-      fillerInfo: {
-        name: store.state.user.displayName,
-        email: store.state.user.email,
-      }
     }
     await queries.updateClientInformationData(clientId,data);
+    store.commit('setLoading',false)
   } catch (error) {
     console.error("Error updating client data:", error);
+    store.commit('setLoading',false)
+
     // You can handle the error here, like showing a toast message
     // For now, let's re-throw the error to propagate it
     throw error;

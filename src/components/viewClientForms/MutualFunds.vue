@@ -116,58 +116,46 @@ const mutualFundFormData = ref(new MutualFundDetails());
 const isEditing = ref(false);
 const currentFormInfo = store.state.viewClientData.clientData.mutualFundFormData;
 
-const submitForm = () => {
-  // store.commit("setMutualFundFormData", mutualFundFormData);
-  // emit("next-step");
-};
-
-const previousButton = () => {
-  emit("prev-step");
-};
-
 const toggleEditMode = () => {
   if (isEditing.value) {
-    // Submit form here
     updateClientsData()
-
   }
   isEditing.value = !isEditing.value;
 };
-
-const fetchMutualFundFormData = () => {
-  // Simulated data for example
-  mutualFundFormData.value = new MutualFundDetails(
-    currentFormInfo.name,
-    currentFormInfo.startDate,
-    currentFormInfo.investmentType,
-    currentFormInfo.companyName,
-    currentFormInfo.investmentAmount,
-    currentFormInfo.remark,
-  );
-};
-
-fetchMutualFundFormData();
-
-
 const updateClientsData = async() => {
+  store.commit('setLoading',true)
   try {
-    let clientId = store.state.viewClientData.clientData.id;
+    let clientId = store.state.viewClientData.id;
     const data = {
       mutualFundFormData: { ...mutualFundFormData.value },
       lastUpdated: Date(),
     }
-    let newData = store.state.viewClientData.clientData
-    newData.mutualFundFormData = {...mutualFundFormData.value}
-    newData.lastUpdated = Date()
-    newData = cloneDeep(newData)
-    await queries.updateClientInformationData(clientId,newData);
+    await queries.updateClientInformationData(clientId,data);
+    store.commit('setLoading',false)
   } catch (error) {
     console.error("Error updating client data:", error);
+    store.commit('setLoading',false)
+
     // You can handle the error here, like showing a toast message
     // For now, let's re-throw the error to propagate it
     throw error;
   }
 }
+
+const fetchMutualFundFormData = () => {
+  // Simulated data for example
+  mutualFundFormData.value = new MutualFundDetails(
+    currentFormInfo.name ? currentFormInfo.name : '',
+    currentFormInfo.startDate ? currentFormInfo.startDate : '',
+    currentFormInfo.investmentType ? currentFormInfo.investmentType : '',
+    currentFormInfo.companyName ? currentFormInfo.companyName : '',
+    currentFormInfo.investmentAmount ? currentFormInfo.investmentAmount : '',
+    currentFormInfo.remark ? currentFormInfo.remark : '',
+  );
+};
+
+fetchMutualFundFormData();
+
 </script>
 
 <style scoped>

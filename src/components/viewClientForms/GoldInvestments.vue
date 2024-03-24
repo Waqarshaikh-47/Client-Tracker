@@ -21,7 +21,7 @@
     </div>
 
     <!-- Edit Mode -->
-    <form v-else @submit.prevent="submitForm">
+    <form v-else>
       <div class="mb-3">
         <label for="name" class="form-label">Name</label>
         <input
@@ -110,6 +110,7 @@
 import { ref } from "vue";
 import { useStore } from "vuex";
 import { GoldInvestmentDetails } from "@/schemas/forms/GoldInvestmentDetails";
+import queries from '@/plugins/db/queries/quries';
 
 const store = useStore();
 const props = defineProps({
@@ -121,32 +122,41 @@ const emit = defineEmits(["next-step", "prev-step"]);
 const goldInvestmentFormData = ref(new GoldInvestmentDetails());
 const isEditing = ref(false);
 
-const submitForm = () => {
-  store.commit("setGoldInvestmentFormData", goldInvestmentFormData.value);
-  emit("next-step");
-};
 
 const toggleEditMode = () => {
-  isEditing.value = !isEditing.value;
-  if (!isEditing.value) {
-    // Reset form data if cancelling edit mode
-    // goldInvestmentFormData.value = new GoldInvestmentDetails();
+  if (isEditing.value) {
+    updateClientsData()
   }
+  isEditing.value = !isEditing.value;
 };
+const updateClientsData = async() => {
+  store.commit('setLoading',true)
+  try {
+    let clientId = store.state.viewClientData.id;
+    const data = {
+      goldInvestmentFormData: { ...goldInvestmentFormData.value },
+      lastUpdated: Date(),
+    }
+    await queries.updateClientInformationData(clientId,data);
+    store.commit('setLoading',false)
+  } catch (error) {
+    console.error("Error updating client data:", error);
+    store.commit('setLoading',false)
 
-const previousButton = () => {
-  emit("prev-step");
-};
+    // You can handle the error here, like showing a toast message
+    // For now, let's re-throw the error to propagate it
+    throw error;
+  }
+}
 
-// Fetch initial gold investment data or set from store
+
 const fetchGoldInvestmentData = () => {
-  // Simulated data for example
   goldInvestmentFormData.value = new GoldInvestmentDetails(
-    currentFormInfo.name,
-    currentFormInfo.investmentValue,
-    currentFormInfo.quantity,
-    currentFormInfo.investmentDate,
-    currentFormInfo.goldType
+    currentFormInfo.name ? currentFormInfo.name : '',
+    currentFormInfo.investmentValue ? currentFormInfo.investmentValue : '',
+    currentFormInfo.quantity ? currentFormInfo.quantity : '',
+    currentFormInfo.investmentDate ? currentFormInfo.investmentDate : '',
+    currentFormInfo.goldType ? currentFormInfo.goldType : ''
   );
 };
 

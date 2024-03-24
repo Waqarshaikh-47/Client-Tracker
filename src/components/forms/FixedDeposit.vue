@@ -111,8 +111,6 @@ const updateClientsData = async() => {
     await queries.updateClientInformationData(clientId,data);
   } catch (error) {
     console.error("Error updating client data:", error);
-    // You can handle the error here, like showing a toast message
-    // For now, let's re-throw the error to propagate it
     throw error;
   }
 }
@@ -127,8 +125,6 @@ const submitForm = async() => {
   } catch (error) {
     console.error("Error submitting form:", error);
     store.commit('setLoading', false);
-    // You can handle the error here, like showing a toast message
-    // For now, let's re-throw the error to propagate it
     throw error;
   }
 };
