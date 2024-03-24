@@ -130,10 +130,14 @@ fetchClientInformation();
 
 const updateClientsData = async() => {
   try {
-    let clientId = store.state.viewClientData.clientData.id;
+    let clientId = store.state.viewClientData.id;
     const data = {
       clientInformationFormData: { ...clientInformationData.value },
       lastUpdated: Date(),
+      fillerInfo: {
+        name: store.state.user.displayName,
+        email: store.state.user.email,
+      }
     }
     await queries.updateClientInformationData(clientId,data);
   } catch (error) {
