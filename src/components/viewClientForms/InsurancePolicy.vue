@@ -1,7 +1,11 @@
 <template>
   <div class="container mt-5">
     <h1>INSURANCE POLICY</h1>
-
+    <div class="text-end" v-if="allForms.length">
+      <button class="btn btn-primary" @click="addNewForm">
+        {{ isAddNewForm ? "Save" : "Add New Form" }}
+      </button>
+    </div>
     <!-- View Mode -->
     <div v-if="!isEditing">
       <p><strong>Name:</strong> {{ insurancePolicyFormData.name }}</p>
@@ -200,11 +204,22 @@
         ></textarea>
       </div>
     </form>
-    <div class="d-flex justify-content-between mt-4 mb-4">
+    <div class="d-flex justify-content-between mt-4 mb-4" v-if="!isAddNewForm">
       <button @click="toggleEditMode" class="btn btn-primary">
         {{ isEditing ? "Save" : "Edit" }}
       </button>
     </div>
+    <ul class="list-group mt-3 container" v-if="allForms.length">
+      <li
+        @click="setCurrentForm(form, formIndex)"
+        v-for="(form, formIndex) in allForms"
+        :key="formIndex + 'fromList'"
+        class="list-group-item custom-list-item"
+        :class="{ active: currentFormIndex === formIndex }"
+      >
+        <i class="bi bi-journal"></i> {{ form.companyName }}
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -213,9 +228,11 @@ import { ref } from "vue";
 import { useStore } from "vuex";
 import { InsurancePolicyDetails } from "@/schemas/forms/InsurancePolicyDetails";
 import queries from "@/plugins/db/queries/quries";
+import { cloneDeep, isArray } from "lodash";
+import router from "@/router";
+
 
 const store = useStore();
-const currentFormInfo = store.state.viewClientData.clientData.insurancePolicyFormData;
 
 const props = defineProps({
   legIndex: Number,
@@ -224,6 +241,15 @@ const props = defineProps({
 const emit = defineEmits(["next-step", "prev-step"]);
 const insurancePolicyFormData = ref(new InsurancePolicyDetails());
 const isEditing = ref(false);
+const isAddNewForm = ref(false);
+const currentFormInfo = ref({});
+const currentFormIndex = ref(0);
+const allForms = ref(
+  isArray(store.state.viewClientData.clientData.insurancePolicyFormData)
+    ? store.state.viewClientData.clientData.insurancePolicyFormData
+    : []
+);
+
 
 const toggleEditMode = () => {
   if (isEditing.value) {
@@ -235,12 +261,22 @@ const updateClientsData = async() => {
   store.commit('setLoading',true)
   try {
     let clientId = store.state.viewClientData.id;
+    let formParamsData = cloneDeep(allForms.value);
+    let currentFormParamsData = cloneDeep(insurancePolicyFormData.value);
+    if (isAddNewForm.value) {
+      formParamsData.push({ ...currentFormParamsData });
+    } else {
+      formParamsData[currentFormIndex.value] = { ...currentFormParamsData };
+    }
     const data = {
-      insurancePolicyFormData: { ...insurancePolicyFormData.value },
+      insurancePolicyFormData: formParamsData,
       lastUpdated: Date(),
     }
     await queries.updateClientInformationData(clientId,data);
     store.commit('setLoading',false)
+    isAddNewForm.value = false;
+    isEditing.value = false;
+    router.push({ name: "clients" });
   } catch (error) {
     console.error("Error updating client data:", error);
     store.commit('setLoading',false)
@@ -254,24 +290,50 @@ const updateClientsData = async() => {
 const fetchInsuranceFormData = () => {
   // Simulated data for example
   insurancePolicyFormData.value = new InsurancePolicyDetails(
-    currentFormInfo.name ? currentFormInfo.name : '',
-    currentFormInfo.startDate ? currentFormInfo.startDate : '',
-    currentFormInfo.policyNumber ? currentFormInfo.policyNumber : '',
-    currentFormInfo.planType ? currentFormInfo.planType : '',
-    currentFormInfo.companyName ? currentFormInfo.companyName : '',
-    currentFormInfo.planName ? currentFormInfo.planName : '',
-    currentFormInfo.paymentMode ? currentFormInfo.paymentMode : '',
-    currentFormInfo.premiumAmount ? currentFormInfo.premiumAmount : '',
-    currentFormInfo.sumAssured ? currentFormInfo.sumAssured : '',
-    currentFormInfo.premiumPayTerm ? currentFormInfo.premiumPayTerm : '',
-    currentFormInfo.policyTerm ? currentFormInfo.policyTerm : '',
-    currentFormInfo.maturityDate ? currentFormInfo.maturityDate : '',
-    currentFormInfo.remark ? currentFormInfo.remark : ''
+    currentFormInfo.value.name ? currentFormInfo.value.name : '',
+    currentFormInfo.value.startDate ? currentFormInfo.value.startDate : '',
+    currentFormInfo.value.policyNumber ? currentFormInfo.value.policyNumber : '',
+    currentFormInfo.value.planType ? currentFormInfo.value.planType : '',
+    currentFormInfo.value.companyName ? currentFormInfo.value.companyName : '',
+    currentFormInfo.value.planName ? currentFormInfo.value.planName : '',
+    currentFormInfo.value.paymentMode ? currentFormInfo.value.paymentMode : '',
+    currentFormInfo.value.premiumAmount ? currentFormInfo.value.premiumAmount : '',
+    currentFormInfo.value.sumAssured ? currentFormInfo.value.sumAssured : '',
+    currentFormInfo.value.premiumPayTerm ? currentFormInfo.value.premiumPayTerm : '',
+    currentFormInfo.value.policyTerm ? currentFormInfo.value.policyTerm : '',
+    currentFormInfo.value.maturityDate ? currentFormInfo.value.maturityDate : '',
+    currentFormInfo.value.remark ? currentFormInfo.value.remark : ''
   );
 };
 
-fetchInsuranceFormData();
-</script>
+const setCurrentForm = (form, formIndex) => {
+  currentFormInfo.value = form;
+  currentFormIndex.value = formIndex;
+  fetchInsuranceFormData();
+};
+
+const initializeCurrentForm = () => {
+  if (allForms.value.length) {
+    currentFormInfo.value = allForms.value[0];
+    fetchInsuranceFormData();
+  } else {
+    currentFormInfo.value = {};
+    fetchInsuranceFormData();
+  }
+};
+
+initializeCurrentForm();
+
+const addNewForm = () => {
+  if (!isAddNewForm.value) {
+    currentFormInfo.value = {};
+    fetchInsuranceFormData();
+    isEditing.value = true;
+    isAddNewForm.value = true;
+  } else {
+    updateClientsData();
+  }
+};</script>
 
 <style scoped>
 .btn-primary {
@@ -292,5 +354,21 @@ fetchInsuranceFormData();
 .btn-secondary:hover {
   background-color: #5a6268;
   border-color: #5a6167;
+}
+
+.custom-list-item {
+  background-color: #343a40; /* Dark background color */
+  color: white; /* Text color */
+  border-color: #343a40; /* Border color */
+}
+
+.custom-list-item:hover {
+  background-color: #495057; /* Darker background color on hover */
+}
+
+.custom-list-item.active {
+  background-color: #6f6f6f; /* Active background color */
+  color: white; /* Active text color */
+  border-color: #212529; /* Active border color */
 }
 </style>
