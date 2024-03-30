@@ -52,11 +52,11 @@ const clientInformationData = new ClientInformation('','','','','');
 const saveClientsData = async() => {
   const data = {
     clientInformationFormData: { ...clientInformationData },
-    fixedDepositFormData: {  },
-    goldInvestmentFormData: {  },
-    indiaPostFormData: {  },
-    insurancePolicyFormData: { },
-    mutualFundFormData: {  },
+    fixedDepositFormData: [],
+    goldInvestmentFormData: [],
+    indiaPostFormData: [],
+    insurancePolicyFormData: [],
+    mutualFundFormData: [],
     startDate: Date(),
     lastUpdated: Date(),
     fillerInfo: {

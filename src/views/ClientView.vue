@@ -63,53 +63,73 @@
       >
         <ul class="list-group mt-3">
           <template v-if="filteredActiveClients.length">
-  <div class="table-responsive">
-    <table class="table table-dark table-striped">
-      <thead>
-        <tr>
-          <th></th>
-          <th>Name</th>
-          <th>Consultant</th>
-          <th>Last Updated</th>
-          <th>Created on</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(activeClient, activeIndex) in filteredActiveClients" :key="'active-' + activeIndex">
-          <td>{{ activeIndex + 1 }}</td>
-          <td class="text-light">{{ activeClient.clientData.clientInformationFormData.fullName }}</td>
-          <td class="text-light">{{ activeClient.clientData.fillerInfo.name }}</td>
-          <td class="text-light">{{ formatDate(activeClient.clientData.lastUpdated) }}</td>
-          <td class="text-light">{{ formatDate(activeClient.clientData.startDate) }}</td>
-          <td>
-            <div class="dropdown">
-              <button
-                class="btn btn-secondary dropdown-toggle"
-                type="button"
-                id="dropdownMenuButton"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                <i class="bi bi-three-dots"></i>
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <li>
-                  <a class="dropdown-item text-dark" @click="viewContact(activeIndex, activeClient)">View</a>
-                </li>
-              </ul>
+            <div class="table-responsive" style="min-height: 400px">
+              <table class="table table-dark table-striped">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Consultant</th>
+                    <th>Last Updated</th>
+                    <th>Created on</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    v-for="(activeClient, activeIndex) in filteredActiveClients"
+                    :key="'active-' + activeIndex"
+                  >
+                    <td>{{ activeIndex + 1 }}</td>
+                    <td class="text-light">
+                      {{
+                        activeClient.clientData.clientInformationFormData
+                          .fullName
+                      }}
+                    </td>
+                    <td class="text-light">
+                      {{ activeClient.clientData.fillerInfo.name }}
+                    </td>
+                    <td class="text-light">
+                      {{ formatDate(activeClient.clientData.lastUpdated) }}
+                    </td>
+                    <td class="text-light">
+                      {{ formatDate(activeClient.clientData.startDate) }}
+                    </td>
+                    <td>
+                      <div class="dropdown">
+                        <button
+                          class="btn btn-secondary dropdown-toggle"
+                          type="button"
+                          id="dropdownMenuButton"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          <i class="bi bi-three-dots"></i>
+                        </button>
+                        <ul
+                          class="dropdown-menu"
+                          aria-labelledby="dropdownMenuButton"
+                        >
+                          <li>
+                            <a
+                              class="dropdown-item text-dark"
+                              @click="viewContact(activeIndex, activeClient)"
+                              >View</a
+                            >
+                          </li>
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</template>
-
-
-
+          </template>
           <template v-else>
-            <li class="list-group-item">No active clients found.</li>
+            <div style="min-height: 200px">
+              <li class="list-group-item">No active clients found.</li>
+            </div>
           </template>
         </ul>
       </div>
@@ -123,51 +143,76 @@
       >
         <ul class="list-group mt-3">
           <template v-if="filteredPendingClients.length">
-  <div class="table-responsive">
-    <table class="table table-dark table-striped">
-      <thead>
-        <tr>
-          <th></th>
-          <th>Name</th>
-          <th>Consultant</th>
-          <th>Last Updated</th>
-          <th>Created On</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(pendingClient, pendingIndex) in filteredPendingClients" :key="'pending-' + pendingIndex">
-          <td>{{ pendingIndex + 1 }}</td>
-          <td class="text-light">{{ pendingClient.clientData.clientInformationFormData.fullName }}</td>
-          <td class="text-light">{{ pendingClient.clientData.fillerInfo.name }}</td>
-          <td class="text-light">{{ formatDate(pendingClient.clientData.lastUpdated) }}</td>
-          <td class="text-light">{{ formatDate(pendingClient.clientData.startDate) }}</td>
-          <td>
-            <div class="dropdown">
-              <button
-                class="btn btn-secondary dropdown-toggle"
-                type="button"
-                id="dropdownMenuButton"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                <i class="bi bi-three-dots"></i>
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <li>
-                  <a class="dropdown-item text-dark" @click="viewContact(pendingIndex, pendingClient)">View</a>
-                </li>
-              </ul>
+            <div class="table-responsive" style="min-height: 400px">
+              <table class="table table-dark table-striped">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Consultant</th>
+                    <th>Last Updated</th>
+                    <th>Created On</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    v-for="(
+                      pendingClient, pendingIndex
+                    ) in filteredPendingClients"
+                    :key="'pending-' + pendingIndex"
+                  >
+                    <td>{{ pendingIndex + 1 }}</td>
+                    <td class="text-light">
+                      {{
+                        pendingClient.clientData.clientInformationFormData
+                          .fullName
+                      }}
+                    </td>
+                    <td class="text-light">
+                      {{ pendingClient.clientData.fillerInfo.name }}
+                    </td>
+                    <td class="text-light">
+                      {{ formatDate(pendingClient.clientData.lastUpdated) }}
+                    </td>
+                    <td class="text-light">
+                      {{ formatDate(pendingClient.clientData.startDate) }}
+                    </td>
+                    <td>
+                      <div class="dropdown">
+                        <button
+                          class="btn btn-secondary dropdown-toggle"
+                          type="button"
+                          id="dropdownMenuButton"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          <i class="bi bi-three-dots"></i>
+                        </button>
+                        <ul
+                          class="dropdown-menu"
+                          aria-labelledby="dropdownMenuButton"
+                        >
+                          <li>
+                            <a
+                              class="dropdown-item text-dark"
+                              @click="viewContact(pendingIndex, pendingClient)"
+                              >View</a
+                            >
+                          </li>
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</template>
+          </template>
 
           <template v-else>
-            <li class="list-group-item">No pending clients found.</li>
+            <div style="min-height: 200px">
+              <li class="list-group-item">No pending clients found.</li>
+            </div>
           </template>
         </ul>
       </div>
@@ -176,7 +221,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, onMounted, ref, computed , watch ,inject} from "vue";
+import { onBeforeMount, onMounted, ref, computed, watch, inject } from "vue";
 import queries from "@/plugins/db/queries/quries";
 import { useStore } from "vuex";
 import router from "@/router";
@@ -206,13 +251,13 @@ onBeforeMount(async () => {
   }
 });
 
-const activateTab = (tabId:string) => {
+const activateTab = (tabId: string) => {
   activeTab.value = tabId;
 };
 
 const viewContact = (index: number, clientData: any): void => {
   // You can implement the view functionality here
-  let clientDataClone = cloneDeep(clientData)
+  let clientDataClone = cloneDeep(clientData);
   store.commit("setViewClientData", clientDataClone);
   router.push({ name: "client-details" });
 };
@@ -223,8 +268,7 @@ watch(searchQuery, () => {
   searchClients(activeTab.value);
 });
 
-
-const searchClients = (tabName:string) => {
+const searchClients = (tabName: string) => {
   if (tabName == "active-client-tab") {
     if (searchQuery.value) {
       let filterValue = filter(activeClients, (client) => {
@@ -241,10 +285,10 @@ const searchClients = (tabName:string) => {
     } else {
       filteredActiveClients.value = activeClients;
     }
-  } else if(tabName == "pending-client-tab") {
+  } else if (tabName == "pending-client-tab") {
     // Filter for pending list
     if (searchQuery.value) {
-      let filterValue = filter(pendingClients, (client) => {        
+      let filterValue = filter(pendingClients, (client) => {
         return (
           client.clientData.clientInformationFormData.fullName
             .toLowerCase()
@@ -276,36 +320,45 @@ const deleteContact = (index: number, listType: string): void => {
 
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
-  const options:any = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-  return date.toLocaleDateString('en-GB', options);
-}
+  const options: any = {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  };
+  return date.toLocaleDateString("en-GB", options);
+};
 
 interface ClientData {
   [key: string]: any;
 }
 
-function categorizeClients(clients: { id: string, clientData: ClientData }[]): { active: { id: string, clientData: ClientData }[], pending: { id: string, clientData: ClientData }[] } {
-  const activeClientsList: { id: string, clientData: ClientData }[] = [];
-  const pendingClientsList: { id: string, clientData: ClientData }[] = [];
+function categorizeClients(clients: { id: string; clientData: ClientData }[]): {
+  active: { id: string; clientData: ClientData }[];
+  pending: { id: string; clientData: ClientData }[];
+} {
+  const activeClientsList: { id: string; clientData: ClientData }[] = [];
+  const pendingClientsList: { id: string; clientData: ClientData }[] = [];
 
   const formsToCheck = [
-    'fixedDepositFormData',
-    'goldInvestmentFormData',
-    'indiaPostFormData',
-    'insurancePolicyFormData',
-    'mutualFundFormData'
+    "fixedDepositFormData",
+    "goldInvestmentFormData",
+    "indiaPostFormData",
+    "insurancePolicyFormData",
+    "mutualFundFormData",
   ];
 
-  clients.forEach(client => {
+  clients.forEach((client) => {
     const data = client.clientData;
 
     // Flag to check if client is pending
     let isPending = false;
 
-    formsToCheck.forEach(form => {
-      if (Object.keys(data[form]).some(key => data[form][key] !== '')) {
+    formsToCheck.forEach((form) => {
+      if (Object.keys(data[form]).some((key) => data[form][key] !== "")) {
         // Form has a key with a value
-        if (Object.keys(data[form]).some(key => data[form][key] === '')) {
+        if (Object.keys(data[form]).some((key) => data[form][key] === "")) {
           // Form also has a key with an empty value
           isPending = true;
         }
@@ -321,8 +374,6 @@ function categorizeClients(clients: { id: string, clientData: ClientData }[]): {
 
   return { active: activeClientsList, pending: pendingClientsList };
 }
-
-
 </script>
 
 <style>

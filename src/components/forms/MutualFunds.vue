@@ -108,7 +108,7 @@ onMounted(()=>{
 const updateClientsData = async() => {
   let clientId = store.state.clientId;
   const data = {
-    mutualFundFormData: { ...mutualFundFormData },
+    mutualFundFormData: [{ ...mutualFundFormData }],
     lastUpdated: Date(),
     fillerInfo: {
       name: store.state.user.displayName,

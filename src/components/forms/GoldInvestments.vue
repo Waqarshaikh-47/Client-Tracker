@@ -98,7 +98,7 @@ const updateClientsData = async () => {
   let clientId = store.state.clientId;
   let newData = cloneDeep(goldInvestmentFormData.value);
   const data = {
-    goldInvestmentFormData: { ...newData },
+    goldInvestmentFormData: [{ ...newData }],
     lastUpdated: Date(),
     fillerInfo: {
       name: store.state.user.displayName,

@@ -100,7 +100,7 @@ const updateClientsData = async() => {
   try {
     let clientId = store.state.clientId;
     const data = {
-      indiaPostFormData: { ...indiaPostFormData },
+      indiaPostFormData: [{ ...indiaPostFormData }],
       lastUpdated: Date(),
       fillerInfo: {
         name: store.state.user.displayName,

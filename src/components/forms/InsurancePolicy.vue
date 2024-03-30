@@ -121,7 +121,7 @@ const updateClientsData = async() => {
     let clientId = store.state.clientId;
     let newData = cloneDeep(insuranceFormData.value)
     const data = {
-      insurancePolicyFormData: {...newData},
+      insurancePolicyFormData: [{...newData}],
       lastUpdated: Date(),
       fillerInfo: {
         name: store.state.user.displayName,

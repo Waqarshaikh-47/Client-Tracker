@@ -101,7 +101,7 @@ const updateClientsData = async() => {
   try {
     let clientId = store.state.clientId;
     const data = {
-      fixedDepositFormData: { ...fixedDepositFormData },
+      fixedDepositFormData:[ { ...fixedDepositFormData }],
       lastUpdated: Date(),
       fillerInfo: {
         name: store.state.user.displayName,
