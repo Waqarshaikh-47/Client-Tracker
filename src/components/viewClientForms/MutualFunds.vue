@@ -119,7 +119,6 @@ import { MutualFundDetails } from "@/schemas/forms/MutualFundDetails";
 import { useStore } from "vuex";
 import queries from "@/plugins/db/queries/quries";
 import { cloneDeep, isArray } from "lodash";
-import { initializeAuth } from "firebase/auth";
 import router from "@/router";
 
 const store = useStore();
@@ -167,19 +166,12 @@ const updateClientsData = async () => {
   } catch (error) {
     console.error("Error updating client data:", error);
     store.commit("setLoading", false);
-    router.push({ name: "clients" });
-
     // You can handle the error here, like showing a toast message
     // For now, let's re-throw the error to propagate it
     throw error;
   }
 };
 
-const setCurrentForm = (form, formIndex) => {
-  currentFormInfo.value = form;
-  currentFormIndex.value = formIndex;
-  fetchMutualFundFormData();
-};
 
 const fetchMutualFundFormData = () => {
   // Simulated data for example
@@ -195,6 +187,12 @@ const fetchMutualFundFormData = () => {
       : "",
     currentFormInfo.value.remark ? currentFormInfo.value.remark : ""
   );
+};
+
+const setCurrentForm = (form, formIndex) => {
+  currentFormInfo.value = form;
+  currentFormIndex.value = formIndex;
+  fetchMutualFundFormData();
 };
 
 const initializeCurrentForm = () => {

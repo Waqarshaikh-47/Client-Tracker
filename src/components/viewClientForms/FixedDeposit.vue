@@ -1,7 +1,11 @@
 <template>
   <div class="container mt-5">
     <h1>Fixed Deposit Details</h1>
-
+    <div class="text-end" v-if="allForms.length">
+      <button class="btn btn-primary" @click="addNewForm">
+        {{ isAddNewForm ? "Save" : "Add New Form" }}
+      </button>
+    </div>
     <!-- View Mode -->
     <div v-if="!isEditing">
       <p><strong>Name:</strong> {{ fixedDepositFormData.name }}</p>
@@ -84,11 +88,22 @@
         >
       </div>
     </form>
-    <div class="d-flex justify-content-between mt-4 mb-4">
+    <div class="d-flex justify-content-between mt-4 mb-4" v-if="!isAddNewForm">
       <button @click="toggleEditMode" class="btn btn-primary">
         {{ isEditing ? "Save" : "Edit" }}
       </button>
     </div>
+    <ul class="list-group mt-3 container" v-if="allForms.length">
+      <li
+        @click="setCurrentForm(form, formIndex)"
+        v-for="(form, formIndex) in allForms"
+        :key="formIndex + 'fromList'"
+        class="list-group-item custom-list-item"
+        :class="{ active: currentFormIndex === formIndex }"
+      >
+        <i class="bi bi-journal"></i>  {{ form.name }}
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -97,6 +112,8 @@ import { ref } from "vue";
 import { useStore } from "vuex";
 import { FixedDepositDetails } from "@/schemas/forms/FixedDeposit";
 import queries from '@/plugins/db/queries/quries';
+import { cloneDeep, isArray } from "lodash";
+import router from "@/router";
 
 const store = useStore();
 const props = defineProps({
@@ -106,21 +123,37 @@ const props = defineProps({
 const emit = defineEmits(["next-step", "prev-step"]);
 const fixedDepositFormData = ref(new FixedDepositDetails());
 const isEditing = ref(false);
-const currentFormInfo = store.state.viewClientData.clientData.fixedDepositFormData;
+const isAddNewForm = ref(false);
+const currentFormInfo = ref({});
+const currentFormIndex = ref(0);
 
-
+const allForms = ref(
+  isArray(store.state.viewClientData.clientData.fixedDepositFormData)
+    ? store.state.viewClientData.clientData.fixedDepositFormData
+    : []
+);
 const updateClientsData = async() => {
   store.commit('setLoading',true)
   try {
     let clientId = store.state.viewClientData.id;
+    let formParamsData = cloneDeep(allForms.value);
+    let currentFormParamsData = cloneDeep(fixedDepositFormData.value);
+    if (isAddNewForm.value) {
+      formParamsData.push({ ...currentFormParamsData });
+    } else {
+      formParamsData[currentFormIndex.value] = { ...currentFormParamsData };
+    }
     const data = {
-      fixedDepositFormData: { ...fixedDepositFormData.value },
+      fixedDepositFormData: formParamsData,
       lastUpdated: Date(),
     }
     await queries.updateClientInformationData(clientId,data);
+    isAddNewForm.value = false;
+    isEditing.value = false;
     store.commit('setLoading',false)
+    router.push({ name: "clients" });
   } catch (error) {
-    console.error("Error updating client data:", error);
+    alert("Error updating client data:", error);
     store.commit('setLoading',false)
 
     // You can handle the error here, like showing a toast message
@@ -134,7 +167,11 @@ const toggleEditMode = () => {
     updateClientsData()
   }
   isEditing.value = !isEditing.value;
-
+};
+const setCurrentForm = (form, formIndex) => {
+  currentFormInfo.value = form;
+  currentFormIndex.value = formIndex;
+  fetchFixedDepositData();
 };
 
 
@@ -142,15 +179,38 @@ const toggleEditMode = () => {
 const fetchFixedDepositData = () => {
   // Simulated data for example
   fixedDepositFormData.value = new FixedDepositDetails(
-    currentFormInfo.name ? currentFormInfo.name : '',
-    currentFormInfo.investmentAmount ? currentFormInfo.investmentAmount : '',
-    currentFormInfo.annualInterestRate ? currentFormInfo.annualInterestRate : '',
-    currentFormInfo.startDate ? currentFormInfo.startDate : '',
-    currentFormInfo.tenure ? currentFormInfo.tenure : ''
+    currentFormInfo.value.name ? currentFormInfo.value.name : '',
+    currentFormInfo.value.investmentAmount ? currentFormInfo.value.investmentAmount : '',
+    currentFormInfo.value.annualInterestRate ? currentFormInfo.value.annualInterestRate : '',
+    currentFormInfo.value.startDate ? currentFormInfo.value.startDate : '',
+    currentFormInfo.value.tenure ? currentFormInfo.value.tenure : ''
   );
 };
 
-fetchFixedDepositData();
+const initializeCurrentForm = () => {
+  if (allForms.value.length) {
+    currentFormInfo.value = allForms.value[0];
+    fetchFixedDepositData();
+  } else {
+    currentFormInfo.value = {};
+    fetchFixedDepositData();
+  }
+};
+
+initializeCurrentForm();
+
+const addNewForm = () => {
+  if (!isAddNewForm.value) {
+    currentFormInfo.value = {};
+    fetchFixedDepositData();
+    isEditing.value = true;
+    isAddNewForm.value = true;
+  } else {
+    updateClientsData();
+  }
+};
+
+
 </script>
 
 <style scoped>
@@ -172,5 +232,21 @@ fetchFixedDepositData();
 .btn-secondary:hover {
   background-color: #5a6268;
   border-color: #5a6167;
+}
+
+.custom-list-item {
+  background-color: #343a40; /* Dark background color */
+  color: white; /* Text color */
+  border-color: #343a40; /* Border color */
+}
+
+.custom-list-item:hover {
+  background-color: #495057; /* Darker background color on hover */
+}
+
+.custom-list-item.active {
+  background-color: #6f6f6f; /* Active background color */
+  color: white; /* Active text color */
+  border-color: #212529; /* Active border color */
 }
 </style>
