@@ -1,5 +1,5 @@
 export class MutualFundDetails {
-    name: string;
+    fundName: string;
     startDate: string;
     investmentType: string;
     companyName: string;
@@ -7,14 +7,14 @@ export class MutualFundDetails {
     remark: string;
   
     constructor(
-      name: string,
+      fundName: string,
       startDate: string,
       investmentType: string,
       companyName: string,
       investmentAmount: number,
       remark: string
     ) {
-      this.name = name;
+      this.fundName = fundName;
       this.startDate = startDate;
       this.investmentType = investmentType;
       this.companyName = companyName;

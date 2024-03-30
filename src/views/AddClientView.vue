@@ -48,10 +48,10 @@ import InsurancePolicy from "@/components/forms/InsurancePolicy.vue";
 const steps = ref([
   { name: "Client Information", componentName: shallowRef(ClientInformation) },
   { name: "Mutual Fund", componentName: shallowRef(MutualFunds) },
+  { name: "Insurance Policy", componentName: shallowRef(InsurancePolicy) },
   { name: "Gold Investment", componentName: shallowRef(GoldInvestments) },
   { name: "Fixed Deposit Info", componentName: shallowRef(FixedDeposit) },
   { name: "India Post Office", componentName: shallowRef(IndiaPostOffice) },
-  { name: "Insurance Policy", componentName: shallowRef(InsurancePolicy) },
 ]);
 
 const currentStep = ref(0);

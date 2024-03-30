@@ -8,13 +8,13 @@
     </div>
     <!-- View Mode -->
     <div v-if="!isEditing">
-      <p><strong>Name:</strong> {{ mutualFundFormData.name }}</p>
+      <p><strong>Company Name:</strong> {{ mutualFundFormData.companyName }}</p>
       <p><strong>Start Date:</strong> {{ mutualFundFormData.startDate }}</p>
       <p>
         <strong>Investment Type:</strong>
         {{ mutualFundFormData.investmentType }}
       </p>
-      <p><strong>Company Name:</strong> {{ mutualFundFormData.companyName }}</p>
+      <p><strong>Fund Name:</strong> {{ mutualFundFormData.fundName }}</p>
       <p>
         <strong>Investment Amount:</strong>
         {{ mutualFundFormData.investmentAmount }}
@@ -25,13 +25,13 @@
     <!-- Edit Mode -->
     <form v-else @submit.prevent="submitForm">
       <div class="mb-3">
-        <label for="name" class="form-label">Name</label>
+        <label for="companyName" class="form-label">Company Name</label>
         <input
-          v-model="mutualFundFormData.name"
+          v-model="mutualFundFormData.companyName"
           type="text"
           class="form-control"
-          id="name"
-          placeholder="Enter your name"
+          id="companyName"
+          placeholder="Enter company name"
           required
         />
       </div>
@@ -60,12 +60,12 @@
         </select>
       </div>
       <div class="mb-3">
-        <label for="companyName" class="form-label">Company Name</label>
+        <label for="fundName" class="form-label">Fund Name</label>
         <input
-          v-model="mutualFundFormData.companyName"
+          v-model="mutualFundFormData.fundName"
           type="text"
           class="form-control"
-          id="companyName"
+          id="fundName"
           placeholder="Enter company name"
           required
         />
@@ -176,7 +176,7 @@ const updateClientsData = async () => {
 const fetchMutualFundFormData = () => {
   // Simulated data for example
   mutualFundFormData.value = new MutualFundDetails(
-    currentFormInfo.value.name ? currentFormInfo.value.name : "",
+    currentFormInfo.value.fundName ? currentFormInfo.value.fundName : "",
     currentFormInfo.value.startDate ? currentFormInfo.value.startDate : "",
     currentFormInfo.value.investmentType
       ? currentFormInfo.value.investmentType
