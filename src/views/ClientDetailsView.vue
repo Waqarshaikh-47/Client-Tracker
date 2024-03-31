@@ -1,25 +1,15 @@
 <template>
   <div class="container mt-5">
     <!-- Progress Tabs -->
-    <button
-      class="btn btn-primary mt-1 mb-1"
-      data-bs-toggle="modal"
-      data-bs-target="#printPdfModal"
-    >
+    <button class="btn btn-primary mt-1 mb-1" data-bs-toggle="modal" data-bs-target="#printPdfModal">
       <i class="bi bi-file-pdf"></i> Print PDF
     </button>
 
     <div class="progress-tabs mb-4">
-      <div
-        v-for="(step, index) in steps"
-        :key="index"
-        class="progress-tab"
-        :class="{
-          active: index === currentStep,
-          completed: index < currentStep,
-        }"
-        @click="setCurrentTab(index)"
-      >
+      <div v-for="(step, index) in steps" :key="index" class="progress-tab" :class="{
+        active: index === currentStep,
+        completed: index < currentStep,
+      }" @click="setCurrentTab(index)">
         <div class="progress-tab-content">
           <span class="step-number">{{ index + 1 }}</span>
           <span class="step-name">{{ step.name }}</span>
@@ -31,13 +21,8 @@
     <!-- Forms -->
     <template v-for="(step, index) in steps" :key="index + step.componentName">
       <div v-show="index === currentStep">
-        <component
-          :is="step.componentName"
-          @prev-step="prevStep"
-          @next-step="nextStep"
-          :legIndex="index"
-          :isLastForm="index == steps.length - 1"
-        />
+        <component :is="step.componentName" @prev-step="prevStep" @next-step="nextStep" :legIndex="index"
+          :isLastForm="index == steps.length - 1" />
       </div>
     </template>
     <!-- Forms -->
@@ -52,12 +37,28 @@
           <div class="modal-body">
             <div class="mb-3">
               <p>Select forms to include in the PDF:</p>
-              <div class="form-check" v-for="(form, index) in forms" :key="index">
-                <input class="form-check-input" type="checkbox" :id="`form${index}`" :value="form" v-model="selectedForms">
-                <label class="form-check-label" :for="`form${index}`">
-                  {{ form }}
-                </label>
-              </div>
+              <!-- {{ forms }} -->
+              <template class="form-check d-flex flex-column" v-for="(form, index) in forms.clientData" :key="index">
+                <template v-if="index.toString() !== 'fillerInfo' && index.toString() !== 'lastUpdated' && index.toString() !== 'startDate'
+        && form.length">
+                  <div class="">
+                    {{ beautifyName(index.toString()) }}s
+
+                    <label class="form-check-label" :for="`form${index}`">
+                    <!-- <input class="form-check-input" type="checkbox" :id="`form${index}`" :value="form"
+                      v-model="selectedForms"> -->
+
+                    </label>
+                    <div class="ms-5" v-for="(formField, i) in form" :key="i">
+                      <label class="form-check-label" :for="`form${index}`">{{ beautifyName(index.toString())
+                        }} - {{ i }}</label>
+                      <input class="form-check-input ms-3" type="checkbox" :id="`form${index}_${i}`"
+                        :value="{index:index,value:form[i]}" v-model="selectedForms">
+
+                    </div>
+                  </div>
+                </template>
+              </template>
             </div>
             <!-- Add your PDF content here -->
             <div ref="printContent" style="display: none;" >
@@ -87,8 +88,8 @@ import InsurancePolicy from "@/components/viewClientForms/InsurancePolicy.vue";
 import PdfForms from "@/components/viewClientForms/PdfForms.vue"
 import * as bootstrap from "bootstrap"; // Import all exports from the 'bootstrap' module
 
-const store:any = inject('store')
-const authModal:any = ref<bootstrap.Modal>();
+const store: any = inject('store')
+const authModal: any = ref<bootstrap.Modal>();
 const steps = ref([
   { name: "Client Information", componentName: shallowRef(ClientInformation) },
   { name: "Mutual Fund", componentName: shallowRef(MutualFunds) },
@@ -98,19 +99,14 @@ const steps = ref([
   { name: "India Post Office", componentName: shallowRef(IndiaPostOffice) },
 ]);
 
-let forms = ref([
-        "Client Information",
-        "Mutual Fund",
-        "Gold Investment",
-        "Fixed Deposit Info",
-        "India Post Office",
-        "Insurance Policy"
-      ])
- let selectedForms =  ref([])
+let forms = ref(store.state.viewClientData)
+let selectedForms = ref([]);
+let selectedSubForms = ref(Array.from({ length: forms.value.clientData.length }, () => [])); // Initialize with empty arrays for each form
+
 onBeforeUnmount(() => {
   let initializeClientData = {
-    id : '',
-    clientData : {
+    id: '',
+    clientData: {
       clientInformationFormData: {},
       fillerInfo: {},
       fixedDepositFormData: {},
@@ -122,10 +118,28 @@ onBeforeUnmount(() => {
       startDate: ""
     }
   }
-  store.commit("setViewClientData",initializeClientData );
+  store.commit("setViewClientData", initializeClientData);
 });
 
 const currentStep = ref(0);
+const beautifyName = (name: string) => {
+  switch (name) {
+    case "clientInformationFormData":
+      return 'Client Information'
+    case "fixedDepositFormData":
+      return 'Fixed Deposit'
+    case "goldInvestmentFormData":
+      return 'Gold Investment'
+    case "indiaPostFormData":
+      return 'India Post'
+    case "mutualFundFormData":
+      return 'Mutual Fund'
+    case "insurancePolicyFormData":
+      return 'Insurance Police'
+    default:
+      break;
+  }
+}
 
 const nextStep = () => {
   if (currentStep.value < steps.value.length - 1) {
@@ -144,11 +158,12 @@ const setCurrentTab = (index: any) => {
 };
 
 
-const printPdf = ()=>{
+const printPdf = () => {
+
   printPDF()
 }
 
-const printContent:any = ref(null);
+const printContent: any = ref(null);
 
 const printPDF = () => {
   const content = printContent.value;
@@ -166,27 +181,27 @@ const printPDF = () => {
 
   printWindow.document.open();
   printWindow.document.write(`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <title>GrowSmart</title>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-          }
-          h1 {
-            color: #333;
-          }
-          p {
-            color: #666;
-          }
-        </style>
-      </head>
-      <body>
-        ${content.innerHTML}
-      </body>
-    </html>
-  `);
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>GrowSmart</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+            }
+            h1 {
+              color: #333;
+            }
+            p {
+              color: #666;
+            }
+          </style>
+        </head>
+        <body>
+          ${content.innerHTML}
+        </body>
+      </html>
+    `);
   printWindow.document.close();
   printWindow.print();
 };
@@ -251,7 +266,7 @@ const printPDF = () => {
   border-color: #5a6167;
 }
 
-.btn-group-lg > .btn,
+.btn-group-lg>.btn,
 .btn-lg {
   font-size: 1.25rem;
   padding: 0.75rem 1.5rem;

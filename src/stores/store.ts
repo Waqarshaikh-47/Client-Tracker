@@ -59,14 +59,14 @@ const state = {
   viewClientData : {
     id : '',
     clientData : {
-      clientInformationFormData: {},
+      clientInformationFormData: [],
       fillerInfo: {},
-      fixedDepositFormData: {},
-      goldInvestmentFormData: {},
-      indiaPostFormData: {},
-      insurancePolicyFormData: {},
+      fixedDepositFormData: [],
+      goldInvestmentFormData: [],
+      indiaPostFormData: [],
+      insurancePolicyFormData: [],
       lastUpdated: "",
-      mutualFundFormData: {},
+      mutualFundFormData: [],
       startDate: ""
     }
   }
@@ -103,6 +103,8 @@ const mutations = {
   },
   setViewClientData(state: any, data:object) {
     state.viewClientData = data;
+    localStorage.setItem('viewClientData', JSON.stringify(data));
+
   },
 };
 
@@ -111,5 +113,9 @@ const store = createStore({
   state,
   mutations,
 });
+const storedViewClientData = localStorage.getItem('viewClientData');
+if (storedViewClientData) {
+  store.commit('setViewClientData', JSON.parse(storedViewClientData));
+}
 
 export default store;

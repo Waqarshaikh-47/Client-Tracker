@@ -9,6 +9,7 @@ import AddUser from "@/views/users/AddUser.vue";
 import NotAuthorized from "@/views/NotAuthorized.vue";
 import ClientDetailsView from "@/views/ClientDetailsView.vue";
 import UsersView from "@/views/UsersView.vue";
+import PdfForms from "@/components/viewClientForms/PdfForms.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -67,6 +68,11 @@ const router = createRouter({
       path:'/notAuthorized',
       name:'notAuthorized',
       component: NotAuthorized,
+    },
+    {
+      path:'/x',
+      name:'x',
+      component: PdfForms,
     },
     {
       path:'/clients/client-details',
