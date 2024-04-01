@@ -11,10 +11,11 @@
       <p><strong>Date of Birth:</strong> {{ clientInformationData.dob }}</p>
       <p><strong>Email Address:</strong> {{ clientInformationData.email }}</p>
       <p><strong>Phone Number:</strong> {{ clientInformationData.phone }}</p>
+      <p><strong>Gender:</strong> {{ clientInformationData.gender }}</p>
     </div>
 
     <!-- Edit Mode -->
-    <form v-else>
+    <form v-else @submit.prevent="updateClientsData">
       <div class="mb-3">
         <label for="fullName" class="form-label">Full Name</label>
         <input
@@ -30,10 +31,12 @@
         <label for="panNumber" class="form-label">PAN Card Number</label>
         <input
           v-model="clientInformationData.panNumber"
+          pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
           type="text"
           class="form-control"
           id="panNumber"
           placeholder="Enter your PAN card number"
+          title="PAN number should be in the format ABCDE1234F"
           required
         />
       </div>
@@ -67,13 +70,27 @@
           class="form-control"
           id="phone"
           placeholder="Enter your phone number"
+          pattern="[0-9]{10}" title="Mobile number should contain 10 digits"
           required
         />
       </div>
+      <div class="mb-3">
+        <label for="gender" class="form-label">Gender</label>
+        <select v-model="clientInformationData.gender" id="gender" class="form-control" required>
+          <option value="">Select gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+      </div>
     </form>
     <div class="d-flex justify-content-between mt-4 mb-4">
-      <button @click="toggleEditMode" class="btn btn-primary">
-        {{ isEditing ? "Save" : "Edit" }}
+      <button v-if="!isEditing" @click="toggleEditMode" class="btn btn-primary">
+        Edit
+      </button>
+      
+      <!-- Save button -->
+      <button v-else type="submit" @click.prevent="updateClientsData" class="btn btn-success">
+        Update
       </button>
     </div>
   </div>
@@ -117,7 +134,8 @@ const fetchClientInformation = () => {
     currentFormInfo.panNumber ? currentFormInfo.panNumber : '',
     currentFormInfo.dob ? currentFormInfo.dob : '',
     currentFormInfo.email ? currentFormInfo.email : '',
-    currentFormInfo.phone ? currentFormInfo.phone : ''
+    currentFormInfo.phone ? currentFormInfo.phone : '',
+    currentFormInfo.gender ? currentFormInfo.gender : '',
   );
 };
 fetchClientInformation();
