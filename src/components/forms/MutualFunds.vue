@@ -44,7 +44,7 @@
           type="text"
           class="form-control"
           id="fundName"
-          placeholder="Enter company name"
+          placeholder="Enter Fund name"
           required
         />
       </div>
