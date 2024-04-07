@@ -88,7 +88,7 @@
           Previous
         </button>
         <button type="submit" class="btn btn-primary">
-          {{ isLastForm ? "Save & Continue" : "Next" }}
+          {{  "Save & Continue" }}
         </button>
       </div>
     </form>
@@ -136,10 +136,11 @@ const updateClientsData = async() => {
   }
 }
 
-const submitForm = () => {
+const submitForm = async() => {
   try {
     store.commit("setInsurancePolicyFormData", {...cloneDeep(insuranceFormData.value)});
-    updateClientsData();
+    await updateClientsData();
+    emit("next-step");
   } catch (error) {
     console.error("Error setting insurance policy form data:", error);
     alert("Something went wrong. Please try again.");

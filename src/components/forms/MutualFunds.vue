@@ -3,13 +3,13 @@
     <h1>Mutual Funds</h1>
     <form @submit.prevent="submitForm">
       <div class="mb-3">
-        <label for="name" class="form-label">Name</label>
+        <label for="companyName" class="form-label">Company Name</label>
         <input
-          v-model="mutualFundFormData.name"
+          v-model="mutualFundFormData.companyName"
           type="text"
           class="form-control"
-          id="name"
-          placeholder="Enter your name"
+          id="companyName"
+          placeholder="Enter company name"
           required
         />
       </div>
@@ -38,12 +38,12 @@
         </select>
       </div>
       <div class="mb-3">
-        <label for="companyName" class="form-label">Company Name</label>
+        <label for="fundName" class="form-label">Fund Name</label>
         <input
-          v-model="mutualFundFormData.companyName"
+          v-model="mutualFundFormData.fundName"
           type="text"
           class="form-control"
-          id="companyName"
+          id="fundName"
           placeholder="Enter company name"
           required
         />

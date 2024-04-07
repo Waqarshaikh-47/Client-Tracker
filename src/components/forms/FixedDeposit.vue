@@ -76,7 +76,7 @@
           Previous
         </button>
         <button type="submit" class="btn btn-primary">
-          {{ isLastForm ? "Save & Continue" : "Next" }}
+          {{ "Save & Continue"  }}
         </button>
       </div>
     </form>

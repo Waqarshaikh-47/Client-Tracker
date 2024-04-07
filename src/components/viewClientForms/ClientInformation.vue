@@ -15,7 +15,7 @@
     </div>
 
     <!-- Edit Mode -->
-    <form v-else @submit.prevent="updateClientsData">
+    <form v-else @submit.prevent="toggleEditMode">
       <div class="mb-3">
         <label for="fullName" class="form-label">Full Name</label>
         <input
@@ -70,27 +70,33 @@
           class="form-control"
           id="phone"
           placeholder="Enter your phone number"
-          pattern="[0-9]{10}" title="Mobile number should contain 10 digits"
+          pattern="[0-9]{10}"
+          title="Mobile number should contain 10 digits"
           required
         />
       </div>
       <div class="mb-3">
         <label for="gender" class="form-label">Gender</label>
-        <select v-model="clientInformationData.gender" id="gender" class="form-control" required>
+        <select
+          v-model="clientInformationData.gender"
+          id="gender"
+          class="form-control"
+          required
+        >
           <option value="">Select gender</option>
           <option value="male">Male</option>
           <option value="female">Female</option>
         </select>
       </div>
+      <div class="d-flex justify-content-between mt-4 mb-4">
+        <!-- Save button -->
+        <button type="submit" class="btn btn-primary">Update</button>
+      </div>
     </form>
     <div class="d-flex justify-content-between mt-4 mb-4">
+      <!-- Save button -->
       <button v-if="!isEditing" @click="toggleEditMode" class="btn btn-primary">
         Edit
-      </button>
-      
-      <!-- Save button -->
-      <button v-else type="submit" @click.prevent="updateClientsData" class="btn btn-success">
-        Update
       </button>
     </div>
   </div>
@@ -101,8 +107,7 @@ import { ref } from "vue";
 import { ClientInformation } from "@/schemas/forms/ClientInformation";
 import { useStore } from "vuex";
 import { cloneDeep } from "lodash";
-import queries from '@/plugins/db/queries/quries';
-
+import queries from "@/plugins/db/queries/quries";
 
 const store = useStore();
 const props = defineProps({
@@ -110,57 +115,52 @@ const props = defineProps({
   isLastForm: Boolean,
 });
 const emit = defineEmits(["next-step", "prev-step"]);
-const currentFormInfo = store.state.viewClientData.clientData.clientInformationFormData;
+const currentFormInfo =
+  store.state.viewClientData.clientData.clientInformationFormData;
 const clientInformationData = ref(new ClientInformation());
 const isEditing = ref(false);
 
-
-
 const toggleEditMode = () => {
   if (isEditing.value) {
-    updateClientsData()
+    updateClientsData();
   }
   isEditing.value = !isEditing.value;
-
 };
-
 
 // Fetch initial client information data or set from store
 // This assumes you have a method to fetch the data, like an API call or Vuex action
 const fetchClientInformation = () => {
   // Simulated data for example
   clientInformationData.value = new ClientInformation(
-    currentFormInfo.fullName ? currentFormInfo.fullName : '',
-    currentFormInfo.panNumber ? currentFormInfo.panNumber : '',
-    currentFormInfo.dob ? currentFormInfo.dob : '',
-    currentFormInfo.email ? currentFormInfo.email : '',
-    currentFormInfo.phone ? currentFormInfo.phone : '',
-    currentFormInfo.gender ? currentFormInfo.gender : '',
+    currentFormInfo.fullName ? currentFormInfo.fullName : "",
+    currentFormInfo.panNumber ? currentFormInfo.panNumber : "",
+    currentFormInfo.dob ? currentFormInfo.dob : "",
+    currentFormInfo.email ? currentFormInfo.email : "",
+    currentFormInfo.phone ? currentFormInfo.phone : "",
+    currentFormInfo.gender ? currentFormInfo.gender : ""
   );
 };
 fetchClientInformation();
 
-
-const updateClientsData = async() => {
-  store.commit('setLoading',true)
+const updateClientsData = async () => {
+  store.commit("setLoading", true);
   try {
     let clientId = store.state.viewClientData.id;
     const data = {
       clientInformationFormData: { ...clientInformationData.value },
       lastUpdated: Date(),
-    }
-    await queries.updateClientInformationData(clientId,data);
-    store.commit('setLoading',false)
+    };
+    await queries.updateClientInformationData(clientId, data);
+    store.commit("setLoading", false);
   } catch (error) {
     console.error("Error updating client data:", error);
-    store.commit('setLoading',false)
+    store.commit("setLoading", false);
 
     // You can handle the error here, like showing a toast message
     // For now, let's re-throw the error to propagate it
     throw error;
   }
-}
-
+};
 </script>
 
 <style scoped>

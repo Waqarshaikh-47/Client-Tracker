@@ -2,8 +2,8 @@
   <div class="container mt-5">
     <h1>Fixed Deposit Details</h1>
     <div class="text-end" v-if="allForms.length">
-      <button class="btn btn-primary" @click="addNewForm">
-        {{ isAddNewForm ? "Save" : "Add New Form" }}
+      <button class="btn btn-primary" v-if="!isAddNewForm" @click="addNewForm">
+        Add New Form
       </button>
     </div>
     <!-- View Mode -->
@@ -22,7 +22,7 @@
     </div>
 
     <!-- Edit Mode -->
-    <form v-else>
+    <form v-else  @submit.prevent="toggleEditMode">
       <div class="mb-3">
         <label for="name" class="form-label">Name</label>
         <input
@@ -87,10 +87,15 @@
           >Enter the number of months or years for the tenure.</small
         >
       </div>
+      <div class="d-flex justify-content-between mt-4 mb-4">
+      <button type="submit" class="btn btn-primary">
+        Save
+      </button>
+    </div>
     </form>
-    <div class="d-flex justify-content-between mt-4 mb-4" v-if="!isAddNewForm">
+    <div class="d-flex justify-content-between mt-4 mb-4" v-if="!isEditing">
       <button @click="toggleEditMode" class="btn btn-primary">
-        {{ isEditing ? "Save" : "Edit" }}
+        Edit
       </button>
     </div>
     <ul class="list-group mt-3 container" v-if="allForms.length">

@@ -225,7 +225,7 @@ import { onBeforeMount, onMounted, ref, computed, watch, inject } from "vue";
 import queries from "@/plugins/db/queries/quries";
 import { useStore } from "vuex";
 import router from "@/router";
-import { cloneDeep, filter } from "lodash";
+import { cloneDeep, filter, isArray, isEmpty, some } from "lodash";
 
 const store = useStore();
 
@@ -354,12 +354,20 @@ function categorizeClients(clients: { id: string; clientData: ClientData }[]): {
 
     // Flag to check if client is pending
     let isPending = false;
+    formsToCheck.forEach((formKey) => {
+      const isFormArray = isArray(data[formKey]);
+      const isFormNotEmpty = !isEmpty(data[formKey]);
 
-    formsToCheck.forEach((form) => {
-      if (Object.keys(data[form]).some((key) => data[form][key] !== "")) {
-        // Form has a key with a value
-        if (Object.keys(data[form]).some((key) => data[form][key] === "")) {
-          // Form also has a key with an empty value
+      const hasNonEmptyValue = some(data[formKey], (formData) =>
+        some(formData, (value) => value != "")
+      );
+
+      if (isFormArray && isFormNotEmpty && hasNonEmptyValue) {
+        const hasEmptyValue = some(data[formKey], (formData) =>
+          some(formData, (value) => value == "")
+        );
+
+        if (hasEmptyValue) {
           isPending = true;
         }
       }
