@@ -41,30 +41,34 @@
               <template class="form-check d-flex flex-column" v-for="(form, index) in forms.clientData" :key="index">
                 <template v-if="index.toString() !== 'fillerInfo' && index.toString() !== 'lastUpdated' && index.toString() !== 'startDate'
         && form.length">
-                  <div class="">
-                    {{ beautifyName(index.toString()) }}s
+                  <div>
+  <div class="m-2">
+    <button class="btn btn-primary" type="button" @click="toggleCollapse(index)">
+      {{ beautifyName(index.toString()) }}s
+      <i :class="['bi', isCollapsed[index] ? 'bi-chevron-down' : 'bi-chevron-up']"></i>
+    </button>
+    <div class="collapse" :id="`collapseForm${index}`" :class="{ show: isCollapsed[index] }">
+      <div class="list-group">
+        <div v-for="(formField, formIndex) in form" :key="formIndex" class="list-group-item">
+          <input class="form-check-input" type="checkbox" :id="`form${index}_${formIndex}`"
+            :value="{index:index,value:formField, formId:formIndex}" v-model="selectedForms">
+          <label class="form-check-label ms-3" :for="`form${index}`">
+            <i class="bi bi-journal"></i> {{ formField.name ? formField.name : formField.companyName }}
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-                    <label class="form-check-label" :for="`form${index}`">
-                    <!-- <input class="form-check-input" type="checkbox" :id="`form${index}`" :value="form"
-                      v-model="selectedForms"> -->
-
-                    </label>
-                    <div class="ms-5" v-for="(formField, i) in form" :key="i">
-                      <label class="form-check-label" :for="`form${index}`">{{ beautifyName(index.toString())
-                        }} - {{ i }}</label>
-                      <input class="form-check-input ms-3" type="checkbox" :id="`form${index}_${i}`"
-                        :value="{index:index,value:form[i]}" v-model="selectedForms">
-
-                    </div>
-                  </div>
                 </template>
               </template>
             </div>
             <!-- Add your PDF content here -->
-            <div ref="printContent" style="display: none;" >
-      <h1>GrowSmart Finserv</h1>
-      <PdfForms :selected-forms="selectedForms"/>
-    </div>
+            <div ref="printContent" style="display: none;">
+              <h1>GrowSmart Finserv</h1>
+              <PdfForms :selected-forms="selectedForms" />
+            </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -102,6 +106,7 @@ const steps = ref([
 let forms = ref(store.state.viewClientData)
 let selectedForms = ref([]);
 let selectedSubForms = ref(Array.from({ length: forms.value.clientData.length }, () => [])); // Initialize with empty arrays for each form
+let isCollapsed = ref(Array.from({ length: forms.value.clientData.length }, () => true)); // Initialize all as collapsed
 
 onBeforeUnmount(() => {
   let initializeClientData = {
@@ -157,10 +162,12 @@ const setCurrentTab = (index: any) => {
   currentStep.value = index;
 };
 
+const toggleCollapse = (index: number) => {
+  isCollapsed.value[index] = !isCollapsed.value[index];
+};
 
 const printPdf = () => {
-
-  printPDF()
+  printPDF();
 }
 
 const printContent: any = ref(null);
@@ -270,5 +277,11 @@ const printPDF = () => {
 .btn-lg {
   font-size: 1.25rem;
   padding: 0.75rem 1.5rem;
+}
+.backgroundColorCollapse{
+  background-color: #5a6268;
+  border-color: #2c72af;
+  border: 20px;
+  font-weight: bold;
 }
 </style>

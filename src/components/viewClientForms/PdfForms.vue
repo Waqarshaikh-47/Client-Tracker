@@ -124,18 +124,26 @@ const beautifyName = (name: string) => {
 }
 
 watch(() => props.selectedForms, (newValue, oldValue) => {
+  // Initialize an empty object to store updated form data
+  const updatedPrintFormsData:any = {};
+
+  // Iterate through selectedForms to filter out unchecked forms
   for (const form of newValue) {
-    if (printFormsData.value.hasOwnProperty(form.index)) {
-      // Append form.value to the existing key
-      printFormsData.value[form.index].push(form.value);
-    } else {
-      // Create a new key and set its value as an array containing form.value;
-      printFormsData.value[form.index] = [form.value];
+    if (form.value !== null && form.value !== undefined && form.value !== "") {
+      if (updatedPrintFormsData.hasOwnProperty(form.index)) {
+        // Append form.value to the existing key
+        updatedPrintFormsData[form.index].push(form.value);
+      } else {
+        // Create a new key and set its value as an array containing form.value;
+        updatedPrintFormsData[form.index] = [form.value];
+      }
     }
   }
-  console.log(printFormsData);
 
+  // Replace printFormsData with the updated data
+  printFormsData.value = updatedPrintFormsData;
 });
+
 </script>
 
 <style>
