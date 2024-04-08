@@ -9,12 +9,12 @@
           </div>
         </div>
       </div>
-      <template v-if="roles && (roles.includes('Write') || roles.includes('Admin') )">
+      <template v-if="roles && (roles.includes('Write') || roles.includes('Admin'))">
         <div class="row">
           <div class="col-md-6" @click="$router.push({name:'new-client'})">
             <div class="card shadow">
               <div class="card-body">
-                <h5 class="card-title">New Client</h5>
+                <h5 class="card-title"><i class="bi bi-person-plus-fill text-success"></i> New Client</h5>
                 <p class="card-text">Add a new client here.</p>
               </div>
             </div>
@@ -22,7 +22,7 @@
           <div class="col-md-6" @click="$router.push({name:'clients'})">
             <div class="card shadow">
               <div class="card-body">
-                <h5 class="card-title">View Clients</h5>
+                <h5 class="card-title"><i class="bi bi-people-fill text-primary"></i> View Clients</h5>
                 <p class="card-text">View all clients here.</p>
               </div>
             </div>
@@ -35,16 +35,16 @@
           <div class="col-md-6" @click="$router.push({name:'new-user'})">
             <div class="card shadow">
               <div class="card-body">
-                <h5 class="card-title">Add New User</h5>
-                <p class="card-text">add agent that could fill data</p>
+                <h5 class="card-title"><i class="bi bi-person-plus-fill text-success"></i> Add New User</h5>
+                <p class="card-text">Add agent that could fill data</p>
               </div>
             </div>
           </div>
           <div class="col-md-6" @click="$router.push({name:'users'})">
             <div class="card shadow">
               <div class="card-body">
-                <h5 class="card-title">View Users</h5>
-                <p class="card-text">list all users</p>
+                <h5 class="card-title"><i class="bi bi-people-fill text-primary"></i> View Users</h5>
+                <p class="card-text">List all users</p>
               </div>
             </div>
           </div>
@@ -61,46 +61,31 @@ import { ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import { getAuth, signOut, type Auth } from 'firebase/auth';
 
-
-
 const store = useStore()
-
-
 const roles = ref<string[]>([])
 
-// Use async/await to properly handle asynchronous data fetching
-
-// Call the fetchData function to fetch users when the component is mounted
-
 const handleSignout = () => {
-  let auth:Auth = getAuth();
+  let auth: Auth = getAuth();
   signOut(auth).then(() => {
-  alert("Please contact the administrator for website access permissions.")
-  router.push({name:'home'})
-})
+    alert("Please contact the administrator for website access permissions.")
+    router.push({ name: 'home' })
+  })
 }
 
 onMounted(async () => {
   let userData = store.state.user;
-  store.commit('setLoading',true)
+  store.commit('setLoading', true)
   const userRoleData = await queries.fetchUserDataByEmail(userData.email);
-  store.commit('setLoading',false)
-  // Check the structure of userRoleData[0] to ensure it contains the expected properties
-  if (userRoleData[0]  && userRoleData[0].roles  && (userRoleData[0].roles.includes("Admin") || userRoleData[0].roles.includes("Write"))) {
-    // Update userData directly
-    userData.roles = userRoleData[0].roles; // Assuming 'roles' is an array
+  store.commit('setLoading', false)
+  if (userRoleData[0] && userRoleData[0].roles && (userRoleData[0].roles.includes("Admin") || userRoleData[0].roles.includes("Write"))) {
+    userData.roles = userRoleData[0].roles;
     userData.displayName = userRoleData[0].displayName;
     store.commit('setUser', userData);
-  
-    // Update the roles ref value
     roles.value = userData.roles;
-    
-  }else{
+  } else {
     handleSignout()
   }
 });
-
-
 </script>
 
 <style scoped>
@@ -141,8 +126,16 @@ onMounted(async () => {
   font-size: 1.1rem;
 }
 
-.text-success {
-  color: #28a745;
+.bi {
+  vertical-align: text-bottom;
+  margin-right: 5px;
 }
 
+.text-success {
+  color: #198754;
+}
+
+.text-primary {
+  color: #198754 !important;
+}
 </style>
