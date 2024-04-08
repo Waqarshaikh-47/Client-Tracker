@@ -157,9 +157,13 @@
           <li>
             <i class="bi bi-globe"></i>
             <span class="contact-label">Website:</span>
-            <a class="text-light" href="https://growsmartfinserv.vercel.app"
-              >https://growsmartfinserv.vercel.app</a
+            <a
+              class="text-light"
+              href="https://growsmartfinserv.vercel.app"
+              target="_blank"
             >
+              https://growsmartfinserv.vercel.app
+            </a>
           </li>
         </ul>
       </div>
