@@ -2,9 +2,9 @@
     <div class="mt-3">
 
         <h4>SignIn with account</h4>
-        <p><input type="text" placeholder="email" id="email" v-model="email" class="form-control"></p>
+        <p><input type="text" placeholder="Email" id="email" v-model="email" class="form-control"></p>
         <div class="input-group">
-            <input placeholder="password" id="password" v-model="password" class="form-control" :type="passwordFieldType">
+            <input placeholder="Password" id="password" v-model="password" class="form-control" :type="passwordFieldType">
             <button @click="togglePasswordVisibility" class="btn btn-outline-secondary" type="button" id="password-visibility-toggle">
                 <i :class="passwordVisibilityIcon"></i>
             </button>
