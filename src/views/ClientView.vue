@@ -225,7 +225,7 @@ import { onBeforeMount, onMounted, ref, computed, watch, inject } from "vue";
 import queries from "@/plugins/db/queries/quries";
 import { useStore } from "vuex";
 import router from "@/router";
-import { cloneDeep, filter, isArray, isEmpty, some } from "lodash";
+import { cloneDeep, filter, isArray, isEmpty, some, sortBy } from "lodash";
 
 const store = useStore();
 
@@ -240,10 +240,11 @@ onBeforeMount(async () => {
   try {
     store.commit("setLoading", true);
     const userData = await queries.getAllClientsInformation();
-    activeClients = categorizeClients(userData).active;
-    pendingClients = categorizeClients(userData).pending;
-    filteredActiveClients.value = categorizeClients(userData).active;
-    filteredPendingClients.value = categorizeClients(userData).pending;
+    let userDataSorted = sortByLastUpdated(userData);
+    activeClients = categorizeClients(userDataSorted).active;
+    pendingClients = categorizeClients(userDataSorted).pending;
+    filteredActiveClients.value = categorizeClients(userDataSorted).active;
+    filteredPendingClients.value = categorizeClients(userDataSorted).pending;
     store.commit("setLoading", false);
   } catch (error: any) {
     console.error("Error fetching client information:", error.message);
@@ -382,6 +383,12 @@ function categorizeClients(clients: { id: string; clientData: ClientData }[]): {
 
   return { active: activeClientsList, pending: pendingClientsList };
 }
+
+const sortByLastUpdated = (dataArray: Array<any>) => {
+  return sortBy(dataArray, (item) =>
+    new Date(item.clientData.lastUpdated).getTime()
+  ).reverse();
+};
 </script>
 
 <style>

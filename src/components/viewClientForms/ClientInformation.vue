@@ -12,6 +12,7 @@
       <p><strong>Email Address:</strong> {{ clientInformationData.email }}</p>
       <p><strong>Phone Number:</strong> {{ clientInformationData.phone }}</p>
       <p><strong>Gender:</strong> {{ clientInformationData.gender }}</p>
+      <p><strong>Address:</strong> {{ clientInformationData.address }}</p>
     </div>
 
     <!-- Edit Mode -->
@@ -88,6 +89,17 @@
           <option value="female">Female</option>
         </select>
       </div>
+      <div class="mb-3">
+        <label for="address" class="form-label">Address</label>
+        <textarea
+          v-model="clientInformationData.address"
+          id="address"
+          class="form-control"
+          rows="4"
+          placeholder="Enter address"
+          required
+        ></textarea>
+      </div>
       <div class="d-flex justify-content-between mt-4 mb-4">
         <!-- Save button -->
         <button type="submit" class="btn btn-primary">Update</button>
@@ -137,7 +149,8 @@ const fetchClientInformation = () => {
     currentFormInfo.dob ? currentFormInfo.dob : "",
     currentFormInfo.email ? currentFormInfo.email : "",
     currentFormInfo.phone ? currentFormInfo.phone : "",
-    currentFormInfo.gender ? currentFormInfo.gender : ""
+    currentFormInfo.gender ? currentFormInfo.gender : "",
+    currentFormInfo.address ? currentFormInfo.address : ""
   );
 };
 fetchClientInformation();
