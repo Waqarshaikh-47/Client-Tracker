@@ -1,5 +1,5 @@
 <template>
-  <Home />
+  <!-- <Home /> -->
   <Loader/>
 </template>
 <script setup lang="ts">

@@ -1,6 +1,6 @@
 <!-- Loader.vue -->
 <template>
-    <div v-if="isLoading" class="loader-overlay">
+    <div v-if="true" class="loader-overlay">
       <div class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
